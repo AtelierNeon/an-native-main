@@ -1,0 +1,3 @@
+[submodule "source/expat"]
+	path = source/expat
+	url = https://github.com/AtelierNeon/an-expat-gsm.git
