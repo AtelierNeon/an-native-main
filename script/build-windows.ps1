@@ -161,6 +161,10 @@ Write-Information "[PowerShell] Project information: CMake toolset: `"$ProjectTo
 Write-Information "[PowerShell] Project information: CMake platform to build: $MyCmakePlatformToBuildListString"
 Write-Information "[PowerShell] Component information: expat with shared libraries: $ProjectExpatWithSharedLibraries"
 Write-Information "[PowerShell] Component information: expat without apps: $ProjectExpatWithoutApps"
+Write-Information "[PowerShell] Component information: expat without installing all artifacts: $ProjectExpatWithoutInstallAll"
+Write-Information "[PowerShell] Component information: expat without installing files: $ProjectExpatWithoutInstallFiles"
+Write-Information "[PowerShell] Component information: expat without installing headers: $ProjectExpatWithoutInstallHeaders"
+Write-Information "[PowerShell] Component information: expat without installing libraries: $ProjectExpatWithoutInstallLibraries"
 Write-Information "[PowerShell] Component information: expat without test apps: $ProjectExpatWithoutTestApps"
 
 
