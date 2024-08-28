@@ -52,6 +52,12 @@ $ProjectExpatWithoutInstallFiles = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_FIL
 $ProjectExpatWithoutInstallHeaders = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_HEADERS} else {'OFF'}
 $ProjectExpatWithoutInstallLibraries = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
 $ProjectExpatWithoutTestApps = if ($Env:MY_PROJECT_EXPAT_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_EXPAT_WITHOUT_TEST_APPS} else {'OFF'}
+$ProjectSqliteWithSharedLibraries = if ($Env:MY_PROJECT_SQLITE_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_SQLITE_WITH_SHARED_LIBRARIES} else {'OFF'}
+$ProjectSqliteWithoutApps = if ($Env:MY_PROJECT_SQLITE_WITHOUT_APPS) {$Env:MY_PROJECT_SQLITE_WITHOUT_APPS} else {'OFF'}
+$ProjectSqliteWithoutInstallAll = if ($Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_ALL} else {'OFF'}
+$ProjectSqliteWithoutInstallFiles = if ($Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_FILES} else {'OFF'}
+$ProjectSqliteWithoutInstallHeaders = if ($Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_HEADERS} else {'OFF'}
+$ProjectSqliteWithoutInstallLibraries = if ($Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
 
 ##
 ## My variables
@@ -81,6 +87,24 @@ if ('ON'.Equals($ProjectExpatWithoutInstallLibraries)) {
 }
 if ('ON'.Equals($ProjectExpatWithoutTestApps)) {
     $MyCmakeCommonArgumentList += "-DEXPAT_WITHOUT_TEST_APPS=$ProjectExpatWithoutTestApps"
+}
+if ('ON'.Equals($ProjectSqliteWithSharedLibraries)) {
+    $MyCmakeCommonArgumentList += "-DSQLITE_WITH_SHARED_LIBRARIES=$ProjectSqliteWithSharedLibraries"
+}
+if ('ON'.Equals($ProjectSqliteWithoutApps)) {
+    $MyCmakeCommonArgumentList += "-DSQLITE_WITHOUT_APPS=$ProjectSqliteWithoutApps"
+}
+if ('ON'.Equals($ProjectSqliteWithoutInstallAll)) {
+    $MyCmakeCommonArgumentList += "-DSQLITE_WITHOUT_INSTALL_ALL=$ProjectSqliteWithoutInstallAll"
+}
+if ('ON'.Equals($ProjectSqliteWithoutInstallFiles)) {
+    $MyCmakeCommonArgumentList += "-DSQLITE_WITHOUT_INSTALL_FILES=$ProjectSqliteWithoutInstallFiles"
+}
+if ('ON'.Equals($ProjectSqliteWithoutInstallHeaders)) {
+    $MyCmakeCommonArgumentList += "-DSQLITE_WITHOUT_INSTALL_HEADERS=$ProjectSqliteWithoutInstallHeaders"
+}
+if ('ON'.Equals($ProjectSqliteWithoutInstallLibraries)) {
+    $MyCmakeCommonArgumentList += "-DSQLITE_WITHOUT_INSTALL_LIBRARIES=$ProjectSqliteWithoutInstallLibraries"
 }
 if ('ON'.Equals($ProjectWithSharedVcrt)) {
     $MyCmakeCommonArgumentList += "-DBUILD_WITH_SHARED_VCRT=$ProjectWithSharedVcrt"
@@ -166,6 +190,12 @@ Write-Information "[PowerShell] Component information: expat without installing 
 Write-Information "[PowerShell] Component information: expat without installing headers: $ProjectExpatWithoutInstallHeaders"
 Write-Information "[PowerShell] Component information: expat without installing libraries: $ProjectExpatWithoutInstallLibraries"
 Write-Information "[PowerShell] Component information: expat without test apps: $ProjectExpatWithoutTestApps"
+Write-Information "[PowerShell] Component information: SQLite with shared libraries: $ProjectSqliteWithSharedLibraries"
+Write-Information "[PowerShell] Component information: SQLite without apps: $ProjectSqliteWithoutApps"
+Write-Information "[PowerShell] Component information: SQLite without installing all artifacts: $ProjectSqliteWithoutInstallAll"
+Write-Information "[PowerShell] Component information: SQLite without installing files: $ProjectSqliteWithoutInstallFiles"
+Write-Information "[PowerShell] Component information: SQLite without installing headers: $ProjectSqliteWithoutInstallHeaders"
+Write-Information "[PowerShell] Component information: SQLite without installing libraries: $ProjectSqliteWithoutInstallLibraries"
 
 
 

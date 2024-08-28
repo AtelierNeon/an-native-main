@@ -3,6 +3,7 @@
     "cmake.sourceDirectory": "${workspaceFolder}",
     "cmake.configureSettings": {
         "EXPAT_WITHOUT_APPS": "OFF",
-        "EXPAT_WITHOUT_TEST_APPS": "OFF"
+        "EXPAT_WITHOUT_TEST_APPS": "OFF",
+        "SQLITE_WITHOUT_APPS": "OFF"
     }
 }

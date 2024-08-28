@@ -4,3 +4,6 @@
 [submodule "source/expat"]
 	path = source/expat
 	url = https://github.com/AtelierNeon/an-expat-gsm.git
+[submodule "source/sqlite"]
+	path = source/sqlite
+	url = https://github.com/AtelierNeon/an-sqlite-gsm.git
