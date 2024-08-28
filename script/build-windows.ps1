@@ -47,6 +47,10 @@ $ProjectWithWorkaroundSpectre = if ($Env:MY_PROJECT_WITH_WORKAROUND_SPECTRE) {$E
 ####
 $ProjectExpatWithSharedLibraries = if ($Env:MY_PROJECT_EXPAT_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_EXPAT_WITH_SHARED_LIBRARIES} else {'OFF'}
 $ProjectExpatWithoutApps = if ($Env:MY_PROJECT_EXPAT_WITHOUT_APPS) {$Env:MY_PROJECT_EXPAT_WITHOUT_APPS} else {'OFF'}
+$ProjectExpatWithoutInstallAll = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_ALL} else {'OFF'}
+$ProjectExpatWithoutInstallFiles = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_FILES} else {'OFF'}
+$ProjectExpatWithoutInstallHeaders = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_HEADERS} else {'OFF'}
+$ProjectExpatWithoutInstallLibraries = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
 $ProjectExpatWithoutTestApps = if ($Env:MY_PROJECT_EXPAT_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_EXPAT_WITHOUT_TEST_APPS} else {'OFF'}
 
 ##
@@ -62,6 +66,18 @@ if ('ON'.Equals($ProjectExpatWithSharedLibraries)) {
 }
 if ('ON'.Equals($ProjectExpatWithoutApps)) {
     $MyCmakeCommonArgumentList += "-DEXPAT_WITHOUT_APPS=$ProjectExpatWithoutApps"
+}
+if ('ON'.Equals($ProjectExpatWithoutInstallAll)) {
+    $MyCmakeCommonArgumentList += "-DEXPAT_WITHOUT_INSTALL_ALL=$ProjectExpatWithoutInstallAll"
+}
+if ('ON'.Equals($ProjectExpatWithoutInstallFiles)) {
+    $MyCmakeCommonArgumentList += "-DEXPAT_WITHOUT_INSTALL_FILES=$ProjectExpatWithoutInstallFiles"
+}
+if ('ON'.Equals($ProjectExpatWithoutInstallHeaders)) {
+    $MyCmakeCommonArgumentList += "-DEXPAT_WITHOUT_INSTALL_HEADERS=$ProjectExpatWithoutInstallHeaders"
+}
+if ('ON'.Equals($ProjectExpatWithoutInstallLibraries)) {
+    $MyCmakeCommonArgumentList += "-DEXPAT_WITHOUT_INSTALL_LIBRARIES=$ProjectExpatWithoutInstallLibraries"
 }
 if ('ON'.Equals($ProjectExpatWithoutTestApps)) {
     $MyCmakeCommonArgumentList += "-DEXPAT_WITHOUT_TEST_APPS=$ProjectExpatWithoutTestApps"
