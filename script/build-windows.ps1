@@ -45,6 +45,15 @@ $ProjectWithWorkaroundSpectre = if ($Env:MY_PROJECT_WITH_WORKAROUND_SPECTRE) {$E
 ####
 #### Project component level config
 ####
+$ProjectCurlWithOpenSsl = if ($Env:MY_PROJECT_CURL_WITH_OPENSSL) {$Env:MY_PROJECT_CURL_WITH_OPENSSL} else {'OFF'}
+$ProjectCurlWithSharedLibraries = if ($Env:MY_PROJECT_CURL_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_CURL_WITH_SHARED_LIBRARIES} else {'OFF'}
+$ProjectCurlWithSharedZlib = if ($Env:MY_PROJECT_CURL_WITH_SHARED_ZLIB) {$Env:MY_PROJECT_CURL_WITH_SHARED_ZLIB} else {'OFF'}
+$ProjectCurlWithZlib = if ($Env:MY_PROJECT_CURL_WITH_ZLIB) {$Env:MY_PROJECT_CURL_WITH_ZLIB} else {'OFF'}
+$ProjectCurlWithoutApps = if ($Env:MY_PROJECT_CURL_WITHOUT_APPS) {$Env:MY_PROJECT_CURL_WITHOUT_APPS} else {'OFF'}
+$ProjectCurlWithoutInstallAll = if ($Env:MY_PROJECT_CURL_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_CURL_WITHOUT_INSTALL_ALL} else {'OFF'}
+$ProjectCurlWithoutInstallFiles = if ($Env:MY_PROJECT_CURL_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_CURL_WITHOUT_INSTALL_FILES} else {'OFF'}
+$ProjectCurlWithoutInstallHeaders = if ($Env:MY_PROJECT_CURL_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_CURL_WITHOUT_INSTALL_HEADERS} else {'OFF'}
+$ProjectCurlWithoutInstallLibraries = if ($Env:MY_PROJECT_CURL_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_CURL_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
 $ProjectExpatWithSharedLibraries = if ($Env:MY_PROJECT_EXPAT_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_EXPAT_WITH_SHARED_LIBRARIES} else {'OFF'}
 $ProjectExpatWithoutApps = if ($Env:MY_PROJECT_EXPAT_WITHOUT_APPS) {$Env:MY_PROJECT_EXPAT_WITHOUT_APPS} else {'OFF'}
 $ProjectExpatWithoutInstallAll = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_ALL} else {'OFF'}
@@ -88,6 +97,33 @@ $MyCmakeCommonArgumentList = @(
         "-T $ProjectToolset",
         "-DMY_REVISION=$ProjectRevision"
 )
+if ('ON'.Equals($ProjectCurlWithOpenSsl)) {
+    $MyCmakeCommonArgumentList += "-DCURL_WITH_OPENSSL=$ProjectCurlWithOpenSsl"
+}
+if ('ON'.Equals($ProjectCurlWithSharedLibraries)) {
+    $MyCmakeCommonArgumentList += "-DCURL_WITH_SHARED_LIBRARIES=$ProjectCurlWithSharedLibraries"
+}
+if ('ON'.Equals($ProjectCurlWithSharedZlib)) {
+    $MyCmakeCommonArgumentList += "-DCURL_WITH_SHARED_ZLIB=$ProjectCurlWithSharedZlib"
+}
+if ('ON'.Equals($ProjectCurlWithZlib)) {
+    $MyCmakeCommonArgumentList += "-DCURL_WITH_ZLIB=$ProjectCurlWithZlib"
+}
+if ('ON'.Equals($ProjectCurlWithoutApps)) {
+    $MyCmakeCommonArgumentList += "-DCURL_WITHOUT_APPS=$ProjectCurlWithoutApps"
+}
+if ('ON'.Equals($ProjectCurlWithoutInstallAll)) {
+    $MyCmakeCommonArgumentList += "-DCURL_WITHOUT_INSTALL_ALL=$ProjectCurlWithoutInstallAll"
+}
+if ('ON'.Equals($ProjectCurlWithoutInstallFiles)) {
+    $MyCmakeCommonArgumentList += "-DCURL_WITHOUT_INSTALL_FILES=$ProjectCurlWithoutInstallFiles"
+}
+if ('ON'.Equals($ProjectCurlWithoutInstallHeaders)) {
+    $MyCmakeCommonArgumentList += "-DCURL_WITHOUT_INSTALL_HEADERS=$ProjectCurlWithoutInstallHeaders"
+}
+if ('ON'.Equals($ProjectCurlWithoutInstallLibraries)) {
+    $MyCmakeCommonArgumentList += "-DCURL_WITHOUT_INSTALL_LIBRARIES=$ProjectCurlWithoutInstallLibraries"
+}
 if ('ON'.Equals($ProjectExpatWithSharedLibraries)) {
     $MyCmakeCommonArgumentList += "-DEXPAT_WITH_SHARED_LIBRARIES=$ProjectExpatWithSharedLibraries"
 }
@@ -262,11 +298,20 @@ $MyCmakePlatformToBuildListString = $MyCmakePlatformToBuildList -join ", "
 Write-Information "[PowerShell] Project information: version: `"$MyProjectVersion`""
 Write-Information "[PowerShell] Project information: revision: `"$ProjectRevision`""
 Write-Information "[PowerShell] Project information: release type: `"$ProjectReleaseType`""
-Write-Information "[PowerShell] Project information: Disable clean build: $ProjectShouldDisableCleanBuild"
-Write-Information "[PowerShell] Project information: Disable parallel build: $ProjectShouldDisableParallelBuild"
+Write-Information "[PowerShell] Project information: disable clean build: $ProjectShouldDisableCleanBuild"
+Write-Information "[PowerShell] Project information: disable parallel build: $ProjectShouldDisableParallelBuild"
 Write-Information "[PowerShell] Project information: CMake generator: `"$MyCmakeGenerator`""
 Write-Information "[PowerShell] Project information: CMake toolset: `"$ProjectToolset`""
 Write-Information "[PowerShell] Project information: CMake platform to build: $MyCmakePlatformToBuildListString"
+Write-Information "[PowerShell] Component information: CURL wuth OpenSSL: $ProjectCurlWithOpenSsl"
+Write-Information "[PowerShell] Component information: CURL with shared libraries: $ProjectCurlWithSharedLibraries"
+Write-Information "[PowerShell] Component information: CURL with shared Zlib: $ProjectCurlWithSharedZlib"
+Write-Information "[PowerShell] Component information: CURL with Zlib: $ProjectCurlWithZlib"
+Write-Information "[PowerShell] Component information: CURL without apps: $ProjectCurlWithoutApps"
+Write-Information "[PowerShell] Component information: CURL without installing all artifacts: $ProjectCurlWithoutInstallAll"
+Write-Information "[PowerShell] Component information: CURL without installing files: $ProjectCurlWithoutInstallFiles"
+Write-Information "[PowerShell] Component information: CURL without installing headers: $ProjectCurlWithoutInstallHeaders"
+Write-Information "[PowerShell] Component information: CURL without installing libraries: $ProjectCurlWithoutInstallLibraries"
 Write-Information "[PowerShell] Component information: expat with shared libraries: $ProjectExpatWithSharedLibraries"
 Write-Information "[PowerShell] Component information: expat without apps: $ProjectExpatWithoutApps"
 Write-Information "[PowerShell] Component information: expat without installing all artifacts: $ProjectExpatWithoutInstallAll"

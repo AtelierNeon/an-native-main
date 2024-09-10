@@ -1,6 +1,9 @@
 [submodule "source/cmake-modules"]
 	path = source/cmake-modules
 	url = https://github.com/AtelierNeon/an-cmake-modules-gsm.git
+[submodule "source/curl"]
+	path = source/curl
+	url = https://github.com/AtelierNeon/an-curl-gsm.git
 [submodule "source/expat"]
 	path = source/expat
 	url = https://github.com/AtelierNeon/an-expat-gsm.git
