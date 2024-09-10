@@ -28,4 +28,5 @@ endif ()
 
 ## Process sub-components
 add_subdirectory (source/expat)
+add_subdirectory (source/pcre)
 add_subdirectory (source/sqlite)
