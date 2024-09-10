@@ -52,6 +52,15 @@ $ProjectExpatWithoutInstallFiles = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_FIL
 $ProjectExpatWithoutInstallHeaders = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_HEADERS} else {'OFF'}
 $ProjectExpatWithoutInstallLibraries = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
 $ProjectExpatWithoutTestApps = if ($Env:MY_PROJECT_EXPAT_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_EXPAT_WITHOUT_TEST_APPS} else {'OFF'}
+$ProjectOpenSslWithDeprecatedCiphers = if ($Env:MY_PROJECT_OPENSSL_WITH_DEPRECATED_CIPHERS) {$Env:MY_PROJECT_OPENSSL_WITH_DEPRECATED_CIPHERS} else {'OFF'}
+$ProjectOpenSslWithSharedLibraries = if ($Env:MY_PROJECT_OPENSSL_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_OPENSSL_WITH_SHARED_LIBRARIES} else {'OFF'}
+$ProjectOpenSslWithSharedZlib = if ($Env:MY_PROJECT_OPENSSL_WITH_SHARED_ZLIB) {$Env:MY_PROJECT_OPENSSL_WITH_SHARED_ZLIB} else {'OFF'}
+$ProjectOpenSslWithZlib = if ($Env:MY_PROJECT_OPENSSL_WITH_ZLIB) {$Env:MY_PROJECT_OPENSSL_WITH_ZLIB} else {'OFF'}
+$ProjectOpenSslWithoutApps = if ($Env:MY_PROJECT_OPENSSL_WITHOUT_APPS) {$Env:MY_PROJECT_OPENSSL_WITHOUT_APPS} else {'OFF'}
+$ProjectOpenSslWithoutInstallAll = if ($Env:MY_PROJECT_OPENSSL_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_OPENSSL_WITHOUT_INSTALL_ALL} else {'OFF'}
+$ProjectOpenSslWithoutInstallFiles = if ($Env:MY_PROJECT_OPENSSL_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_OPENSSL_WITHOUT_INSTALL_FILES} else {'OFF'}
+$ProjectOpenSslWithoutInstallHeaders = if ($Env:MY_PROJECT_OPENSSL_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_OPENSSL_WITHOUT_INSTALL_HEADERS} else {'OFF'}
+$ProjectOpenSslWithoutInstallLibraries = if ($Env:MY_PROJECT_OPENSSL_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_OPENSSL_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
 $ProjectPcreWithSharedLibraries = if ($Env:MY_PROJECT_PCRE_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_PCRE_WITH_SHARED_LIBRARIES} else {'OFF'}
 $ProjectPcreWithoutApps = if ($Env:MY_PROJECT_PCRE_WITHOUT_APPS) {$Env:MY_PROJECT_PCRE_WITHOUT_APPS} else {'OFF'}
 $ProjectPcreWithoutInstallAll = if ($Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_ALL} else {'OFF'}
@@ -99,6 +108,33 @@ if ('ON'.Equals($ProjectExpatWithoutInstallLibraries)) {
 }
 if ('ON'.Equals($ProjectExpatWithoutTestApps)) {
     $MyCmakeCommonArgumentList += "-DEXPAT_WITHOUT_TEST_APPS=$ProjectExpatWithoutTestApps"
+}
+if ('ON'.Equals($ProjectOpenSslWithDeprecatedCiphers)) {
+    $MyCmakeCommonArgumentList += "-DOPENSSL_WITH_DEPRECATED_CIPHERS=$ProjectOpenSslWithDeprecatedCiphers"
+}
+if ('ON'.Equals($ProjectOpenSslWithSharedLibraries)) {
+    $MyCmakeCommonArgumentList += "-DOPENSSL_WITH_SHARED_LIBRARIES=$ProjectOpenSslWithSharedLibraries"
+}
+if ('ON'.Equals($ProjectOpenSslWithSharedZlib)) {
+    $MyCmakeCommonArgumentList += "-DOPENSSL_WITH_SHARED_ZLIB=$ProjectOpenSslWithSharedZlib"
+}
+if ('ON'.Equals($ProjectOpenSslWithZlib)) {
+    $MyCmakeCommonArgumentList += "-DOPENSSL_WITH_ZLIB=$ProjectOpenSslWithZlib"
+}
+if ('ON'.Equals($ProjectOpenSslWithoutApps)) {
+    $MyCmakeCommonArgumentList += "-DOPENSSL_WITHOUT_APPS=$ProjectOpenSslWithoutApps"
+}
+if ('ON'.Equals($ProjectOpenSslWithoutInstallAll)) {
+    $MyCmakeCommonArgumentList += "-DOPENSSL_WITHOUT_INSTALL_ALL=$ProjectOpenSslWithoutInstallAll"
+}
+if ('ON'.Equals($ProjectOpenSslWithoutInstallFiles)) {
+    $MyCmakeCommonArgumentList += "-DOPENSSL_WITHOUT_INSTALL_FILES=$ProjectOpenSslWithoutInstallFiles"
+}
+if ('ON'.Equals($ProjectOpenSslWithoutInstallHeaders)) {
+    $MyCmakeCommonArgumentList += "-DOPENSSL_WITHOUT_INSTALL_HEADERS=$ProjectOpenSslWithoutInstallHeaders"
+}
+if ('ON'.Equals($ProjectOpenSslWithoutInstallLibraries)) {
+    $MyCmakeCommonArgumentList += "-DOPENSSL_WITHOUT_INSTALL_LIBRARIES=$ProjectOpenSslWithoutInstallLibraries"
 }
 if ('ON'.Equals($ProjectPcreWithSharedLibraries)) {
     $MyCmakeCommonArgumentList += "-DPCRE_WITH_SHARED_LIBRARIES=$ProjectPcreWithSharedLibraries"
@@ -238,6 +274,15 @@ Write-Information "[PowerShell] Component information: expat without installing 
 Write-Information "[PowerShell] Component information: expat without installing headers: $ProjectExpatWithoutInstallHeaders"
 Write-Information "[PowerShell] Component information: expat without installing libraries: $ProjectExpatWithoutInstallLibraries"
 Write-Information "[PowerShell] Component information: expat without test apps: $ProjectExpatWithoutTestApps"
+Write-Information "[PowerShell] Component information: OpenSSL with deprecated ciphers: $ProjectOpenSslWithDeprecatedCiphers"
+Write-Information "[PowerShell] Component information: OpenSSL with shared libraries: $ProjectOpenSslWithSharedLibraries"
+Write-Information "[PowerShell] Component information: OpenSSL with shared Zlib: $ProjectOpenSslWithSharedZlib"
+Write-Information "[PowerShell] Component information: OpenSSL with Zlib: $ProjectOpenSslWithZlib"
+Write-Information "[PowerShell] Component information: OpenSSL without apps: $ProjectOpenSslWithoutApps"
+Write-Information "[PowerShell] Component information: OpenSSL without installing all artifacts: $ProjectOpenSslWithoutInstallAll"
+Write-Information "[PowerShell] Component information: OpenSSL without installing files: $ProjectOpenSslWithoutInstallFiles"
+Write-Information "[PowerShell] Component information: OpenSSL without installing headers: $ProjectOpenSslWithoutInstallHeaders"
+Write-Information "[PowerShell] Component information: OpenSSL without installing libraries: $ProjectOpenSslWithoutInstallLibraries"
 Write-Information "[PowerShell] Component information: PCRE with shared libraries: $ProjectPcreWithSharedLibraries"
 Write-Information "[PowerShell] Component information: PCRE without apps: $ProjectPcreWithoutApps"
 Write-Information "[PowerShell] Component information: PCRE without installing all artifacts: $ProjectPcreWithoutInstallAll"

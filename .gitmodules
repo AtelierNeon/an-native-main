@@ -4,6 +4,9 @@
 [submodule "source/expat"]
 	path = source/expat
 	url = https://github.com/AtelierNeon/an-expat-gsm.git
+[submodule "source/openssl"]
+	path = source/openssl
+	url = https://github.com/AtelierNeon/an-openssl-gsm.git
 [submodule "source/pcre"]
 	path = source/pcre
 	url = https://github.com/AtelierNeon/an-pcre-gsm.git
