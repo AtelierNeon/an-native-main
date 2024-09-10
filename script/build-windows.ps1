@@ -61,6 +61,16 @@ $ProjectExpatWithoutInstallFiles = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_FIL
 $ProjectExpatWithoutInstallHeaders = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_HEADERS} else {'OFF'}
 $ProjectExpatWithoutInstallLibraries = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
 $ProjectExpatWithoutTestApps = if ($Env:MY_PROJECT_EXPAT_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_EXPAT_WITHOUT_TEST_APPS} else {'OFF'}
+$ProjectNetSnmpWithIpv6 = if ($Env:MY_PROJECT_NETSNMP_WITH_IPV6) {$Env:MY_PROJECT_NETSNMP_WITH_IPV6} else {'OFF'}
+$ProjectNetSnmpWithSharedLibraries = if ($Env:MY_PROJECT_NETSNMP_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_NETSNMP_WITH_SHARED_LIBRARIES} else {'OFF'}
+$ProjectNetSnmpWithSsl = if ($Env:MY_PROJECT_NETSNMP_WITH_SSL) {$Env:MY_PROJECT_NETSNMP_WITH_SSL} else {'OFF'}
+$ProjectNetSnmpWithWinExtDll = if ($Env:MY_PROJECT_NETSNMP_WITH_WINEXTDLL) {$Env:MY_PROJECT_NETSNMP_WITH_WINEXTDLL} else {'OFF'}
+$ProjectNetSnmpWithoutApps = if ($Env:MY_PROJECT_NETSNMP_WITHOUT_APPS) {$Env:MY_PROJECT_NETSNMP_WITHOUT_APPS} else {'OFF'}
+$ProjectNetSnmpWithoutInstallAll = if ($Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_ALL} else {'OFF'}
+$ProjectNetSnmpWithoutInstallFiles = if ($Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_FILES} else {'OFF'}
+$ProjectNetSnmpWithoutInstallHeaders = if ($Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_HEADERS} else {'OFF'}
+$ProjectNetSnmpWithoutInstallLibraries = if ($Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
+$ProjectNetSnmpWithoutMibLoading = if ($Env:MY_PROJECT_NETSNMP_WITHOUT_MIB_LOADING) {$Env:MY_PROJECT_NETSNMP_WITHOUT_MIB_LOADING} else {'OFF'}
 $ProjectOpenSslWithDeprecatedCiphers = if ($Env:MY_PROJECT_OPENSSL_WITH_DEPRECATED_CIPHERS) {$Env:MY_PROJECT_OPENSSL_WITH_DEPRECATED_CIPHERS} else {'OFF'}
 $ProjectOpenSslWithSharedLibraries = if ($Env:MY_PROJECT_OPENSSL_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_OPENSSL_WITH_SHARED_LIBRARIES} else {'OFF'}
 $ProjectOpenSslWithSharedZlib = if ($Env:MY_PROJECT_OPENSSL_WITH_SHARED_ZLIB) {$Env:MY_PROJECT_OPENSSL_WITH_SHARED_ZLIB} else {'OFF'}
@@ -144,6 +154,36 @@ if ('ON'.Equals($ProjectExpatWithoutInstallLibraries)) {
 }
 if ('ON'.Equals($ProjectExpatWithoutTestApps)) {
     $MyCmakeCommonArgumentList += "-DEXPAT_WITHOUT_TEST_APPS=$ProjectExpatWithoutTestApps"
+}
+if ('ON'.Equals($ProjectNetSnmpWithIpv6)) {
+    $MyCmakeCommonArgumentList += "-DNETSNMP_WITH_IPV6=$ProjectNetSnmpWithIpv6"
+}
+if ('ON'.Equals($ProjectNetSnmpWithSharedLibraries)) {
+    $MyCmakeCommonArgumentList += "-DNETSNMP_WITH_SHARED_LIBRARIES=$ProjectNetSnmpWithSharedLibraries"
+}
+if ('ON'.Equals($ProjectNetSnmpWithSsl)) {
+    $MyCmakeCommonArgumentList += "-DNETSNMP_WITH_SSL=$ProjectNetSnmpWithSsl"
+}
+if ('ON'.Equals($ProjectNetSnmpWithWinExtDll)) {
+    $MyCmakeCommonArgumentList += "-DNETSNMP_WITH_WINEXTDLL=$ProjectNetSnmpWithWinExtDll"
+}
+if ('ON'.Equals($ProjectNetSnmpWithoutApps)) {
+    $MyCmakeCommonArgumentList += "-DNETSNMP_WITHOUT_APPS=$ProjectNetSnmpWithoutApps"
+}
+if ('ON'.Equals($ProjectNetSnmpWithoutInstallAll)) {
+    $MyCmakeCommonArgumentList += "-DNETSNMP_WITHOUT_INSTALL_ALL=$ProjectNetSnmpWithoutInstallAll"
+}
+if ('ON'.Equals($ProjectNetSnmpWithoutInstallFiles)) {
+    $MyCmakeCommonArgumentList += "-DNETSNMP_WITHOUT_INSTALL_FILES=$ProjectNetSnmpWithoutInstallFiles"
+}
+if ('ON'.Equals($ProjectNetSnmpWithoutInstallHeaders)) {
+    $MyCmakeCommonArgumentList += "-DNETSNMP_WITHOUT_INSTALL_HEADERS=$ProjectNetSnmpWithoutInstallHeaders"
+}
+if ('ON'.Equals($ProjectNetSnmpWithoutInstallLibraries)) {
+    $MyCmakeCommonArgumentList += "-DNETSNMP_WITHOUT_INSTALL_LIBRARIES=$ProjectNetSnmpWithoutInstallLibraries"
+}
+if ('ON'.Equals($ProjectNetSnmpWithoutMibLoading)) {
+    $MyCmakeCommonArgumentList += "-DNETSNMP_WITHOUT_MIB_LOADING=$ProjectNetSnmpWithoutMibLoading"
 }
 if ('ON'.Equals($ProjectOpenSslWithDeprecatedCiphers)) {
     $MyCmakeCommonArgumentList += "-DOPENSSL_WITH_DEPRECATED_CIPHERS=$ProjectOpenSslWithDeprecatedCiphers"
@@ -319,6 +359,16 @@ Write-Information "[PowerShell] Component information: expat without installing 
 Write-Information "[PowerShell] Component information: expat without installing headers: $ProjectExpatWithoutInstallHeaders"
 Write-Information "[PowerShell] Component information: expat without installing libraries: $ProjectExpatWithoutInstallLibraries"
 Write-Information "[PowerShell] Component information: expat without test apps: $ProjectExpatWithoutTestApps"
+Write-Information "[PowerShell] Component information: Net-SNMP with IPv6: $ProjectNetSnmpWithIpv6"
+Write-Information "[PowerShell] Component information: Net-SNMP with shared libraries: $ProjectNetSnmpWithSharedLibraries"
+Write-Information "[PowerShell] Component information: Net-SNMP with SSL: $ProjectNetSnmpWithSsl"
+Write-Information "[PowerShell] Component information: Net-SNMP with WinExtDll: $ProjectNetSnmpWithWinExtDll"
+Write-Information "[PowerShell] Component information: Net-SNMP without apps: $ProjectNetSnmpWithoutApps"
+Write-Information "[PowerShell] Component information: Net-SNMP without installing all artifacts: $ProjectNetSnmpWithoutInstallAll"
+Write-Information "[PowerShell] Component information: Net-SNMP without installing files: $ProjectNetSnmpWithoutInstallFiles"
+Write-Information "[PowerShell] Component information: Net-SNMP without installing headers: $ProjectNetSnmpWithoutInstallHeaders"
+Write-Information "[PowerShell] Component information: Net-SNMP without installing libraries: $ProjectNetSnmpWithoutInstallLibraries"
+Write-Information "[PowerShell] Component information: Net-SNMP without MIB loading: $ProjectNetSnmpWithoutMibLoading"
 Write-Information "[PowerShell] Component information: OpenSSL with deprecated ciphers: $ProjectOpenSslWithDeprecatedCiphers"
 Write-Information "[PowerShell] Component information: OpenSSL with shared libraries: $ProjectOpenSslWithSharedLibraries"
 Write-Information "[PowerShell] Component information: OpenSSL with shared Zlib: $ProjectOpenSslWithSharedZlib"
