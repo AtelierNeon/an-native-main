@@ -52,6 +52,13 @@ $ProjectExpatWithoutInstallFiles = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_FIL
 $ProjectExpatWithoutInstallHeaders = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_HEADERS} else {'OFF'}
 $ProjectExpatWithoutInstallLibraries = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
 $ProjectExpatWithoutTestApps = if ($Env:MY_PROJECT_EXPAT_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_EXPAT_WITHOUT_TEST_APPS} else {'OFF'}
+$ProjectPcreWithSharedLibraries = if ($Env:MY_PROJECT_PCRE_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_PCRE_WITH_SHARED_LIBRARIES} else {'OFF'}
+$ProjectPcreWithoutApps = if ($Env:MY_PROJECT_PCRE_WITHOUT_APPS) {$Env:MY_PROJECT_PCRE_WITHOUT_APPS} else {'OFF'}
+$ProjectPcreWithoutInstallAll = if ($Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_ALL} else {'OFF'}
+$ProjectPcreWithoutInstallFiles = if ($Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_FILES} else {'OFF'}
+$ProjectPcreWithoutInstallHeaders = if ($Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_HEADERS} else {'OFF'}
+$ProjectPcreWithoutInstallLibraries = if ($Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
+$ProjectPcreWithoutTestApps = if ($Env:MY_PROJECT_PCRE_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_PCRE_WITHOUT_TEST_APPS} else {'OFF'}
 $ProjectSqliteWithSharedLibraries = if ($Env:MY_PROJECT_SQLITE_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_SQLITE_WITH_SHARED_LIBRARIES} else {'OFF'}
 $ProjectSqliteWithoutApps = if ($Env:MY_PROJECT_SQLITE_WITHOUT_APPS) {$Env:MY_PROJECT_SQLITE_WITHOUT_APPS} else {'OFF'}
 $ProjectSqliteWithoutInstallAll = if ($Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_ALL} else {'OFF'}
@@ -87,6 +94,27 @@ if ('ON'.Equals($ProjectExpatWithoutInstallLibraries)) {
 }
 if ('ON'.Equals($ProjectExpatWithoutTestApps)) {
     $MyCmakeCommonArgumentList += "-DEXPAT_WITHOUT_TEST_APPS=$ProjectExpatWithoutTestApps"
+}
+if ('ON'.Equals($ProjectPcreWithSharedLibraries)) {
+    $MyCmakeCommonArgumentList += "-DPCRE_WITH_SHARED_LIBRARIES=$ProjectPcreWithSharedLibraries"
+}
+if ('ON'.Equals($ProjectPcreWithoutApps)) {
+    $MyCmakeCommonArgumentList += "-DPCRE_WITHOUT_APPS=$ProjectPcreWithoutApps"
+}
+if ('ON'.Equals($ProjectPcreWithoutInstallAll)) {
+    $MyCmakeCommonArgumentList += "-DPCRE_WITHOUT_INSTALL_ALL=$ProjectPcreWithoutInstallAll"
+}
+if ('ON'.Equals($ProjectPcreWithoutInstallFiles)) {
+    $MyCmakeCommonArgumentList += "-DPCRE_WITHOUT_INSTALL_FILES=$ProjectPcreWithoutInstallFiles"
+}
+if ('ON'.Equals($ProjectPcreWithoutInstallHeaders)) {
+    $MyCmakeCommonArgumentList += "-DPCRE_WITHOUT_INSTALL_HEADERS=$ProjectPcreWithoutInstallHeaders"
+}
+if ('ON'.Equals($ProjectPcreWithoutInstallLibraries)) {
+    $MyCmakeCommonArgumentList += "-DPCRE_WITHOUT_INSTALL_LIBRARIES=$ProjectPcreWithoutInstallLibraries"
+}
+if ('ON'.Equals($ProjectPcreWithoutTestApps)) {
+    $MyCmakeCommonArgumentList += "-DPCRE_WITHOUT_TEST_APPS=$ProjectPcreWithoutTestApps"
 }
 if ('ON'.Equals($ProjectSqliteWithSharedLibraries)) {
     $MyCmakeCommonArgumentList += "-DSQLITE_WITH_SHARED_LIBRARIES=$ProjectSqliteWithSharedLibraries"
@@ -190,6 +218,13 @@ Write-Information "[PowerShell] Component information: expat without installing 
 Write-Information "[PowerShell] Component information: expat without installing headers: $ProjectExpatWithoutInstallHeaders"
 Write-Information "[PowerShell] Component information: expat without installing libraries: $ProjectExpatWithoutInstallLibraries"
 Write-Information "[PowerShell] Component information: expat without test apps: $ProjectExpatWithoutTestApps"
+Write-Information "[PowerShell] Component information: PCRE with shared libraries: $ProjectPcreWithSharedLibraries"
+Write-Information "[PowerShell] Component information: PCRE without apps: $ProjectPcreWithoutApps"
+Write-Information "[PowerShell] Component information: PCRE without installing all artifacts: $ProjectPcreWithoutInstallAll"
+Write-Information "[PowerShell] Component information: PCRE without installing files: $ProjectPcreWithoutInstallFiles"
+Write-Information "[PowerShell] Component information: PCRE without installing headers: $ProjectPcreWithoutInstallHeaders"
+Write-Information "[PowerShell] Component information: PCRE without installing libraries: $ProjectPcreWithoutInstallLibraries"
+Write-Information "[PowerShell] Component information: PCRE without test apps: $ProjectPcreWithoutTestApps"
 Write-Information "[PowerShell] Component information: SQLite with shared libraries: $ProjectSqliteWithSharedLibraries"
 Write-Information "[PowerShell] Component information: SQLite without apps: $ProjectSqliteWithoutApps"
 Write-Information "[PowerShell] Component information: SQLite without installing all artifacts: $ProjectSqliteWithoutInstallAll"

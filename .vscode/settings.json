@@ -2,8 +2,15 @@
     "cmake.buildDirectory": "${workspaceFolder}/build/vscode",
     "cmake.sourceDirectory": "${workspaceFolder}",
     "cmake.configureSettings": {
+        "CMAKE_BUILD_TYPE": "${buildType}",
         "EXPAT_WITHOUT_APPS": "OFF",
+        "EXPAT_WITHOUT_INSTALL_ALL": "ON",
         "EXPAT_WITHOUT_TEST_APPS": "OFF",
-        "SQLITE_WITHOUT_APPS": "OFF"
+        "PCRE_WITHOUT_APPS": "OFF",
+        "PCRE_WITHOUT_INSTALL_ALL": "ON",
+        "PCRE_WITHOUT_TEST_APPS": "OFF",
+        "SQLITE_WITHOUT_APPS": "OFF",
+        "SQLITE_WITHOUT_INSTALL_ALL": "ON",
+        "MY_REVISION": "9999"
     }
 }
