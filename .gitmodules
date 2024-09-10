@@ -10,3 +10,6 @@
 [submodule "source/sqlite"]
 	path = source/sqlite
 	url = https://github.com/AtelierNeon/an-sqlite-gsm.git
+[submodule "source/zlib"]
+	path = source/zlib
+	url = https://github.com/AtelierNeon/an-zlib-gsm.git
