@@ -65,6 +65,11 @@ $ProjectSqliteWithoutInstallAll = if ($Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_ALL
 $ProjectSqliteWithoutInstallFiles = if ($Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_FILES} else {'OFF'}
 $ProjectSqliteWithoutInstallHeaders = if ($Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_HEADERS} else {'OFF'}
 $ProjectSqliteWithoutInstallLibraries = if ($Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
+$ProjectZlibWithoutInstallAll = if ($Env:MY_PROJECT_ZLIB_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_ZLIB_WITHOUT_INSTALL_ALL} else {'OFF'}
+$ProjectZlibWithoutInstallFiles = if ($Env:MY_PROJECT_ZLIB_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_ZLIB_WITHOUT_INSTALL_FILES} else {'OFF'}
+$ProjectZlibWithoutInstallHeaders = if ($Env:MY_PROJECT_ZLIB_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_ZLIB_WITHOUT_INSTALL_HEADERS} else {'OFF'}
+$ProjectZlibWithoutInstallLibraries = if ($Env:MY_PROJECT_ZLIB_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_ZLIB_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
+$ProjectZlibWithoutTestApps = if ($Env:MY_PROJECT_ZLIB_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_ZLIB_WITHOUT_TEST_APPS} else {'OFF'}
 
 ##
 ## My variables
@@ -133,6 +138,21 @@ if ('ON'.Equals($ProjectSqliteWithoutInstallHeaders)) {
 }
 if ('ON'.Equals($ProjectSqliteWithoutInstallLibraries)) {
     $MyCmakeCommonArgumentList += "-DSQLITE_WITHOUT_INSTALL_LIBRARIES=$ProjectSqliteWithoutInstallLibraries"
+}
+if ('ON'.Equals($ProjectZlibWithoutInstallAll)) {
+    $MyCmakeCommonArgumentList += "-DZLIB_WITHOUT_INSTALL_ALL=$ProjectZlibWithoutInstallAll"
+}
+if ('ON'.Equals($ProjectZlibWithoutInstallFiles)) {
+    $MyCmakeCommonArgumentList += "-DZLIB_WITHOUT_INSTALL_FILES=$ProjectZlibWithoutInstallFiles"
+}
+if ('ON'.Equals($ProjectZlibWithoutInstallHeaders)) {
+    $MyCmakeCommonArgumentList += "-DZLIB_WITHOUT_INSTALL_HEADERS=$ProjectZlibWithoutInstallHeaders"
+}
+if ('ON'.Equals($ProjectZlibWithoutInstallLibraries)) {
+    $MyCmakeCommonArgumentList += "-DZLIB_WITHOUT_INSTALL_LIBRARIES=$ProjectZlibWithoutInstallLibraries"
+}
+if ('ON'.Equals($ProjectZlibWithoutTestApps)) {
+    $MyCmakeCommonArgumentList += "-DZLIB_WITHOUT_TEST_APPS=$ProjectZlibWithoutTestApps"
 }
 if ('ON'.Equals($ProjectWithSharedVcrt)) {
     $MyCmakeCommonArgumentList += "-DBUILD_WITH_SHARED_VCRT=$ProjectWithSharedVcrt"
@@ -231,6 +251,11 @@ Write-Information "[PowerShell] Component information: SQLite without installing
 Write-Information "[PowerShell] Component information: SQLite without installing files: $ProjectSqliteWithoutInstallFiles"
 Write-Information "[PowerShell] Component information: SQLite without installing headers: $ProjectSqliteWithoutInstallHeaders"
 Write-Information "[PowerShell] Component information: SQLite without installing libraries: $ProjectSqliteWithoutInstallLibraries"
+Write-Information "[PowerShell] Component information: Zlib without installing all artifacts: $ProjectZlibWithoutInstallAll"
+Write-Information "[PowerShell] Component information: Zlib without installing files: $ProjectZlibWithoutInstallFiles"
+Write-Information "[PowerShell] Component information: Zlib without installing headers: $ProjectZlibWithoutInstallHeaders"
+Write-Information "[PowerShell] Component information: Zlib without installing libraries: $ProjectZlibWithoutInstallLibraries"
+Write-Information "[PowerShell] Component information: Zlib without test apps: $ProjectZlibWithoutTestApps"
 
 
 
@@ -347,7 +372,7 @@ foreach ($MyCmakePlatform in $MyCmakePlatformList) {
             }
             $MyCmakeArgumentListString = $MyCmakeArgumentList -join " "
             Write-Verbose "[PowerShell] Building project for platform $MyCmakePlatform ... Generating project ... argument list: $MyCmakeArgumentListString"
-            $MyCmakeProcess = Start-Process -FilePath "$CmakeCli" -NoNewWindow -PassThru `
+            $MyCmakeProcess = Start-Process -FilePath "${Env:ProgramFiles}\CMake\bin\$CmakeCli" -NoNewWindow -PassThru `
                     -ArgumentList $MyCmakeArgumentListString
             $MyCmakeProcessHandle = $MyCmakeProcess.Handle
             $MyCmakeProcess.WaitForExit()

@@ -11,6 +11,8 @@
         "PCRE_WITHOUT_TEST_APPS": "OFF",
         "SQLITE_WITHOUT_APPS": "OFF",
         "SQLITE_WITHOUT_INSTALL_ALL": "ON",
+        "ZLIB_WITHOUT_INSTALL_ALL": "ON",
+        "ZLIB_WITHOUT_TEST_APPS": "ON",
         "MY_REVISION": "9999"
     }
 }
