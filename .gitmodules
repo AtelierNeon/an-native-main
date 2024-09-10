@@ -7,6 +7,9 @@
 [submodule "source/expat"]
 	path = source/expat
 	url = https://github.com/AtelierNeon/an-expat-gsm.git
+[submodule "source/net-snmp"]
+	path = source/net-snmp
+	url = https://github.com/AtelierNeon/an-net-snmp-gsm.git
 [submodule "source/openssl"]
 	path = source/openssl
 	url = https://github.com/AtelierNeon/an-openssl-gsm.git
