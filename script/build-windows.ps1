@@ -45,6 +45,12 @@ $ProjectWithWorkaroundSpectre = if ($Env:MY_PROJECT_WITH_WORKAROUND_SPECTRE) {$E
 ####
 #### Project component level config
 ####
+$ProjectBoostWithSharedLibraries = if ($Env:MY_PROJECT_BOOST_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_BOOST_WITH_SHARED_LIBRARIES} else {'OFF'}
+$ProjectBoostWithoutApps = if ($Env:MY_PROJECT_BOOST_WITHOUT_APPS) {$Env:MY_PROJECT_BOOST_WITHOUT_APPS} else {'OFF'}
+$ProjectBoostWithoutInstallAll = if ($Env:MY_PROJECT_BOOST_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_BOOST_WITHOUT_INSTALL_ALL} else {'OFF'}
+$ProjectBoostWithoutInstallFiles = if ($Env:MY_PROJECT_BOOST_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_BOOST_WITHOUT_INSTALL_FILES} else {'OFF'}
+$ProjectBoostWithoutInstallHeaders = if ($Env:MY_PROJECT_BOOST_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_BOOST_WITHOUT_INSTALL_HEADERS} else {'OFF'}
+$ProjectBoostWithoutInstallLibraries = if ($Env:MY_PROJECT_BOOST_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_BOOST_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
 $ProjectCurlWithOpenSsl = if ($Env:MY_PROJECT_CURL_WITH_OPENSSL) {$Env:MY_PROJECT_CURL_WITH_OPENSSL} else {'OFF'}
 $ProjectCurlWithSharedLibraries = if ($Env:MY_PROJECT_CURL_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_CURL_WITH_SHARED_LIBRARIES} else {'OFF'}
 $ProjectCurlWithSharedZlib = if ($Env:MY_PROJECT_CURL_WITH_SHARED_ZLIB) {$Env:MY_PROJECT_CURL_WITH_SHARED_ZLIB} else {'OFF'}
@@ -114,6 +120,24 @@ $MyCmakeCommonArgumentList = @(
         "-T $ProjectToolset",
         "-DMY_REVISION=$ProjectRevision"
 )
+if ('ON'.Equals($ProjectBoostWithSharedLibraries)) {
+    $MyCmakeCommonArgumentList += "-DBOOST_WITH_SHARED_LIBRARIES=$ProjectBoostWithSharedLibraries"
+}
+if ('ON'.Equals($ProjectBoostWithoutApps)) {
+    $MyCmakeCommonArgumentList += "-DBOOST_WITHOUT_APPS=$ProjectBoostWithoutApps"
+}
+if ('ON'.Equals($ProjectBoostWithoutInstallAll)) {
+    $MyCmakeCommonArgumentList += "-DBOOST_WITHOUT_INSTALL_ALL=$ProjectBoostWithoutInstallAll"
+}
+if ('ON'.Equals($ProjectBoostWithoutInstallFiles)) {
+    $MyCmakeCommonArgumentList += "-DBOOST_WITHOUT_INSTALL_FILES=$ProjectBoostWithoutInstallFiles"
+}
+if ('ON'.Equals($ProjectBoostWithoutInstallHeaders)) {
+    $MyCmakeCommonArgumentList += "-DBOOST_WITHOUT_INSTALL_HEADERS=$ProjectBoostWithoutInstallHeaders"
+}
+if ('ON'.Equals($ProjectBoostWithoutInstallLibraries)) {
+    $MyCmakeCommonArgumentList += "-DBOOST_WITHOUT_INSTALL_LIBRARIES=$ProjectBoostWithoutInstallLibraries"
+}
 if ('ON'.Equals($ProjectCurlWithOpenSsl)) {
     $MyCmakeCommonArgumentList += "-DCURL_WITH_OPENSSL=$ProjectCurlWithOpenSsl"
 }
@@ -371,6 +395,12 @@ Write-Information "[PowerShell] Project information: disable parallel build: $Pr
 Write-Information "[PowerShell] Project information: CMake generator: `"$MyCmakeGenerator`""
 Write-Information "[PowerShell] Project information: CMake toolset: `"$ProjectToolset`""
 Write-Information "[PowerShell] Project information: CMake platform to build: $MyCmakePlatformToBuildListString"
+Write-Information "[PowerShell] Component information: Boost with shared libraries: $ProjectBoostWithSharedLibraries"
+Write-Information "[PowerShell] Component information: Boost without apps: $ProjectBoostWithoutApps"
+Write-Information "[PowerShell] Component information: Boost without installing all artifacts: $ProjectBoostWithoutInstallAll"
+Write-Information "[PowerShell] Component information: Boost without installing files: $ProjectBoostWithoutInstallFiles"
+Write-Information "[PowerShell] Component information: Boost without installing headers: $ProjectBoostWithoutInstallHeaders"
+Write-Information "[PowerShell] Component information: Boost without installing libraries: $ProjectBoostWithoutInstallLibraries"
 Write-Information "[PowerShell] Component information: CURL wuth OpenSSL: $ProjectCurlWithOpenSsl"
 Write-Information "[PowerShell] Component information: CURL with shared libraries: $ProjectCurlWithSharedLibraries"
 Write-Information "[PowerShell] Component information: CURL with shared Zlib: $ProjectCurlWithSharedZlib"
