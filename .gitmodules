@@ -22,3 +22,6 @@
 [submodule "source/zlib"]
 	path = source/zlib
 	url = https://github.com/AtelierNeon/an-zlib-gsm.git
+[submodule "source/poco"]
+	path = source/poco
+	url = https://github.com/AtelierNeon/an-poco-gsm.git

@@ -87,6 +87,13 @@ $ProjectPcreWithoutInstallFiles = if ($Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_FILES
 $ProjectPcreWithoutInstallHeaders = if ($Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_HEADERS} else {'OFF'}
 $ProjectPcreWithoutInstallLibraries = if ($Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
 $ProjectPcreWithoutTestApps = if ($Env:MY_PROJECT_PCRE_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_PCRE_WITHOUT_TEST_APPS} else {'OFF'}
+$ProjectPocoWithSharedLibraries = if ($Env:MY_PROJECT_POCO_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_POCO_WITH_SHARED_LIBRARIES} else {'OFF'}
+$ProjectPocoWithSharedZlib = if ($Env:MY_PROJECT_POCO_WITH_SHARED_ZLIB) {$Env:MY_PROJECT_POCO_WITH_SHARED_ZLIB} else {'OFF'}
+$ProjectPocoWithoutApps = if ($Env:MY_PROJECT_POCO_WITHOUT_APPS) {$Env:MY_PROJECT_POCO_WITHOUT_APPS} else {'OFF'}
+$ProjectPocoWithoutInstallAll = if ($Env:MY_PROJECT_POCO_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_POCO_WITHOUT_INSTALL_ALL} else {'OFF'}
+$ProjectPocoWithoutInstallFiles = if ($Env:MY_PROJECT_POCO_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_POCO_WITHOUT_INSTALL_FILES} else {'OFF'}
+$ProjectPocoWithoutInstallHeaders = if ($Env:MY_PROJECT_POCO_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_POCO_WITHOUT_INSTALL_HEADERS} else {'OFF'}
+$ProjectPocoWithoutInstallLibraries = if ($Env:MY_PROJECT_POCO_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_POCO_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
 $ProjectSqliteWithSharedLibraries = if ($Env:MY_PROJECT_SQLITE_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_SQLITE_WITH_SHARED_LIBRARIES} else {'OFF'}
 $ProjectSqliteWithoutApps = if ($Env:MY_PROJECT_SQLITE_WITHOUT_APPS) {$Env:MY_PROJECT_SQLITE_WITHOUT_APPS} else {'OFF'}
 $ProjectSqliteWithoutInstallAll = if ($Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_ALL} else {'OFF'}
@@ -232,6 +239,27 @@ if ('ON'.Equals($ProjectPcreWithoutInstallLibraries)) {
 }
 if ('ON'.Equals($ProjectPcreWithoutTestApps)) {
     $MyCmakeCommonArgumentList += "-DPCRE_WITHOUT_TEST_APPS=$ProjectPcreWithoutTestApps"
+}
+if ('ON'.Equals($ProjectPocoWithSharedLibraries)) {
+    $MyCmakeCommonArgumentList += "-DPOCO_WITH_SHARED_LIBRARIES=$ProjectPocoWithSharedLibraries"
+}
+if ('ON'.Equals($ProjectPocoWithSharedZlib)) {
+    $MyCmakeCommonArgumentList += "-DPOCO_WITH_SHARED_ZLIB=$ProjectPocoWithSharedZlib"
+}
+if ('ON'.Equals($ProjectPocoWithoutApps)) {
+    $MyCmakeCommonArgumentList += "-DPOCO_WITHOUT_APPS=$ProjectPocoWithoutApps"
+}
+if ('ON'.Equals($ProjectPocoWithoutInstallAll)) {
+    $MyCmakeCommonArgumentList += "-DPOCO_WITHOUT_INSTALL_ALL=$ProjectPocoWithoutInstallAll"
+}
+if ('ON'.Equals($ProjectPocoWithoutInstallFiles)) {
+    $MyCmakeCommonArgumentList += "-DPOCO_WITHOUT_INSTALL_FILES=$ProjectPocoWithoutInstallFiles"
+}
+if ('ON'.Equals($ProjectPocoWithoutInstallHeaders)) {
+    $MyCmakeCommonArgumentList += "-DPOCO_WITHOUT_INSTALL_HEADERS=$ProjectPocoWithoutInstallHeaders"
+}
+if ('ON'.Equals($ProjectPocoWithoutInstallLibraries)) {
+    $MyCmakeCommonArgumentList += "-DPOCO_WITHOUT_INSTALL_LIBRARIES=$ProjectPocoWithoutInstallLibraries"
 }
 if ('ON'.Equals($ProjectSqliteWithSharedLibraries)) {
     $MyCmakeCommonArgumentList += "-DSQLITE_WITH_SHARED_LIBRARIES=$ProjectSqliteWithSharedLibraries"
@@ -385,6 +413,13 @@ Write-Information "[PowerShell] Component information: PCRE without installing f
 Write-Information "[PowerShell] Component information: PCRE without installing headers: $ProjectPcreWithoutInstallHeaders"
 Write-Information "[PowerShell] Component information: PCRE without installing libraries: $ProjectPcreWithoutInstallLibraries"
 Write-Information "[PowerShell] Component information: PCRE without test apps: $ProjectPcreWithoutTestApps"
+Write-Information "[PowerShell] Component information: POCO with shared libraries: $ProjectPocoWithSharedLibraries"
+Write-Information "[PowerShell] Component information: POCO with shared Zlib: $ProjectPocoWithSharedZlib"
+Write-Information "[PowerShell] Component information: POCO without apps: $ProjectPocoWithoutApps"
+Write-Information "[PowerShell] Component information: POCO without installing all artifacts: $ProjectPocoWithoutInstallAll"
+Write-Information "[PowerShell] Component information: POCO without installing files: $ProjectPocoWithoutInstallFiles"
+Write-Information "[PowerShell] Component information: POCO without installing headers: $ProjectPocoWithoutInstallHeaders"
+Write-Information "[PowerShell] Component information: POCO without installing libraries: $ProjectPocoWithoutInstallLibraries"
 Write-Information "[PowerShell] Component information: SQLite with shared libraries: $ProjectSqliteWithSharedLibraries"
 Write-Information "[PowerShell] Component information: SQLite without apps: $ProjectSqliteWithoutApps"
 Write-Information "[PowerShell] Component information: SQLite without installing all artifacts: $ProjectSqliteWithoutInstallAll"
