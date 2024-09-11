@@ -16,12 +16,12 @@
 [submodule "source/pcre"]
 	path = source/pcre
 	url = https://github.com/AtelierNeon/an-pcre-gsm.git
+[submodule "source/poco"]
+	path = source/poco
+	url = https://github.com/AtelierNeon/an-poco-gsm.git
 [submodule "source/sqlite"]
 	path = source/sqlite
 	url = https://github.com/AtelierNeon/an-sqlite-gsm.git
 [submodule "source/zlib"]
 	path = source/zlib
 	url = https://github.com/AtelierNeon/an-zlib-gsm.git
-[submodule "source/poco"]
-	path = source/poco
-	url = https://github.com/AtelierNeon/an-poco-gsm.git
