@@ -3,6 +3,8 @@
     "cmake.sourceDirectory": "${workspaceFolder}",
     "cmake.configureSettings": {
         "CMAKE_BUILD_TYPE": "${buildType}",
+        "BOOST_WITHOUT_APPS": "ON",
+        "BOOST_WITHOUT_INSTALL_ALL": "ON",
         "CURL_WITH_OPENSSL": "ON",
         "CURL_WITH_ZLIB": "ON",
         "CURL_WITHOUT_APPS": "ON",
