@@ -51,6 +51,12 @@ $ProjectBoostWithoutInstallAll = if ($Env:MY_PROJECT_BOOST_WITHOUT_INSTALL_ALL) 
 $ProjectBoostWithoutInstallFiles = if ($Env:MY_PROJECT_BOOST_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_BOOST_WITHOUT_INSTALL_FILES} else {'OFF'}
 $ProjectBoostWithoutInstallHeaders = if ($Env:MY_PROJECT_BOOST_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_BOOST_WITHOUT_INSTALL_HEADERS} else {'OFF'}
 $ProjectBoostWithoutInstallLibraries = if ($Env:MY_PROJECT_BOOST_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_BOOST_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
+$ProjectCaresWithoutApps = if ($Env:MY_PROJECT_CARES_WITHOUT_APPS) {$Env:MY_PROJECT_CARES_WITHOUT_APPS} else {'OFF'}
+$ProjectCaresWithoutInstallAll = if ($Env:MY_PROJECT_CARES_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_CARES_WITHOUT_INSTALL_ALL} else {'OFF'}
+$ProjectCaresWithoutInstallFiles = if ($Env:MY_PROJECT_CARES_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_CARES_WITHOUT_INSTALL_FILES} else {'OFF'}
+$ProjectCaresWithoutInstallHeaders = if ($Env:MY_PROJECT_CARES_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_CARES_WITHOUT_INSTALL_HEADERS} else {'OFF'}
+$ProjectCaresWithoutInstallLibraries = if ($Env:MY_PROJECT_CARES_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_CARES_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
+$ProjectCaresWithoutTestApps = if ($Env:MY_PROJECT_CARES_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_CARES_WITHOUT_TEST_APPS} else {'OFF'}
 $ProjectCurlWithOpenSsl = if ($Env:MY_PROJECT_CURL_WITH_OPENSSL) {$Env:MY_PROJECT_CURL_WITH_OPENSSL} else {'OFF'}
 $ProjectCurlWithSharedLibraries = if ($Env:MY_PROJECT_CURL_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_CURL_WITH_SHARED_LIBRARIES} else {'OFF'}
 $ProjectCurlWithSharedZlib = if ($Env:MY_PROJECT_CURL_WITH_SHARED_ZLIB) {$Env:MY_PROJECT_CURL_WITH_SHARED_ZLIB} else {'OFF'}
@@ -152,6 +158,24 @@ if ('ON'.Equals($ProjectBoostWithoutInstallHeaders)) {
 }
 if ('ON'.Equals($ProjectBoostWithoutInstallLibraries)) {
     $MyCmakeCommonArgumentList += "-DBOOST_WITHOUT_INSTALL_LIBRARIES=$ProjectBoostWithoutInstallLibraries"
+}
+if ('ON'.Equals($ProjectCaresWithoutApps)) {
+    $MyCmakeCommonArgumentList += "-DCARES_WITHOUT_APPS=$ProjectCaresWithoutApps"
+}
+if ('ON'.Equals($ProjectCaresWithoutInstallAll)) {
+    $MyCmakeCommonArgumentList += "-DCARES_WITHOUT_INSTALL_ALL=$ProjectCaresWithoutInstallAll"
+}
+if ('ON'.Equals($ProjectCaresWithoutInstallFiles)) {
+    $MyCmakeCommonArgumentList += "-DCARES_WITHOUT_INSTALL_FILES=$ProjectCaresWithoutInstallFiles"
+}
+if ('ON'.Equals($ProjectCaresWithoutInstallHeaders)) {
+    $MyCmakeCommonArgumentList += "-DCARES_WITHOUT_INSTALL_HEADERS=$ProjectCaresWithoutInstallHeaders"
+}
+if ('ON'.Equals($ProjectCaresWithoutInstallLibraries)) {
+    $MyCmakeCommonArgumentList += "-DCARES_WITHOUT_INSTALL_LIBRARIES=$ProjectCaresWithoutInstallLibraries"
+}
+if ('ON'.Equals($ProjectCaresWithoutTestApps)) {
+    $MyCmakeCommonArgumentList += "-DCARES_WITHOUT_TEST_APPS=$ProjectCaresWithoutTestApps"
 }
 if ('ON'.Equals($ProjectCurlWithOpenSsl)) {
     $MyCmakeCommonArgumentList += "-DCURL_WITH_OPENSSL=$ProjectCurlWithOpenSsl"
@@ -461,6 +485,12 @@ Write-Information "[PowerShell] Component information: Boost without installing 
 Write-Information "[PowerShell] Component information: Boost without installing files: $ProjectBoostWithoutInstallFiles"
 Write-Information "[PowerShell] Component information: Boost without installing headers: $ProjectBoostWithoutInstallHeaders"
 Write-Information "[PowerShell] Component information: Boost without installing libraries: $ProjectBoostWithoutInstallLibraries"
+Write-Information "[PowerShell] Component information: c-ares without apps: $ProjectCaresWithoutApps"
+Write-Information "[PowerShell] Component information: c-ares without installing all artifacts: $ProjectCaresWithoutInstallAll"
+Write-Information "[PowerShell] Component information: c-ares without installing files: $ProjectCaresWithoutInstallFiles"
+Write-Information "[PowerShell] Component information: c-ares without installing headers: $ProjectCaresWithoutInstallHeaders"
+Write-Information "[PowerShell] Component information: c-ares without installing libraries: $ProjectCaresWithoutInstallLibraries"
+Write-Information "[PowerShell] Component information: c-ares without test apps: $ProjectCaresWithoutTestApps"
 Write-Information "[PowerShell] Component information: CURL wuth OpenSSL: $ProjectCurlWithOpenSsl"
 Write-Information "[PowerShell] Component information: CURL with shared libraries: $ProjectCurlWithSharedLibraries"
 Write-Information "[PowerShell] Component information: CURL with shared Zlib: $ProjectCurlWithSharedZlib"
