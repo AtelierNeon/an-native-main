@@ -57,6 +57,11 @@ $ProjectCaresWithoutInstallFiles = if ($Env:MY_PROJECT_CARES_WITHOUT_INSTALL_FIL
 $ProjectCaresWithoutInstallHeaders = if ($Env:MY_PROJECT_CARES_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_CARES_WITHOUT_INSTALL_HEADERS} else {'OFF'}
 $ProjectCaresWithoutInstallLibraries = if ($Env:MY_PROJECT_CARES_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_CARES_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
 $ProjectCaresWithoutTestApps = if ($Env:MY_PROJECT_CARES_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_CARES_WITHOUT_TEST_APPS} else {'OFF'}
+$ProjectCjsonWithoutInstallAll = if ($Env:MY_PROJECT_CJSON_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_CJSON_WITHOUT_INSTALL_ALL} else {'OFF'}
+$ProjectCjsonWithoutInstallFiles = if ($Env:MY_PROJECT_CJSON_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_CJSON_WITHOUT_INSTALL_FILES} else {'OFF'}
+$ProjectCjsonWithoutInstallHeaders = if ($Env:MY_PROJECT_CJSON_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_CJSON_WITHOUT_INSTALL_HEADERS} else {'OFF'}
+$ProjectCjsonWithoutInstallLibraries = if ($Env:MY_PROJECT_CJSON_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_CJSON_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
+$ProjectCjsonWithoutTestApps = if ($Env:MY_PROJECT_CJSON_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_CJSON_WITHOUT_TEST_APPS} else {'OFF'}
 $ProjectCurlWithOpenSsl = if ($Env:MY_PROJECT_CURL_WITH_OPENSSL) {$Env:MY_PROJECT_CURL_WITH_OPENSSL} else {'OFF'}
 $ProjectCurlWithSharedLibraries = if ($Env:MY_PROJECT_CURL_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_CURL_WITH_SHARED_LIBRARIES} else {'OFF'}
 $ProjectCurlWithSharedZlib = if ($Env:MY_PROJECT_CURL_WITH_SHARED_ZLIB) {$Env:MY_PROJECT_CURL_WITH_SHARED_ZLIB} else {'OFF'}
@@ -176,6 +181,21 @@ if ('ON'.Equals($ProjectCaresWithoutInstallLibraries)) {
 }
 if ('ON'.Equals($ProjectCaresWithoutTestApps)) {
     $MyCmakeCommonArgumentList += "-DCARES_WITHOUT_TEST_APPS=$ProjectCaresWithoutTestApps"
+}
+if ('ON'.Equals($ProjectCjsonWithoutInstallAll)) {
+    $MyCmakeCommonArgumentList += "-DCJSON_WITHOUT_INSTALL_ALL=$ProjectCjsonWithoutInstallAll"
+}
+if ('ON'.Equals($ProjectCjsonWithoutInstallFiles)) {
+    $MyCmakeCommonArgumentList += "-DCJSON_WITHOUT_INSTALL_FILES=$ProjectCjsonWithoutInstallFiles"
+}
+if ('ON'.Equals($ProjectCjsonWithoutInstallHeaders)) {
+    $MyCmakeCommonArgumentList += "-DCJSON_WITHOUT_INSTALL_HEADERS=$ProjectCjsonWithoutInstallHeaders"
+}
+if ('ON'.Equals($ProjectCjsonWithoutInstallLibraries)) {
+    $MyCmakeCommonArgumentList += "-DCJSON_WITHOUT_INSTALL_LIBRARIES=$ProjectCjsonWithoutInstallLibraries"
+}
+if ('ON'.Equals($ProjectCjsonWithoutTestApps)) {
+    $MyCmakeCommonArgumentList += "-DCJSON_WITHOUT_TEST_APPS=$ProjectCjsonWithoutTestApps"
 }
 if ('ON'.Equals($ProjectCurlWithOpenSsl)) {
     $MyCmakeCommonArgumentList += "-DCURL_WITH_OPENSSL=$ProjectCurlWithOpenSsl"
@@ -491,6 +511,11 @@ Write-Information "[PowerShell] Component information: c-ares without installing
 Write-Information "[PowerShell] Component information: c-ares without installing headers: $ProjectCaresWithoutInstallHeaders"
 Write-Information "[PowerShell] Component information: c-ares without installing libraries: $ProjectCaresWithoutInstallLibraries"
 Write-Information "[PowerShell] Component information: c-ares without test apps: $ProjectCaresWithoutTestApps"
+Write-Information "[PowerShell] Component information: cJSON without installing all artifacts: $ProjectCjsonWithoutInstallAll"
+Write-Information "[PowerShell] Component information: cJSON without installing files: $ProjectCjsonWithoutInstallFiles"
+Write-Information "[PowerShell] Component information: cJSON without installing headers: $ProjectCjsonWithoutInstallHeaders"
+Write-Information "[PowerShell] Component information: cJSON without installing libraries: $ProjectCjsonWithoutInstallLibraries"
+Write-Information "[PowerShell] Component information: cJSON without test apps: $ProjectCjsonWithoutTestApps"
 Write-Information "[PowerShell] Component information: CURL wuth OpenSSL: $ProjectCurlWithOpenSsl"
 Write-Information "[PowerShell] Component information: CURL with shared libraries: $ProjectCurlWithSharedLibraries"
 Write-Information "[PowerShell] Component information: CURL with shared Zlib: $ProjectCurlWithSharedZlib"

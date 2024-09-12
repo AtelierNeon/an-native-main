@@ -29,6 +29,7 @@ endif ()
 ## Process sub-components
 add_subdirectory (source/boost)
 add_subdirectory (source/c-ares)
+add_subdirectory (source/cjson)
 add_subdirectory (source/curl)
 add_subdirectory (source/expat)
 add_subdirectory (source/net-snmp)

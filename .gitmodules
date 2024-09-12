@@ -4,6 +4,9 @@
 [submodule "source/c-ares"]
 	path = source/c-ares
 	url = https://github.com/AtelierNeon/an-c-ares-gsm.git
+[submodule "source/cjson"]
+	path = source/cjson
+	url = https://github.com/AtelierNeon/an-cjson-gsm.git
 [submodule "source/cmake-modules"]
 	path = source/cmake-modules
 	url = https://github.com/AtelierNeon/an-cmake-modules-gsm.git
