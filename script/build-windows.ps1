@@ -78,6 +78,12 @@ $ProjectExpatWithoutInstallFiles = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_FIL
 $ProjectExpatWithoutInstallHeaders = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_HEADERS} else {'OFF'}
 $ProjectExpatWithoutInstallLibraries = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
 $ProjectExpatWithoutTestApps = if ($Env:MY_PROJECT_EXPAT_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_EXPAT_WITHOUT_TEST_APPS} else {'OFF'}
+$ProjectLibWebSocketsWithExternalPoll = if ($Env:MY_PROJECT_LIBWEBSOCKETS_WITH_EXTERNAL_POLL) {$Env:MY_PROJECT_LIBWEBSOCKETS_WITH_EXTERNAL_POLL} else {'OFF'}
+$ProjectLibWebSocketsWithoutInstallAll = if ($Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_ALL} else {'OFF'}
+$ProjectLibWebSocketsWithoutInstallFiles = if ($Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_FILES} else {'OFF'}
+$ProjectLibWebSocketsWithoutInstallHeaders = if ($Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_HEADERS} else {'OFF'}
+$ProjectLibWebSocketsWithoutInstallLibraries = if ($Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
+$ProjectLibWebSocketsWithoutTestApps = if ($Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_TEST_APPS} else {'OFF'}
 $ProjectNetSnmpWithIpv6 = if ($Env:MY_PROJECT_NETSNMP_WITH_IPV6) {$Env:MY_PROJECT_NETSNMP_WITH_IPV6} else {'OFF'}
 $ProjectNetSnmpWithSharedLibraries = if ($Env:MY_PROJECT_NETSNMP_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_NETSNMP_WITH_SHARED_LIBRARIES} else {'OFF'}
 $ProjectNetSnmpWithSsl = if ($Env:MY_PROJECT_NETSNMP_WITH_SSL) {$Env:MY_PROJECT_NETSNMP_WITH_SSL} else {'OFF'}
@@ -244,6 +250,24 @@ if ('ON'.Equals($ProjectExpatWithoutInstallLibraries)) {
 }
 if ('ON'.Equals($ProjectExpatWithoutTestApps)) {
     $MyCmakeCommonArgumentList += "-DEXPAT_WITHOUT_TEST_APPS=$ProjectExpatWithoutTestApps"
+}
+if ('ON'.Equals($ProjectLibWebSocketsWithExternalPoll)) {
+    $MyCmakeCommonArgumentList += "-DLIBWEBSOCKETS_WITH_EXTERNAL_POLL=$ProjectLibWebSocketsWithExternalPoll"
+}
+if ('ON'.Equals($ProjectLibWebSocketsWithoutInstallAll)) {
+    $MyCmakeCommonArgumentList += "-DLIBWEBSOCKETS_WITHOUT_INSTALL_ALL=$ProjectLibWebSocketsWithoutInstallAll"
+}
+if ('ON'.Equals($ProjectLibWebSocketsWithoutInstallFiles)) {
+    $MyCmakeCommonArgumentList += "-DLIBWEBSOCKETS_WITHOUT_INSTALL_FILES=$ProjectLibWebSocketsWithoutInstallFiles"
+}
+if ('ON'.Equals($ProjectLibWebSocketsWithoutInstallHeaders)) {
+    $MyCmakeCommonArgumentList += "-DLIBWEBSOCKETS_WITHOUT_INSTALL_HEADERS=$ProjectLibWebSocketsWithoutInstallHeaders"
+}
+if ('ON'.Equals($ProjectLibWebSocketsWithoutInstallLibraries)) {
+    $MyCmakeCommonArgumentList += "-DLIBWEBSOCKETS_WITHOUT_INSTALL_LIBRARIES=$ProjectLibWebSocketsWithoutInstallLibraries"
+}
+if ('ON'.Equals($ProjectLibWebSocketsWithoutTestApps)) {
+    $MyCmakeCommonArgumentList += "-DLIBWEBSOCKETS_WITHOUT_TEST_APPS=$ProjectLibWebSocketsWithoutTestApps"
 }
 if ('ON'.Equals($ProjectNetSnmpWithIpv6)) {
     $MyCmakeCommonArgumentList += "-DNETSNMP_WITH_IPV6=$ProjectNetSnmpWithIpv6"
@@ -532,6 +556,12 @@ Write-Information "[PowerShell] Component information: expat without installing 
 Write-Information "[PowerShell] Component information: expat without installing headers: $ProjectExpatWithoutInstallHeaders"
 Write-Information "[PowerShell] Component information: expat without installing libraries: $ProjectExpatWithoutInstallLibraries"
 Write-Information "[PowerShell] Component information: expat without test apps: $ProjectExpatWithoutTestApps"
+Write-Information "[PowerShell] Component information: libwebsockets with external poll: $ProjectLibWebSocketsWithExternalPoll"
+Write-Information "[PowerShell] Component information: libwebsockets without installing all artifacts: $ProjectLibWebSocketsWithoutInstallAll"
+Write-Information "[PowerShell] Component information: libwebsockets without installing files: $ProjectLibWebSocketsWithoutInstallFiles"
+Write-Information "[PowerShell] Component information: libwebsockets without installing headers: $ProjectLibWebSocketsWithoutInstallHeaders"
+Write-Information "[PowerShell] Component information: libwebsockets without installing libraries: $ProjectLibWebSocketsWithoutInstallLibraries"
+Write-Information "[PowerShell] Component information: libwebsockets without test apps: $ProjectLibWebSocketsWithoutTestApps"
 Write-Information "[PowerShell] Component information: Net-SNMP with IPv6: $ProjectNetSnmpWithIpv6"
 Write-Information "[PowerShell] Component information: Net-SNMP with shared libraries: $ProjectNetSnmpWithSharedLibraries"
 Write-Information "[PowerShell] Component information: Net-SNMP with SSL: $ProjectNetSnmpWithSsl"
