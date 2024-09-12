@@ -1,6 +1,9 @@
 [submodule "source/boost"]
 	path = source/boost
 	url = https://github.com/AtelierNeon/an-boost-gsm.git
+[submodule "source/c-ares"]
+	path = source/c-ares
+	url = https://github.com/AtelierNeon/an-c-ares-gsm.git
 [submodule "source/cmake-modules"]
 	path = source/cmake-modules
 	url = https://github.com/AtelierNeon/an-cmake-modules-gsm.git
