@@ -30,6 +30,35 @@
             }
         },
         {
+            "name": "(Linux / MacOS) Launch paho-mqtt-c/test/test1-static",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/vscode/source/paho-mqtt-c/test/test1-static",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${fileDirname}",
+            "environment": [],
+            "externalConsole": false,
+            "linux": {
+                "MIMode": "gdb",
+                "setupCommands": [
+                    {
+                        "description": "Enable pretty-printing for gdb",
+                        "text": "-enable-pretty-printing",
+                        "ignoreFailures": true
+                    },
+                    {
+                        "description": "Set Disassembly Flavor to Intel",
+                        "text": "-gdb-set disassembly-flavor intel",
+                        "ignoreFailures": true
+                    }
+                ]
+            },
+            "osx": {
+                "MIMode": "lldb"
+            }
+        },
+        {
             "name": "(Linux / MacOS) Launch pcre/pcretest",
             "type": "cppdbg",
             "request": "launch",
@@ -156,6 +185,17 @@
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/vscode/source/expat/tests/${command:cmake.buildType}/runtests.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${fileDirname}",
+            "environment": [],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "(Windows) Launch paho-mqtt-c/test/test1-static",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/vscode/source/paho-mqtt-c/test/${command:cmake.buildType}/test1-static.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
