@@ -86,6 +86,13 @@ $ProjectOpenSslWithoutInstallAll = if ($Env:MY_PROJECT_OPENSSL_WITHOUT_INSTALL_A
 $ProjectOpenSslWithoutInstallFiles = if ($Env:MY_PROJECT_OPENSSL_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_OPENSSL_WITHOUT_INSTALL_FILES} else {'OFF'}
 $ProjectOpenSslWithoutInstallHeaders = if ($Env:MY_PROJECT_OPENSSL_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_OPENSSL_WITHOUT_INSTALL_HEADERS} else {'OFF'}
 $ProjectOpenSslWithoutInstallLibraries = if ($Env:MY_PROJECT_OPENSSL_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_OPENSSL_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
+$ProjectPahoWithOpenSsl = if ($Env:MY_PROJECT_PAHO_WITH_OPENSSL) {$Env:MY_PROJECT_PAHO_WITH_OPENSSL} else {'OFF'}
+$ProjectPahoWithSharedLibraries = if ($Env:MY_PROJECT_PAHO_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_PAHO_WITH_SHARED_LIBRARIES} else {'OFF'}
+$ProjectPahoWithoutInstallAll = if ($Env:MY_PROJECT_PAHO_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_PAHO_WITHOUT_INSTALL_ALL} else {'OFF'}
+$ProjectPahoWithoutInstallFiles = if ($Env:MY_PROJECT_PAHO_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_PAHO_WITHOUT_INSTALL_FILES} else {'OFF'}
+$ProjectPahoWithoutInstallHeaders = if ($Env:MY_PROJECT_PAHO_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_PAHO_WITHOUT_INSTALL_HEADERS} else {'OFF'}
+$ProjectPahoWithoutInstallLibraries = if ($Env:MY_PROJECT_PAHO_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_PAHO_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
+$ProjectPahoWithoutTestApps = if ($Env:MY_PROJECT_PAHO_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_PAHO_WITHOUT_TEST_APPS} else {'OFF'}
 $ProjectPcreWithSharedLibraries = if ($Env:MY_PROJECT_PCRE_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_PCRE_WITH_SHARED_LIBRARIES} else {'OFF'}
 $ProjectPcreWithoutApps = if ($Env:MY_PROJECT_PCRE_WITHOUT_APPS) {$Env:MY_PROJECT_PCRE_WITHOUT_APPS} else {'OFF'}
 $ProjectPcreWithoutInstallAll = if ($Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_ALL} else {'OFF'}
@@ -242,6 +249,27 @@ if ('ON'.Equals($ProjectOpenSslWithoutInstallHeaders)) {
 }
 if ('ON'.Equals($ProjectOpenSslWithoutInstallLibraries)) {
     $MyCmakeCommonArgumentList += "-DOPENSSL_WITHOUT_INSTALL_LIBRARIES=$ProjectOpenSslWithoutInstallLibraries"
+}
+if ('ON'.Equals($ProjectPahoWithOpenSsl)) {
+    $MyCmakeCommonArgumentList += "-DPAHO_WITH_OPENSSL=$ProjectPahoWithOpenSsl"
+}
+if ('ON'.Equals($ProjectPahoWithSharedLibraries)) {
+    $MyCmakeCommonArgumentList += "-DPAHO_WITH_SHARED_LIBRARIES=$ProjectPahoWithSharedLibraries"
+}
+if ('ON'.Equals($ProjectPahoWithoutInstallAll)) {
+    $MyCmakeCommonArgumentList += "-DPAHO_WITHOUT_INSTALL_ALL=$ProjectPahoWithoutInstallAll"
+}
+if ('ON'.Equals($ProjectPahoWithoutInstallFiles)) {
+    $MyCmakeCommonArgumentList += "-DPAHO_WITHOUT_INSTALL_FILES=$ProjectPahoWithoutInstallFiles"
+}
+if ('ON'.Equals($ProjectPahoWithoutInstallHeaders)) {
+    $MyCmakeCommonArgumentList += "-DPAHO_WITHOUT_INSTALL_HEADERS=$ProjectPahoWithoutInstallHeaders"
+}
+if ('ON'.Equals($ProjectPahoWithoutInstallLibraries)) {
+    $MyCmakeCommonArgumentList += "-DPAHO_WITHOUT_INSTALL_LIBRARIES=$ProjectPahoWithoutInstallLibraries"
+}
+if ('ON'.Equals($ProjectPahoWithoutTestApps)) {
+    $MyCmakeCommonArgumentList += "-DPAHO_WITHOUT_TEST_APPS=$ProjectPahoWithoutTestApps"
 }
 if ('ON'.Equals($ProjectPcreWithSharedLibraries)) {
     $MyCmakeCommonArgumentList += "-DPCRE_WITH_SHARED_LIBRARIES=$ProjectPcreWithSharedLibraries"
@@ -436,6 +464,13 @@ Write-Information "[PowerShell] Component information: OpenSSL without installin
 Write-Information "[PowerShell] Component information: OpenSSL without installing files: $ProjectOpenSslWithoutInstallFiles"
 Write-Information "[PowerShell] Component information: OpenSSL without installing headers: $ProjectOpenSslWithoutInstallHeaders"
 Write-Information "[PowerShell] Component information: OpenSSL without installing libraries: $ProjectOpenSslWithoutInstallLibraries"
+Write-Information "[PowerShell] Component information: Eclipse Paho with OpenSSL: $ProjectPahoWithOpenSsl"
+Write-Information "[PowerShell] Component information: Eclipse Paho with shared libraries: $ProjectPahoWithSharedLibraries"
+Write-Information "[PowerShell] Component information: Eclipse Paho without installing all artifacts: $ProjectPahoWithoutInstallAll"
+Write-Information "[PowerShell] Component information: Eclipse Paho without installing files: $ProjectPahoWithoutInstallFiles"
+Write-Information "[PowerShell] Component information: Eclipse Paho without installing headers: $ProjectPahoWithoutInstallHeaders"
+Write-Information "[PowerShell] Component information: Eclipse Paho without installing libraries: $ProjectPahoWithoutInstallLibraries"
+Write-Information "[PowerShell] Component information: Eclipse Paho without test apps: $ProjectPahoWithoutTestApps"
 Write-Information "[PowerShell] Component information: PCRE with shared libraries: $ProjectPcreWithSharedLibraries"
 Write-Information "[PowerShell] Component information: PCRE without apps: $ProjectPcreWithoutApps"
 Write-Information "[PowerShell] Component information: PCRE without installing all artifacts: $ProjectPcreWithoutInstallAll"

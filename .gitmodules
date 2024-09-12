@@ -16,6 +16,9 @@
 [submodule "source/openssl"]
 	path = source/openssl
 	url = https://github.com/AtelierNeon/an-openssl-gsm.git
+[submodule "source/paho-mqtt-c"]
+	path = source/paho-mqtt-c
+	url = https://github.com/AtelierNeon/an-paho-mqtt-c-gsm.git
 [submodule "source/pcre"]
 	path = source/pcre
 	url = https://github.com/AtelierNeon/an-pcre-gsm.git
