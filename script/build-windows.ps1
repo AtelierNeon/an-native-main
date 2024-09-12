@@ -107,6 +107,14 @@ $ProjectPocoWithoutInstallAll = if ($Env:MY_PROJECT_POCO_WITHOUT_INSTALL_ALL) {$
 $ProjectPocoWithoutInstallFiles = if ($Env:MY_PROJECT_POCO_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_POCO_WITHOUT_INSTALL_FILES} else {'OFF'}
 $ProjectPocoWithoutInstallHeaders = if ($Env:MY_PROJECT_POCO_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_POCO_WITHOUT_INSTALL_HEADERS} else {'OFF'}
 $ProjectPocoWithoutInstallLibraries = if ($Env:MY_PROJECT_POCO_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_POCO_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
+$ProjectProtoBufWithSharedLibraries = if ($Env:MY_PROJECT_PROTOBUF_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_PROTOBUF_WITH_SHARED_LIBRARIES} else {'OFF'}
+$ProjectProtoBufWithSharedZlib = if ($Env:MY_PROJECT_PROTOBUF_WITH_SHARED_ZLIB) {$Env:MY_PROJECT_PROTOBUF_WITH_SHARED_ZLIB} else {'OFF'}
+$ProjectProtoBufWithZlib = if ($Env:MY_PROJECT_PROTOBUF_WITH_ZLIB) {$Env:MY_PROJECT_PROTOBUF_WITH_ZLIB} else {'OFF'}
+$ProjectProtoBufWithoutInstallAll = if ($Env:MY_PROJECT_PROTOBUF_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_PROTOBUF_WITHOUT_INSTALL_ALL} else {'OFF'}
+$ProjectProtoBufWithoutInstallFiles = if ($Env:MY_PROJECT_PROTOBUF_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_PROTOBUF_WITHOUT_INSTALL_FILES} else {'OFF'}
+$ProjectProtoBufWithoutInstallHeaders = if ($Env:MY_PROJECT_PROTOBUF_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_PROTOBUF_WITHOUT_INSTALL_HEADERS} else {'OFF'}
+$ProjectProtoBufWithoutInstallLibraries = if ($Env:MY_PROJECT_PROTOBUF_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_PROTOBUF_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
+$ProjectProtoBufWithoutTestApps = if ($Env:MY_PROJECT_PROTOBUF_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_PROTOBUF_WITHOUT_TEST_APPS} else {'OFF'}
 $ProjectSqliteWithSharedLibraries = if ($Env:MY_PROJECT_SQLITE_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_SQLITE_WITH_SHARED_LIBRARIES} else {'OFF'}
 $ProjectSqliteWithoutApps = if ($Env:MY_PROJECT_SQLITE_WITHOUT_APPS) {$Env:MY_PROJECT_SQLITE_WITHOUT_APPS} else {'OFF'}
 $ProjectSqliteWithoutInstallAll = if ($Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_ALL} else {'OFF'}
@@ -313,6 +321,30 @@ if ('ON'.Equals($ProjectPocoWithoutInstallHeaders)) {
 if ('ON'.Equals($ProjectPocoWithoutInstallLibraries)) {
     $MyCmakeCommonArgumentList += "-DPOCO_WITHOUT_INSTALL_LIBRARIES=$ProjectPocoWithoutInstallLibraries"
 }
+if ('ON'.Equals($ProjectProtoBufWithSharedLibraries)) {
+    $MyCmakeCommonArgumentList += "-DPROTOBUF_WITH_SHARED_LIBRARIES=$ProjectProtoBufWithSharedLibraries"
+}
+if ('ON'.Equals($ProjectProtoBufWithSharedZlib)) {
+    $MyCmakeCommonArgumentList += "-DPROTOBUF_WITH_SHARED_ZLIB=$ProjectProtoBufWithSharedZlib"
+}
+if ('ON'.Equals($ProjectProtoBufWithZlib)) {
+    $MyCmakeCommonArgumentList += "-DPROTOBUF_WITH_ZLIB=$ProjectProtoBufWithZlib"
+}
+if ('ON'.Equals($ProjectProtoBufWithoutInstallAll)) {
+    $MyCmakeCommonArgumentList += "-DPROTOBUF_WITHOUT_INSTALL_ALL=$ProjectProtoBufWithoutInstallAll"
+}
+if ('ON'.Equals($ProjectProtoBufWithoutInstallFiles)) {
+    $MyCmakeCommonArgumentList += "-DPROTOBUF_WITHOUT_INSTALL_FILES=$ProjectProtoBufWithoutInstallFiles"
+}
+if ('ON'.Equals($ProjectProtoBufWithoutInstallHeaders)) {
+    $MyCmakeCommonArgumentList += "-DPROTOBUF_WITHOUT_INSTALL_HEADERS=$ProjectProtoBufWithoutInstallHeaders"
+}
+if ('ON'.Equals($ProjectProtoBufWithoutInstallLibraries)) {
+    $MyCmakeCommonArgumentList += "-DPROTOBUF_WITHOUT_INSTALL_LIBRARIES=$ProjectProtoBufWithoutInstallLibraries"
+}
+if ('ON'.Equals($ProjectProtoBufWithoutTestApps)) {
+    $MyCmakeCommonArgumentList += "-DPROTOBUF_WITHOUT_TEST_APPS=$ProjectProtoBufWithoutTestApps"
+}
 if ('ON'.Equals($ProjectSqliteWithSharedLibraries)) {
     $MyCmakeCommonArgumentList += "-DSQLITE_WITH_SHARED_LIBRARIES=$ProjectSqliteWithSharedLibraries"
 }
@@ -485,6 +517,14 @@ Write-Information "[PowerShell] Component information: POCO without installing a
 Write-Information "[PowerShell] Component information: POCO without installing files: $ProjectPocoWithoutInstallFiles"
 Write-Information "[PowerShell] Component information: POCO without installing headers: $ProjectPocoWithoutInstallHeaders"
 Write-Information "[PowerShell] Component information: POCO without installing libraries: $ProjectPocoWithoutInstallLibraries"
+Write-Information "[PowerShell] Component information: Protocol Buffer with shared libraries: $ProjectProtoBufWithSharedLibraries"
+Write-Information "[PowerShell] Component information: Protocol Buffer with shared Zlib: $ProjectProtoBufWithSharedZlib"
+Write-Information "[PowerShell] Component information: Protocol Buffer with Zlib: $ProjectProtoBufWithZlib"
+Write-Information "[PowerShell] Component information: Protocol Buffer without installing all artifacts: $ProjectProtoBufWithoutInstallAll"
+Write-Information "[PowerShell] Component information: Protocol Buffer without installing files: $ProjectProtoBufWithoutInstallFiles"
+Write-Information "[PowerShell] Component information: Protocol Buffer without installing headers: $ProjectProtoBufWithoutInstallHeaders"
+Write-Information "[PowerShell] Component information: Protocol Buffer without installing libraries: $ProjectProtoBufWithoutInstallLibraries"
+Write-Information "[PowerShell] Component information: Protocol Buffer without test apps: $ProjectProtoBufWithoutTestApps"
 Write-Information "[PowerShell] Component information: SQLite with shared libraries: $ProjectSqliteWithSharedLibraries"
 Write-Information "[PowerShell] Component information: SQLite without apps: $ProjectSqliteWithoutApps"
 Write-Information "[PowerShell] Component information: SQLite without installing all artifacts: $ProjectSqliteWithoutInstallAll"

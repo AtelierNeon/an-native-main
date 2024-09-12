@@ -88,6 +88,35 @@
             }
         },
         {
+            "name": "(Linux / MacOS) Launch protobuf/cmake/tests",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/vscode/source/protobuf/cmake/tests",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${fileDirname}",
+            "environment": [],
+            "externalConsole": false,
+            "linux": {
+                "MIMode": "gdb",
+                "setupCommands": [
+                    {
+                        "description": "Enable pretty-printing for gdb",
+                        "text": "-enable-pretty-printing",
+                        "ignoreFailures": true
+                    },
+                    {
+                        "description": "Set Disassembly Flavor to Intel",
+                        "text": "-gdb-set disassembly-flavor intel",
+                        "ignoreFailures": true
+                    }
+                ]
+            },
+            "osx": {
+                "MIMode": "lldb"
+            }
+        },
+        {
             "name": "(Linux / MacOS) Launch sqlite/sqlite3",
             "type": "cppdbg",
             "request": "launch",
@@ -207,6 +236,17 @@
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/vscode/source/pcre/${command:cmake.buildType}/pcretest.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${fileDirname}",
+            "environment": [],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "(Windows) Launch protobuf/cmake/tests",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/vscode/source/protobuf/cmake/${command:cmake.buildType}/tests.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
