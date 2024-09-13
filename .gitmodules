@@ -16,12 +16,18 @@
 [submodule "source/expat"]
 	path = source/expat
 	url = https://github.com/AtelierNeon/an-expat-gsm.git
+[submodule "source/libssh2"]
+	path = source/libssh2
+	url = https://github.com/AtelierNeon/an-libssh2-gsm.git
 [submodule "source/libwebsockets"]
 	path = source/libwebsockets
 	url = https://github.com/AtelierNeon/an-libwebsockets-gsm.git
 [submodule "source/net-snmp"]
 	path = source/net-snmp
 	url = https://github.com/AtelierNeon/an-net-snmp-gsm.git
+[submodule "source/nghttp2"]
+	path = source/nghttp2
+	url = https://github.com/AtelierNeon/an-nghttp2-gsm.git
 [submodule "source/openssl"]
 	path = source/openssl
 	url = https://github.com/AtelierNeon/an-openssl-gsm.git

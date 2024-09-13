@@ -78,6 +78,14 @@ $ProjectExpatWithoutInstallFiles = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_FIL
 $ProjectExpatWithoutInstallHeaders = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_HEADERS} else {'OFF'}
 $ProjectExpatWithoutInstallLibraries = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
 $ProjectExpatWithoutTestApps = if ($Env:MY_PROJECT_EXPAT_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_EXPAT_WITHOUT_TEST_APPS} else {'OFF'}
+$ProjectLibSsh2WithSharedLibraries = if ($Env:MY_PROJECT_LIBSSH2_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_LIBSSH2_WITH_SHARED_LIBRARIES} else {'OFF'}
+$ProjectLibSsh2WithSharedZlib = if ($Env:MY_PROJECT_LIBSSH2_WITH_SHARED_ZLIB) {$Env:MY_PROJECT_LIBSSH2_WITH_SHARED_ZLIB} else {'OFF'}
+$ProjectLibSsh2WithZlib = if ($Env:MY_PROJECT_LIBSSH2_WITH_ZLIB) {$Env:MY_PROJECT_LIBSSH2_WITH_ZLIB} else {'OFF'}
+$ProjectLibSsh2WithoutInstallAll = if ($Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_ALL} else {'OFF'}
+$ProjectLibSsh2WithoutInstallFiles = if ($Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_FILES} else {'OFF'}
+$ProjectLibSsh2WithoutInstallHeaders = if ($Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_HEADERS} else {'OFF'}
+$ProjectLibSsh2WithoutInstallLibraries = if ($Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
+$ProjectLibSsh2WithoutTestApps = if ($Env:MY_PROJECT_LIBSSH2_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_LIBSSH2_WITHOUT_TEST_APPS} else {'OFF'}
 $ProjectLibWebSocketsWithExternalPoll = if ($Env:MY_PROJECT_LIBWEBSOCKETS_WITH_EXTERNAL_POLL) {$Env:MY_PROJECT_LIBWEBSOCKETS_WITH_EXTERNAL_POLL} else {'OFF'}
 $ProjectLibWebSocketsWithoutInstallAll = if ($Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_ALL} else {'OFF'}
 $ProjectLibWebSocketsWithoutInstallFiles = if ($Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_FILES} else {'OFF'}
@@ -94,6 +102,11 @@ $ProjectNetSnmpWithoutInstallFiles = if ($Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL
 $ProjectNetSnmpWithoutInstallHeaders = if ($Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_HEADERS} else {'OFF'}
 $ProjectNetSnmpWithoutInstallLibraries = if ($Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
 $ProjectNetSnmpWithoutMibLoading = if ($Env:MY_PROJECT_NETSNMP_WITHOUT_MIB_LOADING) {$Env:MY_PROJECT_NETSNMP_WITHOUT_MIB_LOADING} else {'OFF'}
+$ProjectNgHttp2WithoutInstallAll = if ($Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_ALL} else {'OFF'}
+$ProjectNgHttp2WithoutInstallFiles = if ($Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_FILES} else {'OFF'}
+$ProjectNgHttp2WithoutInstallHeaders = if ($Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_HEADERS} else {'OFF'}
+$ProjectNgHttp2WithoutInstallLibraries = if ($Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
+$ProjectNgHttp2WithoutTestApps = if ($Env:MY_PROJECT_NGHTTP2_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_NGHTTP2_WITHOUT_TEST_APPS} else {'OFF'}
 $ProjectOpenSslWithDeprecatedCiphers = if ($Env:MY_PROJECT_OPENSSL_WITH_DEPRECATED_CIPHERS) {$Env:MY_PROJECT_OPENSSL_WITH_DEPRECATED_CIPHERS} else {'OFF'}
 $ProjectOpenSslWithSharedLibraries = if ($Env:MY_PROJECT_OPENSSL_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_OPENSSL_WITH_SHARED_LIBRARIES} else {'OFF'}
 $ProjectOpenSslWithSharedZlib = if ($Env:MY_PROJECT_OPENSSL_WITH_SHARED_ZLIB) {$Env:MY_PROJECT_OPENSSL_WITH_SHARED_ZLIB} else {'OFF'}
@@ -251,6 +264,30 @@ if ('ON'.Equals($ProjectExpatWithoutInstallLibraries)) {
 if ('ON'.Equals($ProjectExpatWithoutTestApps)) {
     $MyCmakeCommonArgumentList += "-DEXPAT_WITHOUT_TEST_APPS=$ProjectExpatWithoutTestApps"
 }
+if ('ON'.Equals($ProjectLibSsh2WithSharedLibraries)) {
+    $MyCmakeCommonArgumentList += "-DLIBSSH2_WITH_SHARED_LIBRARIES=$ProjectLibSsh2WithSharedLibraries"
+}
+if ('ON'.Equals($ProjectLibSsh2WithSharedZlib)) {
+    $MyCmakeCommonArgumentList += "-DLIBSSH2_WITH_SHARED_ZLIB=$ProjectLibSsh2WithSharedZlib"
+}
+if ('ON'.Equals($ProjectLibSsh2WithZlib)) {
+    $MyCmakeCommonArgumentList += "-DLIBSSH2_WITH_ZLIB=$ProjectLibSsh2WithZlib"
+}
+if ('ON'.Equals($ProjectLibSsh2WithoutInstallAll)) {
+    $MyCmakeCommonArgumentList += "-DLIBSSH2_WITHOUT_INSTALL_ALL=$ProjectLibSsh2WithoutInstallAll"
+}
+if ('ON'.Equals($ProjectLibSsh2WithoutInstallFiles)) {
+    $MyCmakeCommonArgumentList += "-DLIBSSH2_WITHOUT_INSTALL_FILES=$ProjectLibSsh2WithoutInstallFiles"
+}
+if ('ON'.Equals($ProjectLibSsh2WithoutInstallHeaders)) {
+    $MyCmakeCommonArgumentList += "-DLIBSSH2_WITHOUT_INSTALL_HEADERS=$ProjectLibSsh2WithoutInstallHeaders"
+}
+if ('ON'.Equals($ProjectLibSsh2WithoutInstallLibraries)) {
+    $MyCmakeCommonArgumentList += "-DLIBSSH2_WITHOUT_INSTALL_LIBRARIES=$ProjectLibSsh2WithoutInstallLibraries"
+}
+if ('ON'.Equals($ProjectLibSsh2WithoutTestApps)) {
+    $MyCmakeCommonArgumentList += "-DLIBSSH2_WITHOUT_TEST_APPS=$ProjectLibSsh2WithoutTestApps"
+}
 if ('ON'.Equals($ProjectLibWebSocketsWithExternalPoll)) {
     $MyCmakeCommonArgumentList += "-DLIBWEBSOCKETS_WITH_EXTERNAL_POLL=$ProjectLibWebSocketsWithExternalPoll"
 }
@@ -298,6 +335,21 @@ if ('ON'.Equals($ProjectNetSnmpWithoutInstallLibraries)) {
 }
 if ('ON'.Equals($ProjectNetSnmpWithoutMibLoading)) {
     $MyCmakeCommonArgumentList += "-DNETSNMP_WITHOUT_MIB_LOADING=$ProjectNetSnmpWithoutMibLoading"
+}
+if ('ON'.Equals($ProjectNgHttp2WithoutInstallAll)) {
+    $MyCmakeCommonArgumentList += "-DNGHTTP2_WITHOUT_INSTALL_ALL=$ProjectNgHttp2WithoutInstallAll"
+}
+if ('ON'.Equals($ProjectNgHttp2WithoutInstallFiles)) {
+    $MyCmakeCommonArgumentList += "-DNGHTTP2_WITHOUT_INSTALL_FILES=$ProjectNgHttp2WithoutInstallFiles"
+}
+if ('ON'.Equals($ProjectNgHttp2WithoutInstallHeaders)) {
+    $MyCmakeCommonArgumentList += "-DNGHTTP2_WITHOUT_INSTALL_HEADERS=$ProjectNgHttp2WithoutInstallHeaders"
+}
+if ('ON'.Equals($ProjectNgHttp2WithoutInstallLibraries)) {
+    $MyCmakeCommonArgumentList += "-DNGHTTP2_WITHOUT_INSTALL_LIBRARIES=$ProjectNgHttp2WithoutInstallLibraries"
+}
+if ('ON'.Equals($ProjectNgHttp2WithoutTestApps)) {
+    $MyCmakeCommonArgumentList += "-DNGHTTP2_WITHOUT_TEST_APPS=$ProjectNgHttp2WithoutTestApps"
 }
 if ('ON'.Equals($ProjectOpenSslWithDeprecatedCiphers)) {
     $MyCmakeCommonArgumentList += "-DOPENSSL_WITH_DEPRECATED_CIPHERS=$ProjectOpenSslWithDeprecatedCiphers"
@@ -556,6 +608,14 @@ Write-Information "[PowerShell] Component information: expat without installing 
 Write-Information "[PowerShell] Component information: expat without installing headers: $ProjectExpatWithoutInstallHeaders"
 Write-Information "[PowerShell] Component information: expat without installing libraries: $ProjectExpatWithoutInstallLibraries"
 Write-Information "[PowerShell] Component information: expat without test apps: $ProjectExpatWithoutTestApps"
+Write-Information "[PowerShell] Component information: libssh2 with shared libraries: $ProjectLibSsh2WithSharedLibraries"
+Write-Information "[PowerShell] Component information: libssh2 with shared Zlib: $ProjectLibSsh2WithSharedZlib"
+Write-Information "[PowerShell] Component information: libssh2 with Zlib: $ProjectLibSsh2WithZlib"
+Write-Information "[PowerShell] Component information: libssh2 without installing all artifacts: $ProjectLibSsh2WithoutInstallAll"
+Write-Information "[PowerShell] Component information: libssh2 without installing files: $ProjectLibSsh2WithoutInstallFiles"
+Write-Information "[PowerShell] Component information: libssh2 without installing headers: $ProjectLibSsh2WithoutInstallHeaders"
+Write-Information "[PowerShell] Component information: libssh2 without installing libraries: $ProjectLibSsh2WithoutInstallLibraries"
+Write-Information "[PowerShell] Component information: libssh2 without test apps: $ProjectLibSsh2WithoutTestApps"
 Write-Information "[PowerShell] Component information: libwebsockets with external poll: $ProjectLibWebSocketsWithExternalPoll"
 Write-Information "[PowerShell] Component information: libwebsockets without installing all artifacts: $ProjectLibWebSocketsWithoutInstallAll"
 Write-Information "[PowerShell] Component information: libwebsockets without installing files: $ProjectLibWebSocketsWithoutInstallFiles"
@@ -572,6 +632,11 @@ Write-Information "[PowerShell] Component information: Net-SNMP without installi
 Write-Information "[PowerShell] Component information: Net-SNMP without installing headers: $ProjectNetSnmpWithoutInstallHeaders"
 Write-Information "[PowerShell] Component information: Net-SNMP without installing libraries: $ProjectNetSnmpWithoutInstallLibraries"
 Write-Information "[PowerShell] Component information: Net-SNMP without MIB loading: $ProjectNetSnmpWithoutMibLoading"
+Write-Information "[PowerShell] Component information: nghttp2 without installing all artifacts: $ProjectNgHttp2WithoutInstallAll"
+Write-Information "[PowerShell] Component information: nghttp2 without installing files: $ProjectNgHttp2WithoutInstallFiles"
+Write-Information "[PowerShell] Component information: nghttp2 without installing headers: $ProjectNgHttp2WithoutInstallHeaders"
+Write-Information "[PowerShell] Component information: nghttp2 without installing libraries: $ProjectNgHttp2WithoutInstallLibraries"
+Write-Information "[PowerShell] Component information: nghttp2 without test apps: $ProjectNgHttp2WithoutTestApps"
 Write-Information "[PowerShell] Component information: OpenSSL with deprecated ciphers: $ProjectOpenSslWithDeprecatedCiphers"
 Write-Information "[PowerShell] Component information: OpenSSL with shared libraries: $ProjectOpenSslWithSharedLibraries"
 Write-Information "[PowerShell] Component information: OpenSSL with shared Zlib: $ProjectOpenSslWithSharedZlib"
