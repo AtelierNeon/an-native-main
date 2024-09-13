@@ -22,6 +22,9 @@
 [submodule "source/net-snmp"]
 	path = source/net-snmp
 	url = https://github.com/AtelierNeon/an-net-snmp-gsm.git
+[submodule "source/nghttp2"]
+	path = source/nghttp2
+	url = https://github.com/AtelierNeon/an-nghttp2-gsm.git
 [submodule "source/openssl"]
 	path = source/openssl
 	url = https://github.com/AtelierNeon/an-openssl-gsm.git

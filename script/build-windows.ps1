@@ -94,6 +94,11 @@ $ProjectNetSnmpWithoutInstallFiles = if ($Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL
 $ProjectNetSnmpWithoutInstallHeaders = if ($Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_HEADERS} else {'OFF'}
 $ProjectNetSnmpWithoutInstallLibraries = if ($Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
 $ProjectNetSnmpWithoutMibLoading = if ($Env:MY_PROJECT_NETSNMP_WITHOUT_MIB_LOADING) {$Env:MY_PROJECT_NETSNMP_WITHOUT_MIB_LOADING} else {'OFF'}
+$ProjectNgHttp2WithoutInstallAll = if ($Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_ALL} else {'OFF'}
+$ProjectNgHttp2WithoutInstallFiles = if ($Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_FILES} else {'OFF'}
+$ProjectNgHttp2WithoutInstallHeaders = if ($Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_HEADERS} else {'OFF'}
+$ProjectNgHttp2WithoutInstallLibraries = if ($Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
+$ProjectNgHttp2WithoutTestApps = if ($Env:MY_PROJECT_NGHTTP2_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_NGHTTP2_WITHOUT_TEST_APPS} else {'OFF'}
 $ProjectOpenSslWithDeprecatedCiphers = if ($Env:MY_PROJECT_OPENSSL_WITH_DEPRECATED_CIPHERS) {$Env:MY_PROJECT_OPENSSL_WITH_DEPRECATED_CIPHERS} else {'OFF'}
 $ProjectOpenSslWithSharedLibraries = if ($Env:MY_PROJECT_OPENSSL_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_OPENSSL_WITH_SHARED_LIBRARIES} else {'OFF'}
 $ProjectOpenSslWithSharedZlib = if ($Env:MY_PROJECT_OPENSSL_WITH_SHARED_ZLIB) {$Env:MY_PROJECT_OPENSSL_WITH_SHARED_ZLIB} else {'OFF'}
@@ -298,6 +303,21 @@ if ('ON'.Equals($ProjectNetSnmpWithoutInstallLibraries)) {
 }
 if ('ON'.Equals($ProjectNetSnmpWithoutMibLoading)) {
     $MyCmakeCommonArgumentList += "-DNETSNMP_WITHOUT_MIB_LOADING=$ProjectNetSnmpWithoutMibLoading"
+}
+if ('ON'.Equals($ProjectNgHttp2WithoutInstallAll)) {
+    $MyCmakeCommonArgumentList += "-DNGHTTP2_WITHOUT_INSTALL_ALL=$ProjectNgHttp2WithoutInstallAll"
+}
+if ('ON'.Equals($ProjectNgHttp2WithoutInstallFiles)) {
+    $MyCmakeCommonArgumentList += "-DNGHTTP2_WITHOUT_INSTALL_FILES=$ProjectNgHttp2WithoutInstallFiles"
+}
+if ('ON'.Equals($ProjectNgHttp2WithoutInstallHeaders)) {
+    $MyCmakeCommonArgumentList += "-DNGHTTP2_WITHOUT_INSTALL_HEADERS=$ProjectNgHttp2WithoutInstallHeaders"
+}
+if ('ON'.Equals($ProjectNgHttp2WithoutInstallLibraries)) {
+    $MyCmakeCommonArgumentList += "-DNGHTTP2_WITHOUT_INSTALL_LIBRARIES=$ProjectNgHttp2WithoutInstallLibraries"
+}
+if ('ON'.Equals($ProjectNgHttp2WithoutTestApps)) {
+    $MyCmakeCommonArgumentList += "-DNGHTTP2_WITHOUT_TEST_APPS=$ProjectNgHttp2WithoutTestApps"
 }
 if ('ON'.Equals($ProjectOpenSslWithDeprecatedCiphers)) {
     $MyCmakeCommonArgumentList += "-DOPENSSL_WITH_DEPRECATED_CIPHERS=$ProjectOpenSslWithDeprecatedCiphers"
@@ -572,6 +592,11 @@ Write-Information "[PowerShell] Component information: Net-SNMP without installi
 Write-Information "[PowerShell] Component information: Net-SNMP without installing headers: $ProjectNetSnmpWithoutInstallHeaders"
 Write-Information "[PowerShell] Component information: Net-SNMP without installing libraries: $ProjectNetSnmpWithoutInstallLibraries"
 Write-Information "[PowerShell] Component information: Net-SNMP without MIB loading: $ProjectNetSnmpWithoutMibLoading"
+Write-Information "[PowerShell] Component information: nghttp2 without installing all artifacts: $ProjectNgHttp2WithoutInstallAll"
+Write-Information "[PowerShell] Component information: nghttp2 without installing files: $ProjectNgHttp2WithoutInstallFiles"
+Write-Information "[PowerShell] Component information: nghttp2 without installing headers: $ProjectNgHttp2WithoutInstallHeaders"
+Write-Information "[PowerShell] Component information: nghttp2 without installing libraries: $ProjectNgHttp2WithoutInstallLibraries"
+Write-Information "[PowerShell] Component information: nghttp2 without test apps: $ProjectNgHttp2WithoutTestApps"
 Write-Information "[PowerShell] Component information: OpenSSL with deprecated ciphers: $ProjectOpenSslWithDeprecatedCiphers"
 Write-Information "[PowerShell] Component information: OpenSSL with shared libraries: $ProjectOpenSslWithSharedLibraries"
 Write-Information "[PowerShell] Component information: OpenSSL with shared Zlib: $ProjectOpenSslWithSharedZlib"
