@@ -78,6 +78,14 @@ $ProjectExpatWithoutInstallFiles = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_FIL
 $ProjectExpatWithoutInstallHeaders = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_HEADERS} else {'OFF'}
 $ProjectExpatWithoutInstallLibraries = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
 $ProjectExpatWithoutTestApps = if ($Env:MY_PROJECT_EXPAT_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_EXPAT_WITHOUT_TEST_APPS} else {'OFF'}
+$ProjectLibSsh2WithSharedLibraries = if ($Env:MY_PROJECT_LIBSSH2_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_LIBSSH2_WITH_SHARED_LIBRARIES} else {'OFF'}
+$ProjectLibSsh2WithSharedZlib = if ($Env:MY_PROJECT_LIBSSH2_WITH_SHARED_ZLIB) {$Env:MY_PROJECT_LIBSSH2_WITH_SHARED_ZLIB} else {'OFF'}
+$ProjectLibSsh2WithZlib = if ($Env:MY_PROJECT_LIBSSH2_WITH_ZLIB) {$Env:MY_PROJECT_LIBSSH2_WITH_ZLIB} else {'OFF'}
+$ProjectLibSsh2WithoutInstallAll = if ($Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_ALL} else {'OFF'}
+$ProjectLibSsh2WithoutInstallFiles = if ($Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_FILES} else {'OFF'}
+$ProjectLibSsh2WithoutInstallHeaders = if ($Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_HEADERS} else {'OFF'}
+$ProjectLibSsh2WithoutInstallLibraries = if ($Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
+$ProjectLibSsh2WithoutTestApps = if ($Env:MY_PROJECT_LIBSSH2_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_LIBSSH2_WITHOUT_TEST_APPS} else {'OFF'}
 $ProjectLibWebSocketsWithExternalPoll = if ($Env:MY_PROJECT_LIBWEBSOCKETS_WITH_EXTERNAL_POLL) {$Env:MY_PROJECT_LIBWEBSOCKETS_WITH_EXTERNAL_POLL} else {'OFF'}
 $ProjectLibWebSocketsWithoutInstallAll = if ($Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_ALL} else {'OFF'}
 $ProjectLibWebSocketsWithoutInstallFiles = if ($Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_FILES} else {'OFF'}
@@ -255,6 +263,30 @@ if ('ON'.Equals($ProjectExpatWithoutInstallLibraries)) {
 }
 if ('ON'.Equals($ProjectExpatWithoutTestApps)) {
     $MyCmakeCommonArgumentList += "-DEXPAT_WITHOUT_TEST_APPS=$ProjectExpatWithoutTestApps"
+}
+if ('ON'.Equals($ProjectLibSsh2WithSharedLibraries)) {
+    $MyCmakeCommonArgumentList += "-DLIBSSH2_WITH_SHARED_LIBRARIES=$ProjectLibSsh2WithSharedLibraries"
+}
+if ('ON'.Equals($ProjectLibSsh2WithSharedZlib)) {
+    $MyCmakeCommonArgumentList += "-DLIBSSH2_WITH_SHARED_ZLIB=$ProjectLibSsh2WithSharedZlib"
+}
+if ('ON'.Equals($ProjectLibSsh2WithZlib)) {
+    $MyCmakeCommonArgumentList += "-DLIBSSH2_WITH_ZLIB=$ProjectLibSsh2WithZlib"
+}
+if ('ON'.Equals($ProjectLibSsh2WithoutInstallAll)) {
+    $MyCmakeCommonArgumentList += "-DLIBSSH2_WITHOUT_INSTALL_ALL=$ProjectLibSsh2WithoutInstallAll"
+}
+if ('ON'.Equals($ProjectLibSsh2WithoutInstallFiles)) {
+    $MyCmakeCommonArgumentList += "-DLIBSSH2_WITHOUT_INSTALL_FILES=$ProjectLibSsh2WithoutInstallFiles"
+}
+if ('ON'.Equals($ProjectLibSsh2WithoutInstallHeaders)) {
+    $MyCmakeCommonArgumentList += "-DLIBSSH2_WITHOUT_INSTALL_HEADERS=$ProjectLibSsh2WithoutInstallHeaders"
+}
+if ('ON'.Equals($ProjectLibSsh2WithoutInstallLibraries)) {
+    $MyCmakeCommonArgumentList += "-DLIBSSH2_WITHOUT_INSTALL_LIBRARIES=$ProjectLibSsh2WithoutInstallLibraries"
+}
+if ('ON'.Equals($ProjectLibSsh2WithoutTestApps)) {
+    $MyCmakeCommonArgumentList += "-DLIBSSH2_WITHOUT_TEST_APPS=$ProjectLibSsh2WithoutTestApps"
 }
 if ('ON'.Equals($ProjectLibWebSocketsWithExternalPoll)) {
     $MyCmakeCommonArgumentList += "-DLIBWEBSOCKETS_WITH_EXTERNAL_POLL=$ProjectLibWebSocketsWithExternalPoll"
@@ -576,6 +608,14 @@ Write-Information "[PowerShell] Component information: expat without installing 
 Write-Information "[PowerShell] Component information: expat without installing headers: $ProjectExpatWithoutInstallHeaders"
 Write-Information "[PowerShell] Component information: expat without installing libraries: $ProjectExpatWithoutInstallLibraries"
 Write-Information "[PowerShell] Component information: expat without test apps: $ProjectExpatWithoutTestApps"
+Write-Information "[PowerShell] Component information: libssh2 with shared libraries: $ProjectLibSsh2WithSharedLibraries"
+Write-Information "[PowerShell] Component information: libssh2 with shared Zlib: $ProjectLibSsh2WithSharedZlib"
+Write-Information "[PowerShell] Component information: libssh2 with Zlib: $ProjectLibSsh2WithZlib"
+Write-Information "[PowerShell] Component information: libssh2 without installing all artifacts: $ProjectLibSsh2WithoutInstallAll"
+Write-Information "[PowerShell] Component information: libssh2 without installing files: $ProjectLibSsh2WithoutInstallFiles"
+Write-Information "[PowerShell] Component information: libssh2 without installing headers: $ProjectLibSsh2WithoutInstallHeaders"
+Write-Information "[PowerShell] Component information: libssh2 without installing libraries: $ProjectLibSsh2WithoutInstallLibraries"
+Write-Information "[PowerShell] Component information: libssh2 without test apps: $ProjectLibSsh2WithoutTestApps"
 Write-Information "[PowerShell] Component information: libwebsockets with external poll: $ProjectLibWebSocketsWithExternalPoll"
 Write-Information "[PowerShell] Component information: libwebsockets without installing all artifacts: $ProjectLibWebSocketsWithoutInstallAll"
 Write-Information "[PowerShell] Component information: libwebsockets without installing files: $ProjectLibWebSocketsWithoutInstallFiles"
