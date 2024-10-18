@@ -168,7 +168,8 @@ $ProjectZlibWithoutTestApps = if ($Env:MY_PROJECT_ZLIB_WITHOUT_TEST_APPS) {$Env:
 $MyCmakeCommonArgumentList = @(
         "-S $SourceFolder",
         "-T $ProjectToolset",
-        "-DMY_REVISION=$ProjectRevision"
+        "-DMY_REVISION=$ProjectRevision",
+        "-DCMAKE_BUILD_TYPE=$ProjectReleaseType"
 )
 if ('ON'.Equals($ProjectBoostWithSharedLibraries)) {
     $MyCmakeCommonArgumentList += "-DBOOST_WITH_SHARED_LIBRARIES=$ProjectBoostWithSharedLibraries"
