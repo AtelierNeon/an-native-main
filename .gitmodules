@@ -43,6 +43,9 @@
 [submodule "source/protobuf"]
 	path = source/protobuf
 	url = https://github.com/AtelierNeon/an-protobuf-gsm.git
+[submodule "source/pthreads4w"]
+	path = source/pthreads4w
+	url = https://github.com/AtelierNeon/an-pthreads4w-gsm.git
 [submodule "source/sqlite"]
 	path = source/sqlite
 	url = https://github.com/AtelierNeon/an-sqlite-gsm.git

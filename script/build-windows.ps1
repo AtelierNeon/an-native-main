@@ -145,6 +145,11 @@ $ProjectProtoBufWithoutInstallFiles = if ($Env:MY_PROJECT_PROTOBUF_WITHOUT_INSTA
 $ProjectProtoBufWithoutInstallHeaders = if ($Env:MY_PROJECT_PROTOBUF_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_PROTOBUF_WITHOUT_INSTALL_HEADERS} else {'OFF'}
 $ProjectProtoBufWithoutInstallLibraries = if ($Env:MY_PROJECT_PROTOBUF_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_PROTOBUF_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
 $ProjectProtoBufWithoutTestApps = if ($Env:MY_PROJECT_PROTOBUF_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_PROTOBUF_WITHOUT_TEST_APPS} else {'OFF'}
+$ProjectPthreads4wWithoutInstallAll = if ($Env:MY_PROJECT_PTHREADS4W_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_PTHREADS4W_WITHOUT_INSTALL_ALL} else {'OFF'}
+$ProjectPthreads4wWithoutInstallFiles = if ($Env:MY_PROJECT_PTHREADS4W_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_PTHREADS4W_WITHOUT_INSTALL_FILES} else {'OFF'}
+$ProjectPthreads4wWithoutInstallHeaders = if ($Env:MY_PROJECT_PTHREADS4W_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_PTHREADS4W_WITHOUT_INSTALL_HEADERS} else {'OFF'}
+$ProjectPthreads4wWithoutInstallLibraries = if ($Env:MY_PROJECT_PTHREADS4W_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_PTHREADS4W_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
+$ProjectPthreads4wWithoutTestApps = if ($Env:MY_PROJECT_PTHREADS4W_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_PTHREADS4W_WITHOUT_TEST_APPS} else {'OFF'}
 $ProjectSqliteWithSharedLibraries = if ($Env:MY_PROJECT_SQLITE_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_SQLITE_WITH_SHARED_LIBRARIES} else {'OFF'}
 $ProjectSqliteWithoutApps = if ($Env:MY_PROJECT_SQLITE_WITHOUT_APPS) {$Env:MY_PROJECT_SQLITE_WITHOUT_APPS} else {'OFF'}
 $ProjectSqliteWithoutInstallAll = if ($Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_ALL} else {'OFF'}
@@ -465,6 +470,21 @@ if ('ON'.Equals($ProjectProtoBufWithoutInstallLibraries)) {
 if ('ON'.Equals($ProjectProtoBufWithoutTestApps)) {
     $MyCmakeCommonArgumentList += "-DPROTOBUF_WITHOUT_TEST_APPS=$ProjectProtoBufWithoutTestApps"
 }
+if ('ON'.Equals($ProjectPthreads4wWithoutInstallAll)) {
+    $MyCmakeCommonArgumentList += "-DPTHREADS4W_WITHOUT_INSTALL_ALL=$ProjectPthreads4wWithoutInstallAll"
+}
+if ('ON'.Equals($ProjectPthreads4wWithoutInstallFiles)) {
+    $MyCmakeCommonArgumentList += "-DPTHREADS4W_WITHOUT_INSTALL_FILES=$ProjectPthreads4wWithoutInstallFiles"
+}
+if ('ON'.Equals($ProjectPthreads4wWithoutInstallHeaders)) {
+    $MyCmakeCommonArgumentList += "-DPTHREADS4W_WITHOUT_INSTALL_HEADERS=$ProjectPthreads4wWithoutInstallHeaders"
+}
+if ('ON'.Equals($ProjectPthreads4wWithoutInstallLibraries)) {
+    $MyCmakeCommonArgumentList += "-DPTHREADS4W_WITHOUT_INSTALL_LIBRARIES=$ProjectPthreads4wWithoutInstallLibraries"
+}
+if ('ON'.Equals($ProjectPthreads4wWithoutTestApps)) {
+    $MyCmakeCommonArgumentList += "-DPTHREADS4W_WITHOUT_TEST_APPS=$ProjectPthreads4wWithoutTestApps"
+}
 if ('ON'.Equals($ProjectSqliteWithSharedLibraries)) {
     $MyCmakeCommonArgumentList += "-DSQLITE_WITH_SHARED_LIBRARIES=$ProjectSqliteWithSharedLibraries"
 }
@@ -675,6 +695,11 @@ Write-Information "[PowerShell] Component information: Protocol Buffer without i
 Write-Information "[PowerShell] Component information: Protocol Buffer without installing headers: $ProjectProtoBufWithoutInstallHeaders"
 Write-Information "[PowerShell] Component information: Protocol Buffer without installing libraries: $ProjectProtoBufWithoutInstallLibraries"
 Write-Information "[PowerShell] Component information: Protocol Buffer without test apps: $ProjectProtoBufWithoutTestApps"
+Write-Information "[PowerShell] Component information: PThreads4W without installing all artifacts: $ProjectPthreads4wWithoutInstallAll"
+Write-Information "[PowerShell] Component information: PThreads4W without installing files: $ProjectPthreads4wWithoutInstallFiles"
+Write-Information "[PowerShell] Component information: PThreads4W without installing headers: $ProjectPthreads4wWithoutInstallHeaders"
+Write-Information "[PowerShell] Component information: PThreads4W without installing libraries: $ProjectPthreads4wWithoutInstallLibraries"
+Write-Information "[PowerShell] Component information: PThreads4W without test apps: $ProjectPthreads4wWithoutTestApps"
 Write-Information "[PowerShell] Component information: SQLite with shared libraries: $ProjectSqliteWithSharedLibraries"
 Write-Information "[PowerShell] Component information: SQLite without apps: $ProjectSqliteWithoutApps"
 Write-Information "[PowerShell] Component information: SQLite without installing all artifacts: $ProjectSqliteWithoutInstallAll"
