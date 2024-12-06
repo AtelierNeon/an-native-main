@@ -869,7 +869,7 @@ if [ "$MY_PROJECT_PROTOC_CLI_DETECTED" = "false" ] ; then
     echo "[$SYSTEM_PLATFORM] Detecting Project Protoc ... Creating temp path ... DONE"
 
     ## Restore Project Protoc - Download archive file
-    MY_PROTOC_ARCHIVE_NAME="${PROTOC_VER_ARCH_TO_ARCHIVE_NAME_MAP["${PROJECT_PROTOC_VERSION}_${SYSTEM_ARCHITECTURE}"]}"
+    MY_PROTOC_ARCHIVE_NAME="${PROTOC_VER_ARCH_TO_ARCHIVE_NAME_MAP[${PROJECT_PROTOC_VERSION}_${SYSTEM_ARCHITECTURE}]}"
     MY_PROTOC_ARCHIVE_URL="https://github.com/protocolbuffers/protobuf/releases/download/v${PROJECT_PROTOC_VERSION}/${MY_PROTOC_ARCHIVE_NAME}"
     echo "[$SYSTEM_PLATFORM] Detecting Project Protoc ... Downloading archive file from $MY_PROTOC_ARCHIVE_URL ..."
     $CURL_CLI -Ls --output $MY_PROTOC_TEMP_PATH/$MY_PROTOC_ARCHIVE_NAME $MY_PROTOC_ARCHIVE_URL
