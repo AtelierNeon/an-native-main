@@ -10,6 +10,7 @@
         "CARES_WITHOUT_INSTALL_ALL": "ON",
         "CARES_WITHOUT_TEST_APPS": "ON",
         "CJSON_WITHOUT_INSTALL_ALL": "ON",
+        "CJSON_WITHOUT_TEST_APPS": "ON",
         "CMAKE_BUILD_TYPE": "${buildType}",
         "CURL_WITH_OPENSSL": "ON",
         "CURL_WITH_ZLIB": "ON",
