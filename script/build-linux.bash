@@ -4,15 +4,29 @@
 ## Global config
 ##
 CMAKE_CLI=cmake
+CURL_CLI=/usr/bin/curl
 DIRNAME_CLI=/usr/bin/dirname
+MKTEMP_CLI=/bin/mktemp
+PROTOC_CLI=protoc
 PWD_CLI=/bin/pwd
 UNAME_CLI=/bin/uname
+UNZIP_CLI=/usr/bin/unzip
 declare -A GCC_ARCH_TO_ABI_MAP=(
         ["aarch64"]="gnu"
         ["arm"]="gnueabihf"
         ["x86_64"]="gnu"
 )
+declare -A GCC_ARCH_TO_STRIP_CLI_MAP=(
+        ["aarch64"]="aarch64-linux-gnu-strip"
+        ["arm"]="arm-linux-gnueabihf-strip"
+        ["x86_64"]="x86_64-linux-gnu-strip"
+)
+declare -A PROTOC_VER_ARCH_TO_ARCHIVE_NAME_MAP=(
+        ["3.9.1_aarch64"]="protoc-3.9.1-linux-aarch_64.zip"
+        ["3.9.1_x86_64"]="protoc-3.9.1-linux-x86_64.zip"
+)
 SCRIPT_DIR=$(cd -- "$(${DIRNAME_CLI} "${BASH_SOURCE[0]:-${(%):-%x}}")" &> /dev/null && ${PWD_CLI})
+SYSTEM_ARCHITECTURE=$($UNAME_CLI -m)
 SYSTEM_PLATFORM=$($UNAME_CLI)
 PROJECT_DIR=$SCRIPT_DIR/..
 SOURCE_DIR=$PROJECT_DIR
@@ -31,6 +45,7 @@ PROJECT_GCC_C_COMPILER_NAME="${MY_PROJECT_GCC_C_COMPILER_NAME:=gcc-11}"
 PROJECT_GCC_CXX_COMPILER_NAME="${MY_PROJECT_GCC_CXX_COMPILER_NAME:=g++-11}"
 PROJECT_GCC_LD_NAME="${MY_PROJECT_GCC_LD_NAME:=ld}"
 PROJECT_GCC_OS_NAME="${MY_PROJECT_GCC_OS_NAME:=linux}"
+PROJECT_PROTOC_VERSION="${MY_PROJECT_PROTOC_VERSION:=3.9.1}"
 PROJECT_RELEASE_TYPE="${MY_PROJECT_RELEASE_TYPE:=Debug}"
 PROJECT_REVISION="${BUILD_NUMBER:=9999}"
 PROJECT_SHOULD_DISABLE_CLEAN_BUILD="${MY_PROJECT_SHOULD_DISABLE_CLEAN_BUILD:=OFF}"
@@ -39,6 +54,8 @@ PROJECT_SHOULD_DISABLE_32BIT_BUILD="${MY_PROJECT_SHOULD_DISABLE_32BIT_BUILD:=OFF
 PROJECT_SHOULD_DISABLE_64BIT_BUILD="${MY_PROJECT_SHOULD_DISABLE_64BIT_BUILD:=OFF}"
 PROJECT_SHOULD_DISABLE_ARM_BUILD="${MY_PROJECT_SHOULD_DISABLE_ARM_BUILD:=OFF}"
 PROJECT_SHOULD_DISABLE_X86_BUILD="${MY_PROJECT_SHOULD_DISABLE_X86_BUILD:=OFF}"
+PROJECT_WITH_COMPILER_CACHE="${MY_PROJECT_WITH_COMPILER_CACHE:=OFF}"
+PROJECT_WITH_COMPILER_PRECHECK="${MY_PROJECT_WITH_COMPILER_PRECHECK:=OFF}"
 ####
 #### Project component level config
 ####
@@ -59,8 +76,14 @@ PROJECT_CJSON_WITHOUT_INSTALL_FILES="${MY_PROJECT_CJSON_WITHOUT_INSTALL_FILES:=O
 PROJECT_CJSON_WITHOUT_INSTALL_HEADERS="${MY_PROJECT_CJSON_WITHOUT_INSTALL_HEADERS:=OFF}"
 PROJECT_CJSON_WITHOUT_INSTALL_LIBRARIES="${MY_PROJECT_CJSON_WITHOUT_INSTALL_LIBRARIES:=OFF}"
 PROJECT_CJSON_WITHOUT_TEST_APPS="${MY_PROJECT_CJSON_WITHOUT_TEST_APPS:=OFF}"
+PROJECT_CURL_WITH_CARES="${MY_PROJECT_CURL_WITH_CARES:=OFF}"
+PROJECT_CURL_WITH_LIBSSH2="${MY_PROJECT_CURL_WITH_LIBSSH2:=OFF}"
+PROJECT_CURL_WITH_NGHTTP2="${MY_PROJECT_CURL_WITH_NGHTTP2:=OFF}"
 PROJECT_CURL_WITH_OPENSSL="${MY_PROJECT_CURL_WITH_OPENSSL:=OFF}"
+PROJECT_CURL_WITH_SHARED_CARES="${MY_PROJECT_CURL_WITH_SHARED_CARES:=OFF}"
 PROJECT_CURL_WITH_SHARED_LIBRARIES="${MY_PROJECT_CURL_WITH_SHARED_LIBRARIES:=OFF}"
+PROJECT_CURL_WITH_SHARED_LIBSSH2="${MY_PROJECT_CURL_WITH_SHARED_LIBSSH2:=OFF}"
+PROJECT_CURL_WITH_SHARED_NGHTTP2="${MY_PROJECT_CURL_WITH_SHARED_NGHTTP2:=OFF}"
 PROJECT_CURL_WITH_SHARED_ZLIB="${MY_PROJECT_CURL_WITH_SHARED_ZLIB:=OFF}"
 PROJECT_CURL_WITH_ZLIB="${MY_PROJECT_CURL_WITH_ZLIB:=OFF}"
 PROJECT_CURL_WITHOUT_APPS="${MY_PROJECT_CURL_WITHOUT_APPS:=OFF}"
@@ -91,6 +114,7 @@ PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_LIBRARIES="${MY_PROJECT_LIBWEBSOCKETS_WITH
 PROJECT_LIBWEBSOCKETS_WITHOUT_TEST_APPS="${MY_PROJECT_LIBWEBSOCKETS_WITHOUT_TEST_APPS:=OFF}"
 PROJECT_NETSNMP_WITH_IPV6="${MY_PROJECT_NETSNMP_WITH_IPV6:=OFF}"
 PROJECT_NETSNMP_WITH_SHARED_LIBRARIES="${MY_PROJECT_NETSNMP_WITH_SHARED_LIBRARIES:=OFF}"
+PROJECT_NETSNMP_WITH_SSH="${MY_PROJECT_NETSNMP_WITH_SSH:=OFF}"
 PROJECT_NETSNMP_WITH_SSL="${MY_PROJECT_NETSNMP_WITH_SSL:=OFF}"
 PROJECT_NETSNMP_WITHOUT_APPS="${MY_PROJECT_NETSNMP_WITHOUT_APPS:=OFF}"
 PROJECT_NETSNMP_WITHOUT_INSTALL_ALL="${MY_PROJECT_NETSNMP_WITHOUT_INSTALL_ALL:=OFF}"
@@ -133,6 +157,7 @@ PROJECT_POCO_WITHOUT_INSTALL_ALL="${MY_PROJECT_POCO_WITHOUT_INSTALL_ALL:=OFF}"
 PROJECT_POCO_WITHOUT_INSTALL_FILES="${MY_PROJECT_POCO_WITHOUT_INSTALL_FILES:=OFF}"
 PROJECT_POCO_WITHOUT_INSTALL_HEADERS="${MY_PROJECT_POCO_WITHOUT_INSTALL_HEADERS:=OFF}"
 PROJECT_POCO_WITHOUT_INSTALL_LIBRARIES="${MY_PROJECT_POCO_WITHOUT_INSTALL_LIBRARIES:=OFF}"
+PROJECT_PROTOBUF_WITH_EXTERNAL_PROTOC="${MY_PROJECT_PROTOBUF_WITH_EXTERNAL_PROTOC:=OFF}"
 PROJECT_PROTOBUF_WITH_SHARED_LIBRARIES="${MY_PROJECT_PROTOBUF_WITH_SHARED_LIBRARIES:=OFF}"
 PROJECT_PROTOBUF_WITH_SHARED_ZLIB="${MY_PROJECT_PROTOBUF_WITH_SHARED_ZLIB:=OFF}"
 PROJECT_PROTOBUF_WITH_ZLIB="${MY_PROJECT_PROTOBUF_WITH_ZLIB:=OFF}"
@@ -160,6 +185,7 @@ MY_CMAKE_COMMON_ARGUMENT_LIST=(
         "-S $SOURCE_DIR"
         "-DMY_REVISION=$PROJECT_REVISION"
         "-DCMAKE_BUILD_TYPE=$PROJECT_RELEASE_TYPE"
+        "-DCMAKE_CONFIGURATION_TYPES=$PROJECT_RELEASE_TYPE"
         "-DCMAKE_SYSTEM_NAME=$SYSTEM_PLATFORM"
         "-DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY"
         "-DCMAKE_VERBOSE_MAKEFILE:BOOL=OFF"
@@ -215,11 +241,29 @@ fi
 if [ "ON" = "$PROJECT_CJSON_WITHOUT_TEST_APPS" ]; then
     MY_CMAKE_COMMON_ARGUMENT_LIST+=("-DCJSON_WITHOUT_TEST_APPS=$PROJECT_CJSON_WITHOUT_TEST_APPS")
 fi
+if [ "ON" = "$PROJECT_CURL_WITH_CARES" ]; then
+    MY_CMAKE_COMMON_ARGUMENT_LIST+=("-DCURL_WITH_CARES=$PROJECT_CURL_WITH_CARES")
+fi
+if [ "ON" = "$PROJECT_CURL_WITH_LIBSSH2" ]; then
+    MY_CMAKE_COMMON_ARGUMENT_LIST+=("-DCURL_WITH_LIBSSH2=$PROJECT_CURL_WITH_LIBSSH2")
+fi
+if [ "ON" = "$PROJECT_CURL_WITH_NGHTTP2" ]; then
+    MY_CMAKE_COMMON_ARGUMENT_LIST+=("-DCURL_WITH_NGHTTP2=$PROJECT_CURL_WITH_NGHTTP2")
+fi
 if [ "ON" = "$PROJECT_CURL_WITH_OPENSSL" ]; then
     MY_CMAKE_COMMON_ARGUMENT_LIST+=("-DCURL_WITH_OPENSSL=$PROJECT_CURL_WITH_OPENSSL")
 fi
+if [ "ON" = "$PROJECT_CURL_WITH_SHARED_CARES" ]; then
+    MY_CMAKE_COMMON_ARGUMENT_LIST+=("-DCURL_WITH_SHARED_CARES=$PROJECT_CURL_WITH_SHARED_CARES")
+fi
 if [ "ON" = "$PROJECT_CURL_WITH_SHARED_LIBRARIES" ]; then
     MY_CMAKE_COMMON_ARGUMENT_LIST+=("-DCURL_WITH_SHARED_LIBRARIES=$PROJECT_CURL_WITH_SHARED_LIBRARIES")
+fi
+if [ "ON" = "$PROJECT_CURL_WITH_SHARED_LIBSSH2" ]; then
+    MY_CMAKE_COMMON_ARGUMENT_LIST+=("-DCURL_WITH_SHARED_LIBSSH2=$PROJECT_CURL_WITH_SHARED_LIBSSH2")
+fi
+if [ "ON" = "$PROJECT_CURL_WITH_SHARED_NGHTTP2" ]; then
+    MY_CMAKE_COMMON_ARGUMENT_LIST+=("-DCURL_WITH_SHARED_NGHTTP2=$PROJECT_CURL_WITH_SHARED_NGHTTP2")
 fi
 if [ "ON" = "$PROJECT_CURL_WITH_SHARED_ZLIB" ]; then
     MY_CMAKE_COMMON_ARGUMENT_LIST+=("-DCURL_WITH_SHARED_ZLIB=$PROJECT_CURL_WITH_SHARED_ZLIB")
@@ -307,6 +351,9 @@ if [ "ON" = "$PROJECT_LIBWEBSOCKETS_WITHOUT_TEST_APPS" ]; then
 fi
 if [ "ON" = "$PROJECT_NETSNMP_WITH_IPV6" ]; then
     MY_CMAKE_COMMON_ARGUMENT_LIST+=("-DNETSNMP_WITH_IPV6=$PROJECT_NETSNMP_WITH_IPV6")
+fi
+if [ "ON" = "$PROJECT_NETSNMP_WITH_SSH" ]; then
+    MY_CMAKE_COMMON_ARGUMENT_LIST+=("-DNETSNMP_WITH_SSH=$PROJECT_NETSNMP_WITH_SSH")
 fi
 if [ "ON" = "$PROJECT_NETSNMP_WITH_SHARED_LIBRARIES" ]; then
     MY_CMAKE_COMMON_ARGUMENT_LIST+=("-DNETSNMP_WITH_SHARED_LIBRARIES=$PROJECT_NETSNMP_WITH_SHARED_LIBRARIES")
@@ -437,6 +484,9 @@ fi
 if [ "ON" = "$PROJECT_POCO_WITHOUT_INSTALL_LIBRARIES" ]; then
     MY_CMAKE_COMMON_ARGUMENT_LIST+=("-DPOCO_WITHOUT_INSTALL_LIBRARIES=$PROJECT_POCO_WITHOUT_INSTALL_LIBRARIES")
 fi
+if [ "ON" = "$PROJECT_PROTOBUF_WITH_EXTERNAL_PROTOC" ]; then
+    MY_CMAKE_COMMON_ARGUMENT_LIST+=("-DPROTOBUF_WITH_EXTERNAL_PROTOC=$PROJECT_PROTOBUF_WITH_EXTERNAL_PROTOC")
+fi
 if [ "ON" = "$PROJECT_PROTOBUF_WITH_SHARED_LIBRARIES" ]; then
     MY_CMAKE_COMMON_ARGUMENT_LIST+=("-DPROTOBUF_WITH_SHARED_LIBRARIES=$PROJECT_PROTOBUF_WITH_SHARED_LIBRARIES")
 fi
@@ -494,30 +544,50 @@ fi
 if [ "ON" = "$PROJECT_ZLIB_WITHOUT_TEST_APPS" ]; then
     MY_CMAKE_COMMON_ARGUMENT_LIST+=("-DZLIB_WITHOUT_TEST_APPS=$PROJECT_ZLIB_WITHOUT_TEST_APPS")
 fi
+if [ "ON" = "$PROJECT_WITH_COMPILER_CACHE" ]; then
+    MY_CMAKE_COMMON_ARGUMENT_LIST+=("-DBUILD_WITH_COMPILER_CACHE=$PROJECT_WITH_COMPILER_CACHE")
+fi
+if [ "ON" = "$PROJECT_WITH_COMPILER_PRECHECK" ]; then
+    MY_CMAKE_COMMON_ARGUMENT_LIST+=("-DBUILD_WITH_COMPILER_PRECHECK=$PROJECT_WITH_COMPILER_PRECHECK")
+fi
 MY_GCC_ARCH_LIST=(
         "aarch64"
         "arm"
         "x86_64"
 )
-declare -A MY_GCC_ARCH_BUILD_TOGGLE_MAP=(
+declare -A MY_GCC_ARCH_TO_BUILD_TOGGLE_MAP=(
         ["aarch64"]="ON"
         ["arm"]="ON"
         ["x86_64"]="ON"
 )
+declare -A MY_GCC_ARCH_TO_STRIP_TOGGLE_MAP=(
+        ["aarch64"]="OFF"
+        ["arm"]="OFF"
+        ["x86_64"]="OFF"
+)
 if [ "ON" = "$PROJECT_SHOULD_DISABLE_32BIT_BUILD" ]; then
-    MY_GCC_ARCH_BUILD_TOGGLE_MAP["arm"]="OFF"
+    MY_GCC_ARCH_TO_BUILD_TOGGLE_MAP["arm"]="OFF"
 fi
 if [ "ON" = "$PROJECT_SHOULD_DISABLE_64BIT_BUILD" ]; then
-    MY_GCC_ARCH_BUILD_TOGGLE_MAP["aarch64"]="OFF"
-    MY_GCC_ARCH_BUILD_TOGGLE_MAP["x86_64"]="OFF"
+    MY_GCC_ARCH_TO_BUILD_TOGGLE_MAP["aarch64"]="OFF"
+    MY_GCC_ARCH_TO_BUILD_TOGGLE_MAP["x86_64"]="OFF"
 fi
 if [ "ON" = "$PROJECT_SHOULD_DISABLE_ARM_BUILD" ]; then
-    MY_GCC_ARCH_BUILD_TOGGLE_MAP["aarch64"]="OFF"
-    MY_GCC_ARCH_BUILD_TOGGLE_MAP["arm"]="OFF"
+    MY_GCC_ARCH_TO_BUILD_TOGGLE_MAP["aarch64"]="OFF"
+    MY_GCC_ARCH_TO_BUILD_TOGGLE_MAP["arm"]="OFF"
 fi
 if [ "ON" = "$PROJECT_SHOULD_DISABLE_X86_BUILD" ]; then
-    MY_GCC_ARCH_BUILD_TOGGLE_MAP["x86_64"]="OFF"
+    MY_GCC_ARCH_TO_BUILD_TOGGLE_MAP["x86_64"]="OFF"
 fi
+MY_GCC_ARCH_TO_BUILD_LIST=()
+for MY_GCC_ARCH in ${MY_GCC_ARCH_LIST[*]} ; do
+    if [ "${MY_GCC_ARCH_TO_BUILD_TOGGLE_MAP[$MY_GCC_ARCH]}" = "ON" ]; then
+        MY_GCC_ARCH_TO_BUILD_LIST+=($MY_GCC_ARCH)
+    fi
+done
+MY_GCC_ARCH_TO_BUILD_LIST_STRING=$(IFS=' ' eval 'echo "${MY_GCC_ARCH_TO_BUILD_LIST[*]}"')
+MY_PROJECT_PROTOC_CLI=$PROTOC_CLI-$PROJECT_PROTOC_VERSION
+MY_PROJECT_PROTOC_CLI_DETECTED=false
 
 
 
@@ -527,6 +597,9 @@ echo "[$SYSTEM_PLATFORM] Project information: revision: $PROJECT_REVISION"
 echo "[$SYSTEM_PLATFORM] Project information: release type: $PROJECT_RELEASE_TYPE"
 echo "[$SYSTEM_PLATFORM] Project information: disable clean build: $PROJECT_SHOULD_DISABLE_CLEAN_BUILD"
 echo "[$SYSTEM_PLATFORM] Project information: disable parallel build: $PROJECT_SHOULD_DISABLE_PARALLEL_BUILD"
+echo "[$SYSTEM_PLATFORM] Project information: enable compiler cache: $PROJECT_WITH_COMPILER_CACHE"
+echo "[$SYSTEM_PLATFORM] Project information: enable compiler precheck: $PROJECT_WITH_COMPILER_PRECHECK"
+echo "[$SYSTEM_PLATFORM] Project information: architectures to build: $MY_GCC_ARCH_TO_BUILD_LIST_STRING"
 echo "[$SYSTEM_PLATFORM] Component information: Boost with shared libraries: $PROJECT_BOOST_WITH_SHARED_LIBRARIES"
 echo "[$SYSTEM_PLATFORM] Component information: Boost without apps: $PROJECT_BOOST_WITHOUT_APPS"
 echo "[$SYSTEM_PLATFORM] Component information: Boost without installing all artifacts: $PROJECT_BOOST_WITHOUT_INSTALL_ALL"
@@ -544,8 +617,14 @@ echo "[$SYSTEM_PLATFORM] Component information: cJSON without installing files: 
 echo "[$SYSTEM_PLATFORM] Component information: cJSON without installing headers: $PROJECT_CJSON_WITHOUT_INSTALL_HEADERS"
 echo "[$SYSTEM_PLATFORM] Component information: cJSON without installing libraries: $PROJECT_CJSON_WITHOUT_INSTALL_LIBRARIES"
 echo "[$SYSTEM_PLATFORM] Component information: cJSON without test apps: $PROJECT_CJSON_WITHOUT_TEST_APPS"
+echo "[$SYSTEM_PLATFORM] Component information: CURL with c-ares: $PROJECT_CURL_WITH_CARES"
+echo "[$SYSTEM_PLATFORM] Component information: CURL with libssh2: $PROJECT_CURL_WITH_LIBSSH2"
+echo "[$SYSTEM_PLATFORM] Component information: CURL with nghttp2: $PROJECT_CURL_WITH_NGHTTP2"
 echo "[$SYSTEM_PLATFORM] Component information: CURL with OpenSSL: $PROJECT_CURL_WITH_OPENSSL"
+echo "[$SYSTEM_PLATFORM] Component information: CURL with shared c-ares: $PROJECT_CURL_WITH_SHARED_CARES"
 echo "[$SYSTEM_PLATFORM] Component information: CURL with shared libraries: $PROJECT_CURL_WITH_SHARED_LIBRARIES"
+echo "[$SYSTEM_PLATFORM] Component information: CURL with shared libssh2: $PROJECT_CURL_WITH_SHARED_LIBSSH2"
+echo "[$SYSTEM_PLATFORM] Component information: CURL with shared nghttp2: $PROJECT_CURL_WITH_SHARED_NGHTTP2"
 echo "[$SYSTEM_PLATFORM] Component information: CURL with shared Zlib: $PROJECT_CURL_WITH_SHARED_ZLIB"
 echo "[$SYSTEM_PLATFORM] Component information: CURL with Zlib: $PROJECT_CURL_WITH_ZLIB"
 echo "[$SYSTEM_PLATFORM] Component information: CURL without apps: $PROJECT_CURL_WITHOUT_APPS"
@@ -576,6 +655,7 @@ echo "[$SYSTEM_PLATFORM] Component information: libwebsockets without installing
 echo "[$SYSTEM_PLATFORM] Component information: libwebsockets without test apps: $PROJECT_LIBWEBSOCKETS_WITHOUT_TEST_APPS"
 echo "[$SYSTEM_PLATFORM] Component information: Net-SNMP with IPv6: $PROJECT_NETSNMP_WITH_IPV6"
 echo "[$SYSTEM_PLATFORM] Component information: Net-SNMP with shared libraries: $PROJECT_NETSNMP_WITH_SHARED_LIBRARIES"
+echo "[$SYSTEM_PLATFORM] Component information: Net-SNMP with SSH: $PROJECT_NETSNMP_WITH_SSH"
 echo "[$SYSTEM_PLATFORM] Component information: Net-SNMP with SSL: $PROJECT_NETSNMP_WITH_SSL"
 echo "[$SYSTEM_PLATFORM] Component information: Net-SNMP without apps: $PROJECT_NETSNMP_WITHOUT_APPS"
 echo "[$SYSTEM_PLATFORM] Component information: Net-SNMP without installing all artifacts: $PROJECT_NETSNMP_WITHOUT_INSTALL_ALL"
@@ -618,6 +698,7 @@ echo "[$SYSTEM_PLATFORM] Component information: POCO without installing all arti
 echo "[$SYSTEM_PLATFORM] Component information: POCO without installing files: $PROJECT_POCO_WITHOUT_INSTALL_FILES"
 echo "[$SYSTEM_PLATFORM] Component information: POCO without installing headers: $PROJECT_POCO_WITHOUT_INSTALL_HEADERS"
 echo "[$SYSTEM_PLATFORM] Component information: POCO without installing libraries: $PROJECT_POCO_WITHOUT_INSTALL_LIBRARIES"
+echo "[$SYSTEM_PLATFORM] Component information: Protocol Buffer with external Protocol Buffer Compiler: $PROJECT_PROTOBUF_WITH_EXTERNAL_PROTOC"
 echo "[$SYSTEM_PLATFORM] Component information: Protocol Buffer with shared libraries: $PROJECT_PROTOBUF_WITH_SHARED_LIBRARIES"
 echo "[$SYSTEM_PLATFORM] Component information: Protocol Buffer with shared Zlib: $PROJECT_PROTOBUF_WITH_SHARED_ZLIB"
 echo "[$SYSTEM_PLATFORM] Component information: Protocol Buffer with Zlib: $PROJECT_PROTOBUF_WITH_ZLIB"
@@ -687,6 +768,27 @@ fi
 
 
 
+## Detect binutils strip
+if [ "$PROJECT_RELEASE_TYPE" = "Release" ]; then
+    echo "[$SYSTEM_PLATFORM] Detecting binutils strip ..."
+    for MY_GCC_ARCH in "${!GCC_ARCH_TO_STRIP_CLI_MAP[@]}" ; do
+        echo "[$SYSTEM_PLATFORM] Detecting binutils strip for arch $MY_GCC_ARCH ..."
+        MY_STRIP_CLI="${GCC_ARCH_TO_STRIP_CLI_MAP[$MY_GCC_ARCH]}"
+        $MY_STRIP_CLI --help 1>/dev/null 2>&1
+        MY_CHECK_RESULT=$?
+        if [ $MY_CHECK_RESULT -ne 0 ] ; then
+            echo "[$SYSTEM_PLATFORM] Detecting binutils strip for arch $MY_GCC_ARCH ... NOT FOUND"
+            MY_GCC_ARCH_TO_STRIP_TOGGLE_MAP[$MY_GCC_ARCH]="OFF"
+        else
+            echo "[$SYSTEM_PLATFORM] Detecting binutils strip for arch $MY_GCC_ARCH ... FOUND"
+            MY_GCC_ARCH_TO_STRIP_TOGGLE_MAP[$MY_GCC_ARCH]="ON"
+        fi
+    done
+    echo "[$SYSTEM_PLATFORM] Detecting binutils strip ... DONE"
+fi
+
+
+
 ## Detect CMake
 echo "[$SYSTEM_PLATFORM] Detecting CMake ..."
 $CMAKE_CLI --help 1>/dev/null 2>&1
@@ -699,13 +801,129 @@ echo "[$SYSTEM_PLATFORM] Detecting CMake ... FOUND"
 
 
 
+## Detect CURL
+echo "[$SYSTEM_PLATFORM] Detecting CURL ..."
+$CURL_CLI --version 1>/dev/null 2>&1
+MY_CHECK_RESULT=$?
+if [ $MY_CHECK_RESULT -ne 0 ] ; then
+    echo "[$SYSTEM_PLATFORM] Detecting CURL ... NOT FOUND"
+    exit 1
+fi
+echo "[$SYSTEM_PLATFORM] Detecting CURL ... FOUND"
+
+
+
+## Detect UnZip
+echo "[$SYSTEM_PLATFORM] Detecting UnZip ..."
+$UNZIP_CLI --help 1>/dev/null 2>&1
+MY_CHECK_RESULT=$?
+if [ $MY_CHECK_RESULT -ne 0 ] ; then
+    echo "[$SYSTEM_PLATFORM] Detecting UnZip ... NOT FOUND"
+    exit 1
+fi
+echo "[$SYSTEM_PLATFORM] Detecting UnZip ... FOUND"
+
+
+
+## Add Protoc user folder into PATH
+echo "[$SYSTEM_PLATFORM] Adding Protoc ser folder into PATH ..."
+MY_PROTOC_TARGET_PATH=$HOME/.protoc/$PROJECT_PROTOC_VERSION
+MY_PROTOC_BIN=$MY_PROTOC_TARGET_PATH/bin
+if [[ $PATH == *$MY_PROTOC_BIN* ]]; then
+    echo "[$SYSTEM_PLATFORM] Adding Protoc ser folder into PATH ... SKIPPED"
+else
+    PATH=$PATH:$MY_PROTOC_BIN
+    echo "[$SYSTEM_PLATFORM] Adding Protoc ser folder into PATH ... DONE"
+fi
+
+
+
+## Detect Project Protoc
+if [ "$MY_PROJECT_PROTOC_CLI_DETECTED" = "false" ] ; then
+    echo "[$SYSTEM_PLATFORM] Detecting Project Protoc ..."
+    $MY_PROJECT_PROTOC_CLI --version 1>/dev/null 2>&1
+    MY_CHECK_RESULT=$?
+    if [ $MY_CHECK_RESULT -ne 0 ] ; then
+        echo "[$SYSTEM_PLATFORM] Detecting Project Protoc ... NOT FOUND"
+        MY_PROJECT_PROTOC_CLI_DETECTED=false
+    else
+        echo "[$SYSTEM_PLATFORM] Detecting Project Protoc ... FOUND"
+        MY_PROJECT_PROTOC_CLI_DETECTED=true
+    fi
+fi
+
+
+
+## Restore Project Protoc
+if [ "$MY_PROJECT_PROTOC_CLI_DETECTED" = "false" ] ; then
+    echo "[$SYSTEM_PLATFORM] Restoring Project Protoc ..."
+
+    ## Restore Project Protoc - Create temp path
+    echo "[$SYSTEM_PLATFORM] Detecting Project Protoc ... Creating temp path ..."
+    MY_PROTOC_TEMP_PATH=$(${MKTEMP_CLI} -d)
+    MY_CHECK_RESULT=$?
+    if [ $MY_CHECK_RESULT -ne 0 ] ; then
+        echo "[$SYSTEM_PLATFORM] Detecting Project Protoc ... Creating temp path ... FAILED"
+        exit 1
+    fi
+    echo "[$SYSTEM_PLATFORM] Detecting Project Protoc ... Creating temp path ... DONE"
+
+    ## Restore Project Protoc - Download archive file
+    MY_PROTOC_ARCHIVE_NAME="${PROTOC_VER_ARCH_TO_ARCHIVE_NAME_MAP[${PROJECT_PROTOC_VERSION}_${SYSTEM_ARCHITECTURE}]}"
+    MY_PROTOC_ARCHIVE_URL="https://github.com/protocolbuffers/protobuf/releases/download/v${PROJECT_PROTOC_VERSION}/${MY_PROTOC_ARCHIVE_NAME}"
+    echo "[$SYSTEM_PLATFORM] Detecting Project Protoc ... Downloading archive file from $MY_PROTOC_ARCHIVE_URL ..."
+    $CURL_CLI -Ls --output $MY_PROTOC_TEMP_PATH/$MY_PROTOC_ARCHIVE_NAME $MY_PROTOC_ARCHIVE_URL
+    MY_CHECK_RESULT=$?
+    if [ $MY_CHECK_RESULT -ne 0 ] ; then
+        echo "[$SYSTEM_PLATFORM] Detecting Project Protoc ... Downloading archive file from $MY_PROTOC_ARCHIVE_URL ... FAILED"
+        exit 1
+    fi
+    echo "[$SYSTEM_PLATFORM] Detecting Project Protoc ... Downloading archive file from $MY_PROTOC_ARCHIVE_URL ... DONE"
+
+    ## Restore Project Protoc - Extract archive file
+    echo "[$SYSTEM_PLATFORM] Detecting Project Protoc ... Extracting archive file to $MY_PROTOC_TARGET_PATH ..."
+    if [ ! -d $MY_PROTOC_TARGET_PATH ] ; then
+        mkdir -p $MY_PROTOC_TARGET_PATH
+    fi
+    $UNZIP_CLI -o $MY_PROTOC_TEMP_PATH/$MY_PROTOC_ARCHIVE_NAME -d $MY_PROTOC_TARGET_PATH 1>/dev/null 2>&1
+    MY_CHECK_RESULT=$?
+    if [ $MY_CHECK_RESULT -ne 0 ] ; then
+        echo "[$SYSTEM_PLATFORM] Detecting Project Protoc ... Extracting archive file to $MY_PROTOC_TARGET_PATH ... FAILED"
+        exit 1
+    fi
+    echo "[$SYSTEM_PLATFORM] Detecting Project Protoc ... Extracting archive file to $MY_PROTOC_TARGET_PATH ... DONE"
+
+    ## Restore Project Protoc - Check binary file
+    echo "[$SYSTEM_PLATFORM] Detecting Project Protoc ... Checking binary file ..."
+    if [ -f $MY_PROTOC_BIN/$MY_PROJECT_PROTOC_CLI ] ; then
+        echo "[$SYSTEM_PLATFORM] Detecting Project Protoc ... Checking binary file ... FOUND"
+    else
+        if [ ! -f $MY_PROTOC_BIN/$PROTOC_CLI ] ; then
+            echo "[$SYSTEM_PLATFORM] Detecting Project Protoc ... Checking binary file ... NOT FOUND (Protoc is missing)"
+            exit 1
+        else
+            mv $MY_PROTOC_BIN/$PROTOC_CLI $MY_PROTOC_BIN/$MY_PROJECT_PROTOC_CLI
+            chmod a+x $MY_PROTOC_BIN/$MY_PROJECT_PROTOC_CLI
+            $MY_PROJECT_PROTOC_CLI --version 1>/dev/null 2>&1
+            MY_CHECK_RESULT=$?
+            if [ $MY_CHECK_RESULT -ne 0 ] ; then
+                echo "[$SYSTEM_PLATFORM] Detecting Project Protoc ... Checking binary file ... FAILED"
+                exit 1
+            fi
+            echo "[$SYSTEM_PLATFORM] Detecting Project Protoc ... Checking binary file ... DONE"
+        fi
+    fi
+fi
+
+
+
 for MY_GCC_ARCH in ${MY_GCC_ARCH_LIST[*]} ; do
-    ## Build project for architecture $MY_GCC_ARCH / $MY_GCC_ABI
-    echo "[$SYSTEM_PLATFORM] Detecting C Compiler for $MY_GCC_ARCH ..."
+    ## Build project for arch $MY_GCC_ARCH / $MY_GCC_ABI
+    echo "[$SYSTEM_PLATFORM] Detecting C Compiler for arch $MY_GCC_ARCH ..."
     MY_GCC_ABI="${GCC_ARCH_TO_ABI_MAP[$MY_GCC_ARCH]}"
 
-    if [ "${MY_GCC_ARCH_BUILD_TOGGLE_MAP[$MY_GCC_ARCH]}" = "OFF" ] ; then
-        echo "[$SYSTEM_PLATFORM] Detecting C Compiler for $MY_GCC_ARCH ... SKIPPED"
+    if [ "${MY_GCC_ARCH_TO_BUILD_TOGGLE_MAP[$MY_GCC_ARCH]}" = "OFF" ] ; then
+        echo "[$SYSTEM_PLATFORM] Detecting C Compiler for arch $MY_GCC_ARCH ... SKIPPED"
     else
         # Define GCC CLI path
         MY_GCC_LIB_BASE_PATH=/usr/lib/$MY_GCC_ARCH-$PROJECT_GCC_OS_NAME-$MY_GCC_ABI
@@ -718,20 +936,20 @@ for MY_GCC_ARCH in ${MY_GCC_ARCH_LIST[*]} ; do
         $MY_GCC_C_COMPILER_CLI --help 1>/dev/null 2>&1
         MY_CHECK_RESULT=$?
         if [ $MY_CHECK_RESULT -ne 0 ] ; then
-            echo "[$SYSTEM_PLATFORM] Detecting C Compiler for $MY_GCC_ARCH ... NOT FOUND"
+            echo "[$SYSTEM_PLATFORM] Detecting C Compiler for arch $MY_GCC_ARCH ... NOT FOUND"
             exit 1
         fi
-        echo "[$SYSTEM_PLATFORM] Detecting C Compiler for $MY_GCC_ARCH ... FOUND"
+        echo "[$SYSTEM_PLATFORM] Detecting C Compiler for arch $MY_GCC_ARCH ... FOUND"
 
         # Detect CXX Compiler
-        echo "[$SYSTEM_PLATFORM] Detecting CXX Compiler for $MY_GCC_ARCH ..."
+        echo "[$SYSTEM_PLATFORM] Detecting CXX Compiler for arch $MY_GCC_ARCH ..."
         $MY_GCC_CXX_COMPILER_CLI --help 1>/dev/null 2>&1
         MY_CHECK_RESULT=$?
         if [ $MY_CHECK_RESULT -ne 0 ] ; then
-            echo "[$SYSTEM_PLATFORM] Detecting CXX Compiler for $MY_GCC_ARCH ... NOT FOUND"
+            echo "[$SYSTEM_PLATFORM] Detecting CXX Compiler for arch $MY_GCC_ARCH ... NOT FOUND"
             exit 1
         fi
-        echo "[$SYSTEM_PLATFORM] Detecting CXX Compiler for $MY_GCC_ARCH ... FOUND"
+        echo "[$SYSTEM_PLATFORM] Detecting CXX Compiler for arch $MY_GCC_ARCH ... FOUND"
 
         # Define build / install path
         MY_TEMP_BUILD_DIR=$TEMP_BUILD_DIR/$PROJECT_RELEASE_TYPE/$MY_GCC_ARCH
@@ -741,8 +959,8 @@ for MY_GCC_ARCH in ${MY_GCC_ARCH_LIST[*]} ; do
         MY_TEMP_INSTALL_DIR_ABS=$(cd -- "$(${DIRNAME_CLI} "${MY_TEMP_INSTALL_DIR}/.dummy")" &> /dev/null && ${PWD_CLI})
 
         # Generate project
-        echo "[$SYSTEM_PLATFORM] Building project for platform $MY_GCC_ARCH ..."
-        echo "[$SYSTEM_PLATFORM] Building project for platform $MY_GCC_ARCH ... Generating project ..."
+        echo "[$SYSTEM_PLATFORM] Building project for arch $MY_GCC_ARCH ..."
+        echo "[$SYSTEM_PLATFORM] Building project for arch $MY_GCC_ARCH ... Generating project ..."
         MY_CMAKE_ARGUMENT_LIST=(
                 "-B $MY_TEMP_BUILD_DIR"
                 "--install-prefix $MY_TEMP_INSTALL_DIR_ABS"
@@ -755,17 +973,17 @@ for MY_GCC_ARCH in ${MY_GCC_ARCH_LIST[*]} ; do
         )
         MY_CMAKE_ARGUMENT_LIST=(${MY_CMAKE_COMMON_ARGUMENT_LIST[@]} ${MY_CMAKE_ARGUMENT_LIST[@]})
         MY_CMAKE_ARGUMENT_LIST_STRING=$(IFS=' ' eval 'echo "${MY_CMAKE_ARGUMENT_LIST[*]}"')
-        echo "[$SYSTEM_PLATFORM] Building project for platform $MY_GCC_ARCH ... Generating project ... argument list:" $MY_CMAKE_ARGUMENT_LIST_STRING
+        echo "[$SYSTEM_PLATFORM] Building project for arch $MY_GCC_ARCH ... Generating project ... argument list:" $MY_CMAKE_ARGUMENT_LIST_STRING
         $CMAKE_CLI $MY_CMAKE_ARGUMENT_LIST_STRING
         MY_CHECK_RESULT=$?
         if [ $MY_CHECK_RESULT -ne 0 ] ; then
-            echo "[$SYSTEM_PLATFORM] Building project for platform $MY_GCC_ARCH ... Generating project ... FAILED (ExitCode: $MY_CHECK_RESULT)"
+            echo "[$SYSTEM_PLATFORM] Building project for arch $MY_GCC_ARCH ... Generating project ... FAILED (ExitCode: $MY_CHECK_RESULT)"
             exit 1
         fi
-        echo "[$SYSTEM_PLATFORM] Building project for platform $MY_GCC_ARCH ... Generating project ... DONE"
+        echo "[$SYSTEM_PLATFORM] Building project for arch $MY_GCC_ARCH ... Generating project ... DONE"
 
         # Compile project
-        echo "[$SYSTEM_PLATFORM] Building project for platform $MY_GCC_ARCH ... Compiling project ..."
+        echo "[$SYSTEM_PLATFORM] Building project for arch $MY_GCC_ARCH ... Compiling project ..."
         MY_CMAKE_PARA_PARALLEL="--parallel"
         if [ "ON" = "$PROJECT_SHOULD_DISABLE_PARALLEL_BUILD" ]; then
             MY_CMAKE_PARA_PARALLEL=""
@@ -773,20 +991,34 @@ for MY_GCC_ARCH in ${MY_GCC_ARCH_LIST[*]} ; do
         $CMAKE_CLI --build $MY_TEMP_BUILD_DIR --config $PROJECT_RELEASE_TYPE $MY_CMAKE_PARA_PARALLEL
         MY_CHECK_RESULT=$?
         if [ $MY_CHECK_RESULT -ne 0 ] ; then
-            echo "[$SYSTEM_PLATFORM] Building project for platform $MY_GCC_ARCH ... Compiling project ... FAILED (ExitCode: $MY_CHECK_RESULT)"
+            echo "[$SYSTEM_PLATFORM] Building project for arch $MY_GCC_ARCH ... Compiling project ... FAILED (ExitCode: $MY_CHECK_RESULT)"
             exit 1
         fi
-        echo "[$SYSTEM_PLATFORM] Building project for platform $MY_GCC_ARCH ... Compiling project ... DONE"
+        echo "[$SYSTEM_PLATFORM] Building project for arch $MY_GCC_ARCH ... Compiling project ... DONE"
 
         # Install project
-        echo "[$SYSTEM_PLATFORM] Building project for platform $MY_GCC_ARCH ... Installing project ..."
+        echo "[$SYSTEM_PLATFORM] Building project for arch $MY_GCC_ARCH ... Installing project ..."
         $CMAKE_CLI --install $MY_TEMP_BUILD_DIR --config $PROJECT_RELEASE_TYPE
         MY_CHECK_RESULT=$?
         if [ $MY_CHECK_RESULT -ne 0 ] ; then
-            echo "[$SYSTEM_PLATFORM] Building project for platform $MY_GCC_ARCH ... Installing project ... FAILED (ExitCode: $MY_CHECK_RESULT)"
+            echo "[$SYSTEM_PLATFORM] Building project for arch $MY_GCC_ARCH ... Installing project ... FAILED (ExitCode: $MY_CHECK_RESULT)"
             exit 1
         fi
-        echo "[$SYSTEM_PLATFORM] Building project for platform $MY_GCC_ARCH ... Installing project ... DONE"
-        echo "[$SYSTEM_PLATFORM] Building project for platform $MY_GCC_ARCH ... DONE"
+        echo "[$SYSTEM_PLATFORM] Building project for arch $MY_GCC_ARCH ... Installing project ... DONE"
+
+        if [ "$PROJECT_RELEASE_TYPE" = "Release" ]; then
+            # Strip project
+            if [ "${MY_GCC_ARCH_TO_STRIP_TOGGLE_MAP[$MY_GCC_ARCH]}" = "ON" ]; then
+                MY_STRIP_CLI="${GCC_ARCH_TO_STRIP_CLI_MAP[$MY_GCC_ARCH]}"
+                echo "[$SYSTEM_PLATFORM] Building project for arch $MY_GCC_ARCH ... Striping project ..."
+                for MY_ELF_FILE_PATH in ${ELF_FILE_PATH_LIST[*]} ; do
+                    echo "[$SYSTEM_PLATFORM] Building project for arch $MY_GCC_ARCH ... Striping binary $MY_ELF_FILE_PATH ..."
+                    $MY_STRIP_CLI -s $MY_TEMP_INSTALL_DIR/$MY_ELF_FILE_PATH
+                    echo "[$SYSTEM_PLATFORM] Building project for arch $MY_GCC_ARCH ... Striping binary $MY_ELF_FILE_PATH ... DONE"
+                done
+            fi
+        fi
+        echo "[$SYSTEM_PLATFORM] Building project for arch $MY_GCC_ARCH ... DONE"
     fi
 done
+echo "[$SYSTEM_PLATFORM] Building Project ... DONE"

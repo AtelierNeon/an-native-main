@@ -15,6 +15,11 @@ $CmakeToolsetToGeneratorMap = @{
         'v142' = 'Visual Studio 16 2019'
         'v143' = 'Visual Studio 17 2022'
 }
+$ProtocCli = 'protoc'
+$ProtocVersionArchitectureToArchiveNameMap = @{
+        '3.9.1_AMD64' = 'protoc-3.9.1-win64.zip'
+        '3.9.1_ARM64' = 'protoc-3.9.1-win32.zip'
+}
 $ProjectFolder = Join-Path -Path $PSScriptRoot -ChildPath '..'
 $SourceFolder = $ProjectFolder
 $TempRootFolder = Join-Path -Path $ProjectFolder -ChildPath 'build'
@@ -27,6 +32,7 @@ $TempInstallFolder = Join-Path -Path $TempRootFolder -ChildPath 'i'
 ####
 #### Project level config
 ####
+$ProjectProtocVersion = if ($Env:MY_PROJECT_PROTOC_VERSION) {$Env:MY_PROJECT_PROTOC_VERSION} else {'3.9.1'}
 $ProjectReleaseType = if ($Env:MY_PROJECT_RELEASE_TYPE) {$Env:MY_PROJECT_RELEASE_TYPE} else {'Debug'}
 $ProjectRevision = if ($Env:BUILD_NUMBER) {$Env:BUILD_NUMBER} else {'9999'}
 $ProjectShouldDisableCleanBuild = if ($Env:MY_PROJECT_SHOULD_DISABLE_CLEAN_BUILD) {$Env:MY_PROJECT_SHOULD_DISABLE_CLEAN_BUILD} else {'OFF'}
@@ -37,6 +43,8 @@ $ProjectShouldDisableArmBuild = if ($Env:MY_PROJECT_SHOULD_DISABLE_ARM_BUILD) {$
 $ProjectShouldDisableArm64ecBuild = if ($Env:MY_PROJECT_SHOULD_DISABLE_ARM64EC_BUILD) {$Env:MY_PROJECT_SHOULD_DISABLE_ARM64EC_BUILD} else {'OFF'}
 $ProjectShouldDisableX86Build = if ($Env:MY_PROJECT_SHOULD_DISABLE_X86_BUILD) {$Env:MY_PROJECT_SHOULD_DISABLE_X86_BUILD} else {'OFF'}
 $ProjectToolset = if ($Env:MY_PROJECT_CMAKE_TOOLSET) {$Env:MY_PROJECT_CMAKE_TOOLSET} else {'v142'}
+$ProjectWithCompilerCache = if ($Env:MY_PROJECT_WITH_COMPILER_CACHE) {$Env:MY_PROJECT_WITH_COMPILER_CACHE} else {'OFF'}
+$ProjectWithCompilerPrecheck = if ($Env:MY_PROJECT_WITH_COMPILER_PRECHECK) {$Env:MY_PROJECT_WITH_COMPILER_PRECHECK} else {'OFF'}
 $ProjectWithSharedVcrt = if ($Env:MY_PROJECT_WITH_SHARED_VCRT) {$Env:MY_PROJECT_WITH_SHARED_VCRT} else {'OFF'}
 $ProjectWithStaticVcrt = if ($Env:MY_PROJECT_WITH_STATIC_VCRT) {$Env:MY_PROJECT_WITH_STATIC_VCRT} else {'ON'}
 $ProjectWithWorkaroundArm64rt = if ($Env:MY_PROJECT_WITH_WORKAROUND_ARM64RT) {$Env:MY_PROJECT_WITH_WORKAROUND_ARM64RT} else {'OFF'}
@@ -62,8 +70,14 @@ $ProjectCjsonWithoutInstallFiles = if ($Env:MY_PROJECT_CJSON_WITHOUT_INSTALL_FIL
 $ProjectCjsonWithoutInstallHeaders = if ($Env:MY_PROJECT_CJSON_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_CJSON_WITHOUT_INSTALL_HEADERS} else {'OFF'}
 $ProjectCjsonWithoutInstallLibraries = if ($Env:MY_PROJECT_CJSON_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_CJSON_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
 $ProjectCjsonWithoutTestApps = if ($Env:MY_PROJECT_CJSON_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_CJSON_WITHOUT_TEST_APPS} else {'OFF'}
+$ProjectCurlWithCares = if ($Env:MY_PROJECT_CURL_WITH_CARES) {$Env:MY_PROJECT_CURL_WITH_CARES} else {'OFF'}
+$ProjectCurlWithLibSsh2 = if ($Env:MY_PROJECT_CURL_WITH_LIBSSH2) {$Env:MY_PROJECT_CURL_WITH_LIBSSH2} else {'OFF'}
+$ProjectCurlWithNgHttp2 = if ($Env:MY_PROJECT_CURL_WITH_NGHTTP2) {$Env:MY_PROJECT_CURL_WITH_NGHTTP2} else {'OFF'}
 $ProjectCurlWithOpenSsl = if ($Env:MY_PROJECT_CURL_WITH_OPENSSL) {$Env:MY_PROJECT_CURL_WITH_OPENSSL} else {'OFF'}
+$ProjectCurlWithSharedCares = if ($Env:MY_PROJECT_CURL_WITH_SHARED_CARES) {$Env:MY_PROJECT_CURL_WITH_SHARED_CARES} else {'OFF'}
 $ProjectCurlWithSharedLibraries = if ($Env:MY_PROJECT_CURL_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_CURL_WITH_SHARED_LIBRARIES} else {'OFF'}
+$ProjectCurlWithSharedLibSsh2 = if ($Env:MY_PROJECT_CURL_WITH_SHARED_LIBSSH2) {$Env:MY_PROJECT_CURL_WITH_SHARED_LIBSSH2} else {'OFF'}
+$ProjectCurlWithSharedNgHttp2 = if ($Env:MY_PROJECT_CURL_WITH_SHARED_NGHTTP2) {$Env:MY_PROJECT_CURL_WITH_SHARED_NGHTTP2} else {'OFF'}
 $ProjectCurlWithSharedZlib = if ($Env:MY_PROJECT_CURL_WITH_SHARED_ZLIB) {$Env:MY_PROJECT_CURL_WITH_SHARED_ZLIB} else {'OFF'}
 $ProjectCurlWithZlib = if ($Env:MY_PROJECT_CURL_WITH_ZLIB) {$Env:MY_PROJECT_CURL_WITH_ZLIB} else {'OFF'}
 $ProjectCurlWithoutApps = if ($Env:MY_PROJECT_CURL_WITHOUT_APPS) {$Env:MY_PROJECT_CURL_WITHOUT_APPS} else {'OFF'}
@@ -94,6 +108,7 @@ $ProjectLibWebSocketsWithoutInstallLibraries = if ($Env:MY_PROJECT_LIBWEBSOCKETS
 $ProjectLibWebSocketsWithoutTestApps = if ($Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_TEST_APPS} else {'OFF'}
 $ProjectNetSnmpWithIpv6 = if ($Env:MY_PROJECT_NETSNMP_WITH_IPV6) {$Env:MY_PROJECT_NETSNMP_WITH_IPV6} else {'OFF'}
 $ProjectNetSnmpWithSharedLibraries = if ($Env:MY_PROJECT_NETSNMP_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_NETSNMP_WITH_SHARED_LIBRARIES} else {'OFF'}
+$ProjectNetSnmpWithSsh = if ($Env:MY_PROJECT_NETSNMP_WITH_SSH) {$Env:MY_PROJECT_NETSNMP_WITH_SSH} else {'OFF'}
 $ProjectNetSnmpWithSsl = if ($Env:MY_PROJECT_NETSNMP_WITH_SSL) {$Env:MY_PROJECT_NETSNMP_WITH_SSL} else {'OFF'}
 $ProjectNetSnmpWithWinExtDll = if ($Env:MY_PROJECT_NETSNMP_WITH_WINEXTDLL) {$Env:MY_PROJECT_NETSNMP_WITH_WINEXTDLL} else {'OFF'}
 $ProjectNetSnmpWithoutApps = if ($Env:MY_PROJECT_NETSNMP_WITHOUT_APPS) {$Env:MY_PROJECT_NETSNMP_WITHOUT_APPS} else {'OFF'}
@@ -137,6 +152,7 @@ $ProjectPocoWithoutInstallAll = if ($Env:MY_PROJECT_POCO_WITHOUT_INSTALL_ALL) {$
 $ProjectPocoWithoutInstallFiles = if ($Env:MY_PROJECT_POCO_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_POCO_WITHOUT_INSTALL_FILES} else {'OFF'}
 $ProjectPocoWithoutInstallHeaders = if ($Env:MY_PROJECT_POCO_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_POCO_WITHOUT_INSTALL_HEADERS} else {'OFF'}
 $ProjectPocoWithoutInstallLibraries = if ($Env:MY_PROJECT_POCO_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_POCO_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
+$ProjectProtoBufWithExternalProtoc = if ($Env:MY_PROJECT_PROTOBUF_WITH_EXTERNAL_PROTOC) {$Env:MY_PROJECT_PROTOBUF_WITH_EXTERNAL_PROTOC} else {'OFF'}
 $ProjectProtoBufWithSharedLibraries = if ($Env:MY_PROJECT_PROTOBUF_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_PROTOBUF_WITH_SHARED_LIBRARIES} else {'OFF'}
 $ProjectProtoBufWithSharedZlib = if ($Env:MY_PROJECT_PROTOBUF_WITH_SHARED_ZLIB) {$Env:MY_PROJECT_PROTOBUF_WITH_SHARED_ZLIB} else {'OFF'}
 $ProjectProtoBufWithZlib = if ($Env:MY_PROJECT_PROTOBUF_WITH_ZLIB) {$Env:MY_PROJECT_PROTOBUF_WITH_ZLIB} else {'OFF'}
@@ -168,8 +184,9 @@ $ProjectZlibWithoutTestApps = if ($Env:MY_PROJECT_ZLIB_WITHOUT_TEST_APPS) {$Env:
 $MyCmakeCommonArgumentList = @(
         "-S $SourceFolder",
         "-T $ProjectToolset",
-        "-DMY_REVISION=$ProjectRevision",
-        "-DCMAKE_BUILD_TYPE=$ProjectReleaseType"
+        "-DCMAKE_BUILD_TYPE=$ProjectReleaseType",
+        "-DCMAKE_CONFIGURATION_TYPES=$ProjectReleaseType",
+        "-DMY_REVISION=$ProjectRevision"
 )
 if ('ON'.Equals($ProjectBoostWithSharedLibraries)) {
     $MyCmakeCommonArgumentList += "-DBOOST_WITH_SHARED_LIBRARIES=$ProjectBoostWithSharedLibraries"
@@ -222,11 +239,29 @@ if ('ON'.Equals($ProjectCjsonWithoutInstallLibraries)) {
 if ('ON'.Equals($ProjectCjsonWithoutTestApps)) {
     $MyCmakeCommonArgumentList += "-DCJSON_WITHOUT_TEST_APPS=$ProjectCjsonWithoutTestApps"
 }
+if ('ON'.Equals($ProjectCurlWithCares)) {
+    $MyCmakeCommonArgumentList += "-DCURL_WITH_CARES=$ProjectCurlWithCares"
+}
+if ('ON'.Equals($ProjectCurlWithLibSsh2)) {
+    $MyCmakeCommonArgumentList += "-DCURL_WITH_LIBSSH2=$ProjectCurlWithLibSsh2"
+}
+if ('ON'.Equals($ProjectCurlWithNgHttp2)) {
+    $MyCmakeCommonArgumentList += "-DCURL_WITH_NGHTTP2=$ProjectCurlWithNgHttp2"
+}
 if ('ON'.Equals($ProjectCurlWithOpenSsl)) {
     $MyCmakeCommonArgumentList += "-DCURL_WITH_OPENSSL=$ProjectCurlWithOpenSsl"
 }
+if ('ON'.Equals($ProjectCurlWithSharedCares)) {
+    $MyCmakeCommonArgumentList += "-DCURL_WITH_SHARED_CARES=$ProjectCurlWithSharedCares"
+}
 if ('ON'.Equals($ProjectCurlWithSharedLibraries)) {
     $MyCmakeCommonArgumentList += "-DCURL_WITH_SHARED_LIBRARIES=$ProjectCurlWithSharedLibraries"
+}
+if ('ON'.Equals($ProjectCurlWithSharedLibSsh2)) {
+    $MyCmakeCommonArgumentList += "-DCURL_WITH_SHARED_LIBSSH2=$ProjectCurlWithSharedLibSsh2"
+}
+if ('ON'.Equals($ProjectCurlWithSharedNgHttp2)) {
+    $MyCmakeCommonArgumentList += "-DCURL_WITH_SHARED_NGHTTP2=$ProjectCurlWithSharedNgHttp2"
 }
 if ('ON'.Equals($ProjectCurlWithSharedZlib)) {
     $MyCmakeCommonArgumentList += "-DCURL_WITH_SHARED_ZLIB=$ProjectCurlWithSharedZlib"
@@ -314,6 +349,9 @@ if ('ON'.Equals($ProjectLibWebSocketsWithoutTestApps)) {
 }
 if ('ON'.Equals($ProjectNetSnmpWithIpv6)) {
     $MyCmakeCommonArgumentList += "-DNETSNMP_WITH_IPV6=$ProjectNetSnmpWithIpv6"
+}
+if ('ON'.Equals($ProjectNetSnmpWithSsh)) {
+    $MyCmakeCommonArgumentList += "-DNETSNMP_WITH_SSH=$ProjectNetSnmpWithSsh"
 }
 if ('ON'.Equals($ProjectNetSnmpWithSharedLibraries)) {
     $MyCmakeCommonArgumentList += "-DNETSNMP_WITH_SHARED_LIBRARIES=$ProjectNetSnmpWithSharedLibraries"
@@ -447,6 +485,9 @@ if ('ON'.Equals($ProjectPocoWithoutInstallHeaders)) {
 if ('ON'.Equals($ProjectPocoWithoutInstallLibraries)) {
     $MyCmakeCommonArgumentList += "-DPOCO_WITHOUT_INSTALL_LIBRARIES=$ProjectPocoWithoutInstallLibraries"
 }
+if ('ON'.Equals($ProjectProtoBufWithExternalProtoc)) {
+    $MyCmakeCommonArgumentList += "-DPROTOBUF_WITH_EXTERNAL_PROTOC=$ProjectProtoBufWithExternalProtoc"
+}
 if ('ON'.Equals($ProjectProtoBufWithSharedLibraries)) {
     $MyCmakeCommonArgumentList += "-DPROTOBUF_WITH_SHARED_LIBRARIES=$ProjectProtoBufWithSharedLibraries"
 }
@@ -519,6 +560,12 @@ if ('ON'.Equals($ProjectZlibWithoutInstallLibraries)) {
 if ('ON'.Equals($ProjectZlibWithoutTestApps)) {
     $MyCmakeCommonArgumentList += "-DZLIB_WITHOUT_TEST_APPS=$ProjectZlibWithoutTestApps"
 }
+if ('ON'.Equals($ProjectWithCompilerCache)) {
+    $MyCmakeCommonArgumentList += "-DBUILD_WITH_COMPILER_CACHE=$ProjectWithCompilerCache"
+}
+if ('ON'.Equals($ProjectWithCompilerPrecheck)) {
+    $MyCmakeCommonArgumentList += "-DBUILD_WITH_COMPILER_PRECHECK=$ProjectWithCompilerPrecheck"
+}
 if ('ON'.Equals($ProjectWithSharedVcrt)) {
     $MyCmakeCommonArgumentList += "-DBUILD_WITH_SHARED_VCRT=$ProjectWithSharedVcrt"
 }
@@ -584,6 +631,8 @@ foreach ($Platform in $MyCmakePlatformToBuildToggleMap.Keys) {
     }
 }
 $MyCmakePlatformToBuildListString = $MyCmakePlatformToBuildList -join ", "
+$MyProjectProtocCli = "${ProtocCli}-${ProjectProtocVersion}"
+$MyProjectProtocCliDetected = $false
 
 
 
@@ -593,6 +642,8 @@ Write-Information "[PowerShell] Project information: revision: `"$ProjectRevisio
 Write-Information "[PowerShell] Project information: release type: `"$ProjectReleaseType`""
 Write-Information "[PowerShell] Project information: disable clean build: $ProjectShouldDisableCleanBuild"
 Write-Information "[PowerShell] Project information: disable parallel build: $ProjectShouldDisableParallelBuild"
+Write-Information "[PowerShell] Project information: enable compiler cache: $ProjectWithCompilerCache"
+Write-Information "[PowerShell] Project information: enable compiler precheck: $ProjectWithCompilerPrecheck"
 Write-Information "[PowerShell] Project information: CMake generator: `"$MyCmakeGenerator`""
 Write-Information "[PowerShell] Project information: CMake toolset: `"$ProjectToolset`""
 Write-Information "[PowerShell] Project information: CMake platform to build: $MyCmakePlatformToBuildListString"
@@ -613,8 +664,14 @@ Write-Information "[PowerShell] Component information: cJSON without installing 
 Write-Information "[PowerShell] Component information: cJSON without installing headers: $ProjectCjsonWithoutInstallHeaders"
 Write-Information "[PowerShell] Component information: cJSON without installing libraries: $ProjectCjsonWithoutInstallLibraries"
 Write-Information "[PowerShell] Component information: cJSON without test apps: $ProjectCjsonWithoutTestApps"
-Write-Information "[PowerShell] Component information: CURL wuth OpenSSL: $ProjectCurlWithOpenSsl"
+Write-Information "[PowerShell] Component information: CURL with c-ares: $ProjectCurlWithCares"
+Write-Information "[PowerShell] Component information: CURL with libssh2: $ProjectCurlWithLibSsh2"
+Write-Information "[PowerShell] Component information: CURL with nghttp2: $ProjectCurlWithNgHttp2"
+Write-Information "[PowerShell] Component information: CURL with OpenSSL: $ProjectCurlWithOpenSsl"
+Write-Information "[PowerShell] Component information: CURL with shared c-ares: $ProjectCurlWithSharedCares"
 Write-Information "[PowerShell] Component information: CURL with shared libraries: $ProjectCurlWithSharedLibraries"
+Write-Information "[PowerShell] Component information: CURL with shared libssh2: $ProjectCurlWithSharedLibSsh2"
+Write-Information "[PowerShell] Component information: CURL with shared nghttp2: $ProjectCurlWithSharedNgHttp2"
 Write-Information "[PowerShell] Component information: CURL with shared Zlib: $ProjectCurlWithSharedZlib"
 Write-Information "[PowerShell] Component information: CURL with Zlib: $ProjectCurlWithZlib"
 Write-Information "[PowerShell] Component information: CURL without apps: $ProjectCurlWithoutApps"
@@ -645,6 +702,7 @@ Write-Information "[PowerShell] Component information: libwebsockets without ins
 Write-Information "[PowerShell] Component information: libwebsockets without test apps: $ProjectLibWebSocketsWithoutTestApps"
 Write-Information "[PowerShell] Component information: Net-SNMP with IPv6: $ProjectNetSnmpWithIpv6"
 Write-Information "[PowerShell] Component information: Net-SNMP with shared libraries: $ProjectNetSnmpWithSharedLibraries"
+Write-Information "[PowerShell] Component information: Net-SNMP with SSH: $ProjectNetSnmpWithSsh"
 Write-Information "[PowerShell] Component information: Net-SNMP with SSL: $ProjectNetSnmpWithSsl"
 Write-Information "[PowerShell] Component information: Net-SNMP with WinExtDll: $ProjectNetSnmpWithWinExtDll"
 Write-Information "[PowerShell] Component information: Net-SNMP without apps: $ProjectNetSnmpWithoutApps"
@@ -688,6 +746,7 @@ Write-Information "[PowerShell] Component information: POCO without installing a
 Write-Information "[PowerShell] Component information: POCO without installing files: $ProjectPocoWithoutInstallFiles"
 Write-Information "[PowerShell] Component information: POCO without installing headers: $ProjectPocoWithoutInstallHeaders"
 Write-Information "[PowerShell] Component information: POCO without installing libraries: $ProjectPocoWithoutInstallLibraries"
+Write-Information "[PowerShell] Component information: Protocol Buffer with external Protocol Buffer Compiler: $ProjectProtoBufWithExternalProtoc"
 Write-Information "[PowerShell] Component information: Protocol Buffer with shared libraries: $ProjectProtoBufWithSharedLibraries"
 Write-Information "[PowerShell] Component information: Protocol Buffer with shared Zlib: $ProjectProtoBufWithSharedZlib"
 Write-Information "[PowerShell] Component information: Protocol Buffer with Zlib: $ProjectProtoBufWithZlib"
@@ -792,13 +851,128 @@ Write-Information "[PowerShell] Detecting CMake ... FOUND"
 
 
 
+## Append Protoc user folder into PATH
+$MyProtocTargetPath = "${Env:USERPROFILE}\.protoc\${ProjectProtocVersion}"
+$Env:PATH = $Env:PATH + ';' + "${MyProtocTargetPath}\bin"
+
+
+
+## Detect Project Protoc
+Write-Information "[PowerShell] Detecting Project Protoc ..."
+if (-not $MyProjectProtocCliDetected) {
+    $MyProtocProcess = $null
+    $MyProtocProcessHandle = $null
+    try {
+        $MyProtocProcess = Start-Process -FilePath "$MyProjectProtocCli" -WindowStyle Hidden -PassThru `
+                -ArgumentList "--version"
+        $MyProtocProcessHandle = $MyProtocProcess.Handle
+        $MyProtocProcess.WaitForExit()
+        $MyProtocProcessExitCode = $MyProtocProcess.ExitCode
+        if ($MyProtocProcessExitCode -ne 0) {
+            Write-Error "[PowerShell] Detecting Project Protoc ... INCORRECT (ExitCode: $MyProtocProcessExitCode)"
+            $MyProjectProtocCliDetected = $false
+        } else {
+            Write-Information "[PowerShell] Detecting Project Protoc ... FOUND"
+            $MyProjectProtocCliDetected = $true
+        }
+    } catch {
+        Write-Information "[PowerShell] Detecting Project Protoc ... NOT FOUND (Project Protoc is missing)"
+        $MyProjectProtocCliDetected = $false
+    } finally {
+        if ($null -ne $MyProtocProcessHandle) {
+            $MyProtocProcessHandle = $null
+        }
+        if ($null -ne $MyProtocProcess) {
+            $MyProtocProcess.Dispose()
+            $MyProtocProcess = $null
+        }
+    }
+}
+
+
+
+## Restore Project Protoc
+if (-not $MyProjectProtocCliDetected) {
+    Write-Information "[PowerShell] Restoring Project Protoc ..."
+
+    ## Restore Project Protoc - Download archive file
+    $MyProtocArchiveName = $ProtocVersionArchitectureToArchiveNameMap["${ProjectProtocVersion}_${Env:PROCESSOR_ARCHITECTURE}"]
+    $MyProtocArchiveUrl = "https://github.com/protocolbuffers/protobuf/releases/download/v${ProjectProtocVersion}/${MyProtocArchiveName}"
+    $MyProtocTempPath = [System.guid]::NewGuid().toString()
+    $MyProtocTempPath = "${Env:Temp}\${MyProtocTempPath}_${MyProtocArchiveName}"
+    Write-Information "[PowerShell] Restoring Project Protoc ... Downloading archive file from ${MyProtocArchiveUrl} ..."
+    try {
+        Invoke-WebRequest $MyProtocArchiveUrl -OutFile $MyProtocTempPath
+    } catch {
+        Write-Error "[PowerShell] Restoring Project Protoc ... Downloading archive file from ${MyProtocArchiveUrl} ... FAILED"
+        Exit 1
+    }
+    Write-Information "[PowerShell] Restoring Project Protoc ... Downloading archive file from ${MyProtocArchiveUrl} ... DONE"
+
+    ## Restore Project Protoc - Extract archive file
+    Write-Information "[PowerShell] Restoring Project Protoc ... Extracting archive file to ${MyProtocTargetPath} ..."
+    try {
+        Expand-Archive -Path $MyProtocTempPath -DestinationPath $MyProtocTargetPath
+    } catch {
+        Write-Error "[PowerShell] Restoring Project Protoc ... Extracting archive file to ${MyProtocTargetPath} ... FAILED"
+        Exit 1
+    }
+    Write-Information "[PowerShell] Restoring Project Protoc ... Extracting archive file to ${MyProtocTargetPath} ... DONE"
+
+    ## Restore Project Protoc - Check binary file
+    Write-Information "[PowerShell] Restoring Project Protoc ... Checking binary file ..."
+    if (-not (Test-Path "${MyProtocTargetPath}\bin")) {
+        Write-Error "[PowerShell] Restoring Project Protoc ... Checking binary file ... FAILED (Folder does not exist)"
+        Exit 1
+    }
+    if (Test-Path "${MyProtocTargetPath}\bin\${MyProjectProtocCli}.exe") {
+        Write-Information "[PowerShell] Restoring Project Protoc ... Checking binary file ... FOUND"
+    } elseif (-not (Test-Path "${MyProtocTargetPath}\bin\${ProtocCli}.exe")) {
+        Write-Error "[PowerShell] Restoring Project Protoc ... Checking binary file ... NOT FOUND (Protoc is missing)"
+        Exit 1
+    } else {
+        Move-Item -Path "${MyProtocTargetPath}\bin\${ProtocCli}.exe" -Destination "${MyProtocTargetPath}\bin\${MyProjectProtocCli}.exe" -Force -ErrorVariable MyIoError | Out-Null
+        if ($MyIoError) {
+            Write-Error "[PowerShell] Restoring Project Protoc ... Checking binary file ... FAILED (Can not move resource)"
+            Exit 1
+        }
+        $MyProtocProcess = $null
+        $MyProtocProcessHandle = $null
+        try {
+            $MyProtocProcess = Start-Process -FilePath "$MyProjectProtocCli" -WindowStyle Hidden -PassThru `
+                    -ArgumentList "--version"
+            $MyProtocProcessHandle = $MyProtocProcess.Handle
+            $MyProtocProcess.WaitForExit()
+            $MyProtocProcessExitCode = $MyProtocProcess.ExitCode
+            if ($MyProtocProcessExitCode -ne 0) {
+                Write-Error "[PowerShell] Restoring Project Protoc ... Checking binary file ... INCORRECT (ExitCode: $MyProtocProcessExitCode)"
+                Exit 1
+            }
+        } catch {
+            Write-Information "[PowerShell] Restoring Project Protoc ... Checking binary file ... NOT FOUND (Project Protoc is missing)"
+            Exit 1
+        } finally {
+            if ($null -ne $MyProtocProcessHandle) {
+                $MyProtocProcessHandle = $null
+            }
+            if ($null -ne $MyProtocProcess) {
+                $MyProtocProcess.Dispose()
+                $MyProtocProcess = $null
+            }
+        }
+        Write-Information "[PowerShell] Restoring Project Protoc ... Checking binary file ... DONE"
+    }
+}
+
+
+
 ## Build project
 Write-Information "[PowerShell] Building project ..."
 foreach ($MyCmakePlatform in $MyCmakePlatformList) {
-    ## Build project for platform $MyCmakePlatform
-    Write-Information "[PowerShell] Building project for platform $MyCmakePlatform ..."
+    ## Build project for arch $MyCmakePlatform
+    Write-Information "[PowerShell] Building project for arch $MyCmakePlatform ..."
     if (-not ('ON'.Equals($MyCmakePlatformToBuildToggleMap[$MyCmakePlatform]))) {
-        Write-Information "[PowerShell] Building project for platform $MyCmakePlatform ... SKIPPED"
+        Write-Information "[PowerShell] Building project for arch $MyCmakePlatform ... SKIPPED"
     } else {
         $MyTempBuildFolder = Join-Path -Path $TempBuildFolder -ChildPath $ProjectReleaseType
         $MyTempBuildFolder = Join-Path -Path $MyTempBuildFolder -ChildPath $MyCmakePlatform
@@ -806,10 +980,10 @@ foreach ($MyCmakePlatform in $MyCmakePlatformList) {
         $MyTempInstallFolderAbs = Join-Path -Path $MyTempInstallFolderAbs -ChildPath $ProjectReleaseType
         $MyTempInstallFolderAbs = Join-Path -Path $MyTempInstallFolderAbs -ChildPath $MyCmakePlatform
 
-        ## Build project for platform $MyCmakePlatform - Generate project
+        ## Build project for arch $MyCmakePlatform - Generate project
         $MyCmakeProcess = $null
         $MyCmakeProcessHandle = $null
-        Write-Verbose "[PowerShell] Building project for platform $MyCmakePlatform ... Generating project ..."
+        Write-Verbose "[PowerShell] Building project for arch $MyCmakePlatform ... Generating project ..."
         try {
             $MyCmakeArgumentList = $MyCmakeCommonArgumentList + @(
                     "-B $MyTempBuildFolder",
@@ -827,18 +1001,18 @@ foreach ($MyCmakePlatform in $MyCmakePlatformList) {
                 }
             }
             $MyCmakeArgumentListString = $MyCmakeArgumentList -join " "
-            Write-Verbose "[PowerShell] Building project for platform $MyCmakePlatform ... Generating project ... argument list: $MyCmakeArgumentListString"
+            Write-Verbose "[PowerShell] Building project for arch $MyCmakePlatform ... Generating project ... argument list: $MyCmakeArgumentListString"
             $MyCmakeProcess = Start-Process -FilePath "${Env:ProgramFiles}\CMake\bin\$CmakeCli" -NoNewWindow -PassThru `
                     -ArgumentList $MyCmakeArgumentListString
             $MyCmakeProcessHandle = $MyCmakeProcess.Handle
             $MyCmakeProcess.WaitForExit()
             $MyCmakeProcessExitCode = $MyCmakeProcess.ExitCode
             if ($MyCmakeProcessExitCode -ne 0) {
-                Write-Error "[PowerShell] Building project for platform $MyCmakePlatform ... Generating project ... FAILED (ExitCode: $MyCmakeProcessExitCode)"
+                Write-Error "[PowerShell] Building project for arch $MyCmakePlatform ... Generating project ... FAILED (ExitCode: $MyCmakeProcessExitCode)"
                 Exit 1
             }
         } catch {
-            Write-Error "[PowerShell] Building project for platform $MyCmakePlatform ... Generating project ... FAILED (CMake is missing)"
+            Write-Error "[PowerShell] Building project for arch $MyCmakePlatform ... Generating project ... FAILED (CMake is missing)"
             Exit 1
         } finally {
             if ($null -ne $MyCmakeProcessHandle) {
@@ -849,14 +1023,14 @@ foreach ($MyCmakePlatform in $MyCmakePlatformList) {
                 $MyCmakeProcess = $null
             }
         }
-        Write-Verbose "[PowerShell] Building project for platform $MyCmakePlatform ... Generating project ... DONE"
+        Write-Verbose "[PowerShell] Building project for arch $MyCmakePlatform ... Generating project ... DONE"
 
-        ## Build project for platform $MyCmakePlatform - Compile project
+        ## Build project for arch $MyCmakePlatform - Compile project
         $MyCmakeProcess = $null
         $MyCmakeProcessHandle = $null
-        Write-Verbose "[PowerShell] Building project for platform $MyCmakePlatform ... Compiling project ..."
+        Write-Verbose "[PowerShell] Building project for arch $MyCmakePlatform ... Compiling project ..."
         try {
-            $MyCmakeParaParallel = '--parallel'
+            $MyCmakeParaParallel = '-- /m'
             if ('ON'.Equals($ProjectShouldDisableParallelBuild)) {
                 $MyCmakeParaParallel = ''
             }
@@ -866,11 +1040,11 @@ foreach ($MyCmakePlatform in $MyCmakePlatformList) {
             $MyCmakeProcess.WaitForExit()
             $MyCmakeProcessExitCode = $MyCmakeProcess.ExitCode
             if ($MyCmakeProcessExitCode -ne 0) {
-                Write-Error "[PowerShell] Building project for platform $MyCmakePlatform ... Compiling project ... FAILED (ExitCode: $MyCmakeProcessExitCode)"
+                Write-Error "[PowerShell] Building project for arch $MyCmakePlatform ... Compiling project ... FAILED (ExitCode: $MyCmakeProcessExitCode)"
                 Exit 1
             }
         } catch {
-            Write-Error "[PowerShell] Building project for platform $MyCmakePlatform ... Compiling project ... FAILED (CMake is missing)"
+            Write-Error "[PowerShell] Building project for arch $MyCmakePlatform ... Compiling project ... FAILED (CMake is missing)"
             Exit 1
         } finally {
             if ($null -ne $MyCmakeProcessHandle) {
@@ -881,12 +1055,12 @@ foreach ($MyCmakePlatform in $MyCmakePlatformList) {
                 $MyCmakeProcess = $null
             }
         }
-        Write-Verbose "[PowerShell] Building project for platform $MyCmakePlatform ... Compiling project ... DONE"
+        Write-Verbose "[PowerShell] Building project for arch $MyCmakePlatform ... Compiling project ... DONE"
 
-        ## Build project for platform $MyCmakePlatform - Install project
+        ## Build project for arch $MyCmakePlatform - Install project
         $MyCmakeProcess = $null
         $MyCmakeProcessHandle = $null
-        Write-Verbose "[PowerShell] Building project for platform $MyCmakePlatform ... Installing project ..."
+        Write-Verbose "[PowerShell] Building project for arch $MyCmakePlatform ... Installing project ..."
         try {
             $MyCmakeProcess = Start-Process -FilePath "${Env:ProgramFiles}\CMake\bin\$CmakeCli" -NoNewWindow -PassThru `
                     -ArgumentList "--install $MyTempBuildFolder --config $ProjectReleaseType"
@@ -894,11 +1068,11 @@ foreach ($MyCmakePlatform in $MyCmakePlatformList) {
             $MyCmakeProcess.WaitForExit()
             $MyCmakeProcessExitCode = $MyCmakeProcess.ExitCode
             if ($MyCmakeProcessExitCode -ne 0) {
-                Write-Error "[PowerShell] Building project for platform $MyCmakePlatform ... Installing project ... FAILED (ExitCode: $MyCmakeProcessExitCode)"
+                Write-Error "[PowerShell] Building project for arch $MyCmakePlatform ... Installing project ... FAILED (ExitCode: $MyCmakeProcessExitCode)"
                 Exit 1
             }
         } catch {
-            Write-Error "[PowerShell] Building project for platform $MyCmakePlatform ... Installing project ... FAILED (CMake is missing)"
+            Write-Error "[PowerShell] Building project for arch $MyCmakePlatform ... Installing project ... FAILED (CMake is missing)"
             Exit 1
         } finally {
             if ($null -ne $MyCmakeProcessHandle) {
@@ -909,9 +1083,9 @@ foreach ($MyCmakePlatform in $MyCmakePlatformList) {
                 $MyCmakeProcess = $null
             }
         }
-        Write-Verbose "[PowerShell] Building project for platform $MyCmakePlatform ... Installing project ... DONE"
+        Write-Verbose "[PowerShell] Building project for arch $MyCmakePlatform ... Installing project ... DONE"
 
-        Write-Information "[PowerShell] Building project for platform $MyCmakePlatform ... DONE"
+        Write-Information "[PowerShell] Building project for arch $MyCmakePlatform ... DONE"
     }
 }
 Write-Information "[PowerShell] Building project ... DONE"
