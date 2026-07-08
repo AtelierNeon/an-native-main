@@ -1,6 +1,8 @@
 @echo off
 
-setlocal
+rem Start delaying variable expansion
+setlocal ENABLEDELAYEDEXPANSION
+
 echo [Windows] Applying preset options ...
 set MY_PROJECT_BOOST_WITHOUT_APPS=ON
 set MY_PROJECT_BOOST_WITHOUT_INSTALL_ALL=ON
@@ -57,9 +59,12 @@ set MY_PROJECT_SQLITE_WITHOUT_INSTALL_ALL=ON
 set MY_PROJECT_WITH_COMPILER_PRECHECK=ON
 set MY_PROJECT_ZLIB_WITHOUT_INSTALL_ALL=ON
 set MY_PROJECT_ZLIB_WITHOUT_TEST_APPS=ON
+set NINJA_STATUS=[%%s/%%t %%p :: %%e]
 echo [Windows] Applying default options ... DONE
-call %~dp0\build-windows.cmd
+call "%~dp0\build-windows.cmd"
 if "%ERRORLEVEL%" neq "0" (
     exit /b !ERRORLEVEL!
 )
+
+rem End delaying variable expansion
 endlocal

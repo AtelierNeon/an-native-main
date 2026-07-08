@@ -29,7 +29,7 @@ if "%ERRORLEVEL%" neq "0" (
 rem Detect PowerShell script file
 echo [Windows] Detecting PowerShell script file ...
 set POWERSHELL_SCRIPT=build-windows.ps1
-if not exist %PROJECT_ROOT%\script\%POWERSHELL_SCRIPT% (
+if not exist "%PROJECT_ROOT%\script\%POWERSHELL_SCRIPT%" (
     echo [Windows] Detecting PowerShell script file ... NOT FOUND
     echo [Windows] Aborted ...
     exit /b 2
@@ -38,11 +38,11 @@ if not exist %PROJECT_ROOT%\script\%POWERSHELL_SCRIPT% (
 )
 
 rem !POWERSHELL! -ExecutionPolicy Unrestricted -File %PROJECT_ROOT%\script\%POWERSHELL_SCRIPT% -Config Release
-!POWERSHELL! -ExecutionPolicy Unrestricted -File %PROJECT_ROOT%\script\%POWERSHELL_SCRIPT%
+!POWERSHELL! -ExecutionPolicy Unrestricted -File "%PROJECT_ROOT%\script\%POWERSHELL_SCRIPT%"
 if "!ERRORLEVEL!" neq "0" (
     echo [Windows] Something wrong in running %POWERSHELL_SCRIPT%.
     echo [Windows] Aborting ...
-    exit /b 3
+    exit /b !ERRORLEVEL!
 ) else (
     echo [Windows] Done ...
 )

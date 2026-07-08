@@ -7,18 +7,68 @@ $InformationPreference = 'Continue'
 ##
 ## Global config
 ##
-$CmakeCli = 'cmake'
-$CmakeToolsetToGeneratorMap = @{
-        'v120' = 'Visual Studio 12 2013'
-        'v140' = 'Visual Studio 14 2015'
-        'v141' = 'Visual Studio 15 2017'
-        'v142' = 'Visual Studio 16 2019'
-        'v143' = 'Visual Studio 17 2022'
+$CcacheCli = 'ccache'
+$CcacheVersionArchitectureToArchiveNameWithoutExtMap = @{
+    '4.12.3_AMD64' = 'ccache-4.12.3-windows-x86_64'
+    '4.12.3_ARM64' = 'ccache-4.12.3-windows-aarch64'
+    '4.13.6_AMD64' = 'ccache-4.13.6-windows-x86_64'
+    '4.13.6_ARM64' = 'ccache-4.13.6-windows-aarch64'
 }
+$CmakeCli = 'cmake'
+$CmakePlatformToVcvarsPlatformMap = @{
+    'Win32'   = 'x86'
+    'ARM'     = 'x64_arm'
+    'x64'     = 'x64'
+    'ARM64'   = 'x64_arm64'
+    'ARM64EC' = 'x64_arm64'
+}
+$CmakeToolsetToGeneratorMap = @{
+    'v120' = 'Visual Studio 12 2013'
+    'v140' = 'Visual Studio 14 2015'
+    'v141' = 'Visual Studio 15 2017'
+    'v142' = 'Visual Studio 16 2019'
+    'v143' = 'Visual Studio 17 2022'
+    'v145' = 'Visual Studio 18 2026'
+}
+$CmakeVersionArchitectureToArchiveNameWithoutExtMap = @{
+    '3.21.7_AMD64'  = 'cmake-3.21.7-windows-x86_64'
+    '3.22.6_AMD64'  = 'cmake-3.22.6-windows-x86_64'
+    '3.23.5_AMD64'  = 'cmake-3.23.5-windows-x86_64'
+    '3.24.4_AMD64'  = 'cmake-3.24.4-windows-x86_64'
+    '3.24.4_ARM64'  = 'cmake-3.24.4-windows-arm64'
+    '3.25.3_AMD64'  = 'cmake-3.25.3-windows-x86_64'
+    '3.25.3_ARM64'  = 'cmake-3.25.3-windows-arm64'
+    '3.26.6_AMD64'  = 'cmake-3.26.6-windows-x86_64'
+    '3.26.6_ARM64'  = 'cmake-3.26.6-windows-arm64'
+    '3.27.9_AMD64'  = 'cmake-3.27.9-windows-x86_64'
+    '3.27.9_ARM64'  = 'cmake-3.27.9-windows-arm64'
+    '3.28.6_AMD64'  = 'cmake-3.28.6-windows-x86_64'
+    '3.28.6_ARM64'  = 'cmake-3.28.6-windows-arm64'
+    '3.29.9_AMD64'  = 'cmake-3.29.9-windows-x86_64'
+    '3.29.9_ARM64'  = 'cmake-3.29.9-windows-arm64'
+    '3.30.9_AMD64'  = 'cmake-3.30.9-windows-x86_64'
+    '3.30.9_ARM64'  = 'cmake-3.30.9-windows-arm64'
+    '3.31.12_AMD64' = 'cmake-3.31.12-windows-x86_64'
+    '3.31.12_ARM64' = 'cmake-3.31.12-windows-arm64'
+    '4.0.7_AMD64'   = 'cmake-4.0.7-windows-x86_64'
+    '4.0.7_ARM64'   = 'cmake-4.0.7-windows-arm64'
+    '4.1.6_AMD64'   = 'cmake-4.1.6-windows-x86_64'
+    '4.1.6_ARM64'   = 'cmake-4.1.6-windows-arm64'
+    '4.2.7_AMD64'   = 'cmake-4.2.7-windows-x86_64'
+    '4.2.7_ARM64'   = 'cmake-4.2.7-windows-arm64'
+    '4.3.4_AMD64'   = 'cmake-4.3.4-windows-x86_64'
+    '4.3.4_ARM64'   = 'cmake-4.3.4-windows-arm64'
+}
+$NinjaCli = 'ninja'
+$NinjaVersionArchitectureToArchiveNameWithoutExtMap = @{
+    '1.13.2_AMD64' = 'ninja-win'
+    '1.13.2_ARM64' = 'ninja-winarm64'
+}
+$NtfsCompactCli = 'compact'
 $ProtocCli = 'protoc'
 $ProtocVersionArchitectureToArchiveNameMap = @{
-        '3.9.1_AMD64' = 'protoc-3.9.1-win64.zip'
-        '3.9.1_ARM64' = 'protoc-3.9.1-win32.zip'
+    '3.9.1_AMD64' = 'protoc-3.9.1-win64.zip'
+    '3.9.1_ARM64' = 'protoc-3.9.1-win32.zip'
 }
 $ProjectFolder = Join-Path -Path $PSScriptRoot -ChildPath '..'
 $SourceFolder = $ProjectFolder
@@ -32,161 +82,172 @@ $TempInstallFolder = Join-Path -Path $TempRootFolder -ChildPath 'i'
 ####
 #### Project level config
 ####
-$ProjectProtocVersion = if ($Env:MY_PROJECT_PROTOC_VERSION) {$Env:MY_PROJECT_PROTOC_VERSION} else {'3.9.1'}
-$ProjectReleaseType = if ($Env:MY_PROJECT_RELEASE_TYPE) {$Env:MY_PROJECT_RELEASE_TYPE} else {'Debug'}
-$ProjectRevision = if ($Env:BUILD_NUMBER) {$Env:BUILD_NUMBER} else {'9999'}
-$ProjectShouldDisableCleanBuild = if ($Env:MY_PROJECT_SHOULD_DISABLE_CLEAN_BUILD) {$Env:MY_PROJECT_SHOULD_DISABLE_CLEAN_BUILD} else {'OFF'}
-$ProjectShouldDisableParallelBuild = if ($Env:MY_PROJECT_SHOULD_DISABLE_PARALLEL_BUILD) {$Env:MY_PROJECT_SHOULD_DISABLE_PARALLEL_BUILD} else {'OFF'}
-$ProjectShouldDisable32BitBuild = if ($Env:MY_PROJECT_SHOULD_DISABLE_32BIT_BUILD) {$Env:MY_PROJECT_SHOULD_DISABLE_32BIT_BUILD} else {'OFF'}
-$ProjectShouldDisable64BitBuild = if ($Env:MY_PROJECT_SHOULD_DISABLE_64BIT_BUILD) {$Env:MY_PROJECT_SHOULD_DISABLE_64BIT_BUILD} else {'OFF'}
-$ProjectShouldDisableArmBuild = if ($Env:MY_PROJECT_SHOULD_DISABLE_ARM_BUILD) {$Env:MY_PROJECT_SHOULD_DISABLE_ARM_BUILD} else {'OFF'}
-$ProjectShouldDisableArm64ecBuild = if ($Env:MY_PROJECT_SHOULD_DISABLE_ARM64EC_BUILD) {$Env:MY_PROJECT_SHOULD_DISABLE_ARM64EC_BUILD} else {'OFF'}
-$ProjectShouldDisableX86Build = if ($Env:MY_PROJECT_SHOULD_DISABLE_X86_BUILD) {$Env:MY_PROJECT_SHOULD_DISABLE_X86_BUILD} else {'OFF'}
-$ProjectToolset = if ($Env:MY_PROJECT_CMAKE_TOOLSET) {$Env:MY_PROJECT_CMAKE_TOOLSET} else {'v142'}
-$ProjectWithCompilerCache = if ($Env:MY_PROJECT_WITH_COMPILER_CACHE) {$Env:MY_PROJECT_WITH_COMPILER_CACHE} else {'OFF'}
-$ProjectWithCompilerPrecheck = if ($Env:MY_PROJECT_WITH_COMPILER_PRECHECK) {$Env:MY_PROJECT_WITH_COMPILER_PRECHECK} else {'OFF'}
-$ProjectWithSharedVcrt = if ($Env:MY_PROJECT_WITH_SHARED_VCRT) {$Env:MY_PROJECT_WITH_SHARED_VCRT} else {'OFF'}
-$ProjectWithStaticVcrt = if ($Env:MY_PROJECT_WITH_STATIC_VCRT) {$Env:MY_PROJECT_WITH_STATIC_VCRT} else {'ON'}
-$ProjectWithWorkaroundArm64rt = if ($Env:MY_PROJECT_WITH_WORKAROUND_ARM64RT) {$Env:MY_PROJECT_WITH_WORKAROUND_ARM64RT} else {'OFF'}
-$ProjectWithWorkaroundOptGy = if ($Env:MY_PROJECT_WITH_WORKAROUND_OPT_GY) {$Env:MY_PROJECT_WITH_WORKAROUND_OPT_GY} else {'OFF'}
-$ProjectWithWorkaroundSpectre = if ($Env:MY_PROJECT_WITH_WORKAROUND_SPECTRE) {$Env:MY_PROJECT_WITH_WORKAROUND_SPECTRE} else {'OFF'}
+$ProjectCcacheRoot = if ($Env:MY_PROJECT_CCACHE_ROOT) { $Env:MY_PROJECT_CCACHE_ROOT } else { 'C:\Ccache' }
+$ProjectCcacheVersion = if ($Env:MY_PROJECT_CCACHE_VERSION) { $Env:MY_PROJECT_CCACHE_VERSION } else { '4.13.6' }
+$ProjectCmakeBuildSystem = if ($Env:MY_PROJECT_CMAKE_BUILD_SYSTEM) { $Env:MY_PROJECT_CMAKE_BUILD_SYSTEM } else { 'ninja' } # or 'msbuild'
+$ProjectCmakeRoot = if ($Env:MY_PROJECT_CMAKE_ROOT) { $Env:MY_PROJECT_CMAKE_ROOT } else { 'C:\CMake' }
+$ProjectCmakeToolset = if ($Env:MY_PROJECT_CMAKE_TOOLSET) { $Env:MY_PROJECT_CMAKE_TOOLSET } else { 'v143' }
+$ProjectCmakeVersion = if ($Env:MY_PROJECT_CMAKE_VERSION) { $Env:MY_PROJECT_CMAKE_VERSION } else { '3.31.12' }
+$ProjectNinjaRoot = if ($Env:MY_PROJECT_NINJA_ROOT) { $Env:MY_PROJECT_NINJA_ROOT } else { 'C:\Ninja' }
+$ProjectNinjaVersion = if ($Env:MY_PROJECT_NINJA_VERSION) { $Env:MY_PROJECT_NINJA_VERSION } else { '1.13.2' }
+$ProjectParallelBuildLevel = if ($Env:MY_PROJECT_PARALLEL_BUILD_LEVEL) { $Env:MY_PROJECT_PARALLEL_BUILD_LEVEL } else { '' } # or 4
+$ProjectProtocVersion = if ($Env:MY_PROJECT_PROTOC_VERSION) { $Env:MY_PROJECT_PROTOC_VERSION } else { '3.9.1' }
+$ProjectReleaseType = if ($Env:MY_PROJECT_RELEASE_TYPE) { $Env:MY_PROJECT_RELEASE_TYPE } else { 'Debug' } # or Release
+$ProjectRevision = if ($Env:BUILD_NUMBER) { $Env:BUILD_NUMBER } else { '9999' }
+$ProjectShouldDisableCleanBuild = if ($Env:MY_PROJECT_SHOULD_DISABLE_CLEAN_BUILD) { $Env:MY_PROJECT_SHOULD_DISABLE_CLEAN_BUILD } else { 'OFF' }
+$ProjectShouldDisableInstallBuild = if ($Env:MY_PROJECT_SHOULD_DISABLE_INSTALL_BUILD) { $Env:MY_PROJECT_SHOULD_DISABLE_INSTALL_BUILD } else { 'OFF' }
+$ProjectShouldDisableParallelBuild = if ($Env:MY_PROJECT_SHOULD_DISABLE_PARALLEL_BUILD) { $Env:MY_PROJECT_SHOULD_DISABLE_PARALLEL_BUILD } else { 'OFF' }
+$ProjectShouldDisable32BitBuild = if ($Env:MY_PROJECT_SHOULD_DISABLE_32BIT_BUILD) { $Env:MY_PROJECT_SHOULD_DISABLE_32BIT_BUILD } else { 'OFF' }
+$ProjectShouldDisable64BitBuild = if ($Env:MY_PROJECT_SHOULD_DISABLE_64BIT_BUILD) { $Env:MY_PROJECT_SHOULD_DISABLE_64BIT_BUILD } else { 'OFF' }
+$ProjectShouldDisableArmBuild = if ($Env:MY_PROJECT_SHOULD_DISABLE_ARM_BUILD) { $Env:MY_PROJECT_SHOULD_DISABLE_ARM_BUILD } else { 'OFF' }
+$ProjectShouldDisableArm64ecBuild = if ($Env:MY_PROJECT_SHOULD_DISABLE_ARM64EC_BUILD) { $Env:MY_PROJECT_SHOULD_DISABLE_ARM64EC_BUILD } else { 'OFF' }
+$ProjectShouldDisableX86Build = if ($Env:MY_PROJECT_SHOULD_DISABLE_X86_BUILD) { $Env:MY_PROJECT_SHOULD_DISABLE_X86_BUILD } else { 'OFF' }
+$ProjectWindowsSdkVersion = if ($Env:MY_PROJECT_WINDOWS_SDK_VERSION) { $Env:MY_PROJECT_WINDOWS_SDK_VERSION } else { 'latest' } # or 10.0.22621.0
+$ProjectWithCompilerCache = if ($Env:MY_PROJECT_WITH_COMPILER_CACHE) { $Env:MY_PROJECT_WITH_COMPILER_CACHE } else { 'OFF' }
+$ProjectWithCompilerPrecheck = if ($Env:MY_PROJECT_WITH_COMPILER_PRECHECK) { $Env:MY_PROJECT_WITH_COMPILER_PRECHECK } else { 'OFF' }
+$ProjectWithSharedVcrt = if ($Env:MY_PROJECT_WITH_SHARED_VCRT) { $Env:MY_PROJECT_WITH_SHARED_VCRT } else { 'OFF' }
+$ProjectWithStaticVcrt = if ($Env:MY_PROJECT_WITH_STATIC_VCRT) { $Env:MY_PROJECT_WITH_STATIC_VCRT } else { 'ON' }
+$ProjectWithWorkaroundArm64rt = if ($Env:MY_PROJECT_WITH_WORKAROUND_ARM64RT) { $Env:MY_PROJECT_WITH_WORKAROUND_ARM64RT } else { 'OFF' }
+$ProjectWithWorkaroundOptGy = if ($Env:MY_PROJECT_WITH_WORKAROUND_OPT_GY) { $Env:MY_PROJECT_WITH_WORKAROUND_OPT_GY } else { 'OFF' }
+$ProjectWithWorkaroundSpectre = if ($Env:MY_PROJECT_WITH_WORKAROUND_SPECTRE) { $Env:MY_PROJECT_WITH_WORKAROUND_SPECTRE } else { 'OFF' }
 ####
 #### Project component level config
 ####
-$ProjectBoostWithSharedLibraries = if ($Env:MY_PROJECT_BOOST_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_BOOST_WITH_SHARED_LIBRARIES} else {'OFF'}
-$ProjectBoostWithoutApps = if ($Env:MY_PROJECT_BOOST_WITHOUT_APPS) {$Env:MY_PROJECT_BOOST_WITHOUT_APPS} else {'OFF'}
-$ProjectBoostWithoutInstallAll = if ($Env:MY_PROJECT_BOOST_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_BOOST_WITHOUT_INSTALL_ALL} else {'OFF'}
-$ProjectBoostWithoutInstallFiles = if ($Env:MY_PROJECT_BOOST_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_BOOST_WITHOUT_INSTALL_FILES} else {'OFF'}
-$ProjectBoostWithoutInstallHeaders = if ($Env:MY_PROJECT_BOOST_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_BOOST_WITHOUT_INSTALL_HEADERS} else {'OFF'}
-$ProjectBoostWithoutInstallLibraries = if ($Env:MY_PROJECT_BOOST_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_BOOST_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
-$ProjectCaresWithoutApps = if ($Env:MY_PROJECT_CARES_WITHOUT_APPS) {$Env:MY_PROJECT_CARES_WITHOUT_APPS} else {'OFF'}
-$ProjectCaresWithoutInstallAll = if ($Env:MY_PROJECT_CARES_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_CARES_WITHOUT_INSTALL_ALL} else {'OFF'}
-$ProjectCaresWithoutInstallFiles = if ($Env:MY_PROJECT_CARES_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_CARES_WITHOUT_INSTALL_FILES} else {'OFF'}
-$ProjectCaresWithoutInstallHeaders = if ($Env:MY_PROJECT_CARES_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_CARES_WITHOUT_INSTALL_HEADERS} else {'OFF'}
-$ProjectCaresWithoutInstallLibraries = if ($Env:MY_PROJECT_CARES_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_CARES_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
-$ProjectCaresWithoutTestApps = if ($Env:MY_PROJECT_CARES_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_CARES_WITHOUT_TEST_APPS} else {'OFF'}
-$ProjectCjsonWithoutInstallAll = if ($Env:MY_PROJECT_CJSON_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_CJSON_WITHOUT_INSTALL_ALL} else {'OFF'}
-$ProjectCjsonWithoutInstallFiles = if ($Env:MY_PROJECT_CJSON_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_CJSON_WITHOUT_INSTALL_FILES} else {'OFF'}
-$ProjectCjsonWithoutInstallHeaders = if ($Env:MY_PROJECT_CJSON_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_CJSON_WITHOUT_INSTALL_HEADERS} else {'OFF'}
-$ProjectCjsonWithoutInstallLibraries = if ($Env:MY_PROJECT_CJSON_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_CJSON_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
-$ProjectCjsonWithoutTestApps = if ($Env:MY_PROJECT_CJSON_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_CJSON_WITHOUT_TEST_APPS} else {'OFF'}
-$ProjectCurlWithCares = if ($Env:MY_PROJECT_CURL_WITH_CARES) {$Env:MY_PROJECT_CURL_WITH_CARES} else {'OFF'}
-$ProjectCurlWithLibSsh2 = if ($Env:MY_PROJECT_CURL_WITH_LIBSSH2) {$Env:MY_PROJECT_CURL_WITH_LIBSSH2} else {'OFF'}
-$ProjectCurlWithNgHttp2 = if ($Env:MY_PROJECT_CURL_WITH_NGHTTP2) {$Env:MY_PROJECT_CURL_WITH_NGHTTP2} else {'OFF'}
-$ProjectCurlWithOpenSsl = if ($Env:MY_PROJECT_CURL_WITH_OPENSSL) {$Env:MY_PROJECT_CURL_WITH_OPENSSL} else {'OFF'}
-$ProjectCurlWithSharedCares = if ($Env:MY_PROJECT_CURL_WITH_SHARED_CARES) {$Env:MY_PROJECT_CURL_WITH_SHARED_CARES} else {'OFF'}
-$ProjectCurlWithSharedLibraries = if ($Env:MY_PROJECT_CURL_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_CURL_WITH_SHARED_LIBRARIES} else {'OFF'}
-$ProjectCurlWithSharedLibSsh2 = if ($Env:MY_PROJECT_CURL_WITH_SHARED_LIBSSH2) {$Env:MY_PROJECT_CURL_WITH_SHARED_LIBSSH2} else {'OFF'}
-$ProjectCurlWithSharedNgHttp2 = if ($Env:MY_PROJECT_CURL_WITH_SHARED_NGHTTP2) {$Env:MY_PROJECT_CURL_WITH_SHARED_NGHTTP2} else {'OFF'}
-$ProjectCurlWithSharedZlib = if ($Env:MY_PROJECT_CURL_WITH_SHARED_ZLIB) {$Env:MY_PROJECT_CURL_WITH_SHARED_ZLIB} else {'OFF'}
-$ProjectCurlWithZlib = if ($Env:MY_PROJECT_CURL_WITH_ZLIB) {$Env:MY_PROJECT_CURL_WITH_ZLIB} else {'OFF'}
-$ProjectCurlWithoutApps = if ($Env:MY_PROJECT_CURL_WITHOUT_APPS) {$Env:MY_PROJECT_CURL_WITHOUT_APPS} else {'OFF'}
-$ProjectCurlWithoutInstallAll = if ($Env:MY_PROJECT_CURL_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_CURL_WITHOUT_INSTALL_ALL} else {'OFF'}
-$ProjectCurlWithoutInstallFiles = if ($Env:MY_PROJECT_CURL_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_CURL_WITHOUT_INSTALL_FILES} else {'OFF'}
-$ProjectCurlWithoutInstallHeaders = if ($Env:MY_PROJECT_CURL_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_CURL_WITHOUT_INSTALL_HEADERS} else {'OFF'}
-$ProjectCurlWithoutInstallLibraries = if ($Env:MY_PROJECT_CURL_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_CURL_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
-$ProjectExpatWithSharedLibraries = if ($Env:MY_PROJECT_EXPAT_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_EXPAT_WITH_SHARED_LIBRARIES} else {'OFF'}
-$ProjectExpatWithoutApps = if ($Env:MY_PROJECT_EXPAT_WITHOUT_APPS) {$Env:MY_PROJECT_EXPAT_WITHOUT_APPS} else {'OFF'}
-$ProjectExpatWithoutInstallAll = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_ALL} else {'OFF'}
-$ProjectExpatWithoutInstallFiles = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_FILES} else {'OFF'}
-$ProjectExpatWithoutInstallHeaders = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_HEADERS} else {'OFF'}
-$ProjectExpatWithoutInstallLibraries = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
-$ProjectExpatWithoutTestApps = if ($Env:MY_PROJECT_EXPAT_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_EXPAT_WITHOUT_TEST_APPS} else {'OFF'}
-$ProjectLibSsh2WithSharedLibraries = if ($Env:MY_PROJECT_LIBSSH2_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_LIBSSH2_WITH_SHARED_LIBRARIES} else {'OFF'}
-$ProjectLibSsh2WithSharedZlib = if ($Env:MY_PROJECT_LIBSSH2_WITH_SHARED_ZLIB) {$Env:MY_PROJECT_LIBSSH2_WITH_SHARED_ZLIB} else {'OFF'}
-$ProjectLibSsh2WithZlib = if ($Env:MY_PROJECT_LIBSSH2_WITH_ZLIB) {$Env:MY_PROJECT_LIBSSH2_WITH_ZLIB} else {'OFF'}
-$ProjectLibSsh2WithoutInstallAll = if ($Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_ALL} else {'OFF'}
-$ProjectLibSsh2WithoutInstallFiles = if ($Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_FILES} else {'OFF'}
-$ProjectLibSsh2WithoutInstallHeaders = if ($Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_HEADERS} else {'OFF'}
-$ProjectLibSsh2WithoutInstallLibraries = if ($Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
-$ProjectLibSsh2WithoutTestApps = if ($Env:MY_PROJECT_LIBSSH2_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_LIBSSH2_WITHOUT_TEST_APPS} else {'OFF'}
-$ProjectLibWebSocketsWithExternalPoll = if ($Env:MY_PROJECT_LIBWEBSOCKETS_WITH_EXTERNAL_POLL) {$Env:MY_PROJECT_LIBWEBSOCKETS_WITH_EXTERNAL_POLL} else {'OFF'}
-$ProjectLibWebSocketsWithoutInstallAll = if ($Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_ALL} else {'OFF'}
-$ProjectLibWebSocketsWithoutInstallFiles = if ($Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_FILES} else {'OFF'}
-$ProjectLibWebSocketsWithoutInstallHeaders = if ($Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_HEADERS} else {'OFF'}
-$ProjectLibWebSocketsWithoutInstallLibraries = if ($Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
-$ProjectLibWebSocketsWithoutTestApps = if ($Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_TEST_APPS} else {'OFF'}
-$ProjectNetSnmpWithIpv6 = if ($Env:MY_PROJECT_NETSNMP_WITH_IPV6) {$Env:MY_PROJECT_NETSNMP_WITH_IPV6} else {'OFF'}
-$ProjectNetSnmpWithSharedLibraries = if ($Env:MY_PROJECT_NETSNMP_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_NETSNMP_WITH_SHARED_LIBRARIES} else {'OFF'}
-$ProjectNetSnmpWithSsh = if ($Env:MY_PROJECT_NETSNMP_WITH_SSH) {$Env:MY_PROJECT_NETSNMP_WITH_SSH} else {'OFF'}
-$ProjectNetSnmpWithSsl = if ($Env:MY_PROJECT_NETSNMP_WITH_SSL) {$Env:MY_PROJECT_NETSNMP_WITH_SSL} else {'OFF'}
-$ProjectNetSnmpWithWinExtDll = if ($Env:MY_PROJECT_NETSNMP_WITH_WINEXTDLL) {$Env:MY_PROJECT_NETSNMP_WITH_WINEXTDLL} else {'OFF'}
-$ProjectNetSnmpWithoutApps = if ($Env:MY_PROJECT_NETSNMP_WITHOUT_APPS) {$Env:MY_PROJECT_NETSNMP_WITHOUT_APPS} else {'OFF'}
-$ProjectNetSnmpWithoutInstallAll = if ($Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_ALL} else {'OFF'}
-$ProjectNetSnmpWithoutInstallFiles = if ($Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_FILES} else {'OFF'}
-$ProjectNetSnmpWithoutInstallHeaders = if ($Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_HEADERS} else {'OFF'}
-$ProjectNetSnmpWithoutInstallLibraries = if ($Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
-$ProjectNetSnmpWithoutMibLoading = if ($Env:MY_PROJECT_NETSNMP_WITHOUT_MIB_LOADING) {$Env:MY_PROJECT_NETSNMP_WITHOUT_MIB_LOADING} else {'OFF'}
-$ProjectNgHttp2WithoutInstallAll = if ($Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_ALL} else {'OFF'}
-$ProjectNgHttp2WithoutInstallFiles = if ($Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_FILES} else {'OFF'}
-$ProjectNgHttp2WithoutInstallHeaders = if ($Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_HEADERS} else {'OFF'}
-$ProjectNgHttp2WithoutInstallLibraries = if ($Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
-$ProjectNgHttp2WithoutTestApps = if ($Env:MY_PROJECT_NGHTTP2_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_NGHTTP2_WITHOUT_TEST_APPS} else {'OFF'}
-$ProjectOpenSslWithDeprecatedCiphers = if ($Env:MY_PROJECT_OPENSSL_WITH_DEPRECATED_CIPHERS) {$Env:MY_PROJECT_OPENSSL_WITH_DEPRECATED_CIPHERS} else {'OFF'}
-$ProjectOpenSslWithSharedLibraries = if ($Env:MY_PROJECT_OPENSSL_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_OPENSSL_WITH_SHARED_LIBRARIES} else {'OFF'}
-$ProjectOpenSslWithSharedZlib = if ($Env:MY_PROJECT_OPENSSL_WITH_SHARED_ZLIB) {$Env:MY_PROJECT_OPENSSL_WITH_SHARED_ZLIB} else {'OFF'}
-$ProjectOpenSslWithZlib = if ($Env:MY_PROJECT_OPENSSL_WITH_ZLIB) {$Env:MY_PROJECT_OPENSSL_WITH_ZLIB} else {'OFF'}
-$ProjectOpenSslWithoutApps = if ($Env:MY_PROJECT_OPENSSL_WITHOUT_APPS) {$Env:MY_PROJECT_OPENSSL_WITHOUT_APPS} else {'OFF'}
-$ProjectOpenSslWithoutInstallAll = if ($Env:MY_PROJECT_OPENSSL_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_OPENSSL_WITHOUT_INSTALL_ALL} else {'OFF'}
-$ProjectOpenSslWithoutInstallFiles = if ($Env:MY_PROJECT_OPENSSL_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_OPENSSL_WITHOUT_INSTALL_FILES} else {'OFF'}
-$ProjectOpenSslWithoutInstallHeaders = if ($Env:MY_PROJECT_OPENSSL_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_OPENSSL_WITHOUT_INSTALL_HEADERS} else {'OFF'}
-$ProjectOpenSslWithoutInstallLibraries = if ($Env:MY_PROJECT_OPENSSL_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_OPENSSL_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
-$ProjectPahoWithOpenSsl = if ($Env:MY_PROJECT_PAHO_WITH_OPENSSL) {$Env:MY_PROJECT_PAHO_WITH_OPENSSL} else {'OFF'}
-$ProjectPahoWithSharedLibraries = if ($Env:MY_PROJECT_PAHO_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_PAHO_WITH_SHARED_LIBRARIES} else {'OFF'}
-$ProjectPahoWithoutInstallAll = if ($Env:MY_PROJECT_PAHO_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_PAHO_WITHOUT_INSTALL_ALL} else {'OFF'}
-$ProjectPahoWithoutInstallFiles = if ($Env:MY_PROJECT_PAHO_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_PAHO_WITHOUT_INSTALL_FILES} else {'OFF'}
-$ProjectPahoWithoutInstallHeaders = if ($Env:MY_PROJECT_PAHO_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_PAHO_WITHOUT_INSTALL_HEADERS} else {'OFF'}
-$ProjectPahoWithoutInstallLibraries = if ($Env:MY_PROJECT_PAHO_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_PAHO_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
-$ProjectPahoWithoutTestApps = if ($Env:MY_PROJECT_PAHO_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_PAHO_WITHOUT_TEST_APPS} else {'OFF'}
-$ProjectPcreWithSharedLibraries = if ($Env:MY_PROJECT_PCRE_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_PCRE_WITH_SHARED_LIBRARIES} else {'OFF'}
-$ProjectPcreWithoutApps = if ($Env:MY_PROJECT_PCRE_WITHOUT_APPS) {$Env:MY_PROJECT_PCRE_WITHOUT_APPS} else {'OFF'}
-$ProjectPcreWithoutInstallAll = if ($Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_ALL} else {'OFF'}
-$ProjectPcreWithoutInstallFiles = if ($Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_FILES} else {'OFF'}
-$ProjectPcreWithoutInstallHeaders = if ($Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_HEADERS} else {'OFF'}
-$ProjectPcreWithoutInstallLibraries = if ($Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
-$ProjectPcreWithoutTestApps = if ($Env:MY_PROJECT_PCRE_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_PCRE_WITHOUT_TEST_APPS} else {'OFF'}
-$ProjectPocoWithSharedLibraries = if ($Env:MY_PROJECT_POCO_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_POCO_WITH_SHARED_LIBRARIES} else {'OFF'}
-$ProjectPocoWithSharedZlib = if ($Env:MY_PROJECT_POCO_WITH_SHARED_ZLIB) {$Env:MY_PROJECT_POCO_WITH_SHARED_ZLIB} else {'OFF'}
-$ProjectPocoWithoutApps = if ($Env:MY_PROJECT_POCO_WITHOUT_APPS) {$Env:MY_PROJECT_POCO_WITHOUT_APPS} else {'OFF'}
-$ProjectPocoWithoutInstallAll = if ($Env:MY_PROJECT_POCO_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_POCO_WITHOUT_INSTALL_ALL} else {'OFF'}
-$ProjectPocoWithoutInstallFiles = if ($Env:MY_PROJECT_POCO_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_POCO_WITHOUT_INSTALL_FILES} else {'OFF'}
-$ProjectPocoWithoutInstallHeaders = if ($Env:MY_PROJECT_POCO_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_POCO_WITHOUT_INSTALL_HEADERS} else {'OFF'}
-$ProjectPocoWithoutInstallLibraries = if ($Env:MY_PROJECT_POCO_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_POCO_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
-$ProjectProtoBufWithExternalProtoc = if ($Env:MY_PROJECT_PROTOBUF_WITH_EXTERNAL_PROTOC) {$Env:MY_PROJECT_PROTOBUF_WITH_EXTERNAL_PROTOC} else {'OFF'}
-$ProjectProtoBufWithSharedLibraries = if ($Env:MY_PROJECT_PROTOBUF_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_PROTOBUF_WITH_SHARED_LIBRARIES} else {'OFF'}
-$ProjectProtoBufWithSharedZlib = if ($Env:MY_PROJECT_PROTOBUF_WITH_SHARED_ZLIB) {$Env:MY_PROJECT_PROTOBUF_WITH_SHARED_ZLIB} else {'OFF'}
-$ProjectProtoBufWithZlib = if ($Env:MY_PROJECT_PROTOBUF_WITH_ZLIB) {$Env:MY_PROJECT_PROTOBUF_WITH_ZLIB} else {'OFF'}
-$ProjectProtoBufWithoutInstallAll = if ($Env:MY_PROJECT_PROTOBUF_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_PROTOBUF_WITHOUT_INSTALL_ALL} else {'OFF'}
-$ProjectProtoBufWithoutInstallFiles = if ($Env:MY_PROJECT_PROTOBUF_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_PROTOBUF_WITHOUT_INSTALL_FILES} else {'OFF'}
-$ProjectProtoBufWithoutInstallHeaders = if ($Env:MY_PROJECT_PROTOBUF_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_PROTOBUF_WITHOUT_INSTALL_HEADERS} else {'OFF'}
-$ProjectProtoBufWithoutInstallLibraries = if ($Env:MY_PROJECT_PROTOBUF_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_PROTOBUF_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
-$ProjectProtoBufWithoutTestApps = if ($Env:MY_PROJECT_PROTOBUF_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_PROTOBUF_WITHOUT_TEST_APPS} else {'OFF'}
-$ProjectPthreads4wWithoutInstallAll = if ($Env:MY_PROJECT_PTHREADS4W_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_PTHREADS4W_WITHOUT_INSTALL_ALL} else {'OFF'}
-$ProjectPthreads4wWithoutInstallFiles = if ($Env:MY_PROJECT_PTHREADS4W_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_PTHREADS4W_WITHOUT_INSTALL_FILES} else {'OFF'}
-$ProjectPthreads4wWithoutInstallHeaders = if ($Env:MY_PROJECT_PTHREADS4W_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_PTHREADS4W_WITHOUT_INSTALL_HEADERS} else {'OFF'}
-$ProjectPthreads4wWithoutInstallLibraries = if ($Env:MY_PROJECT_PTHREADS4W_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_PTHREADS4W_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
-$ProjectPthreads4wWithoutTestApps = if ($Env:MY_PROJECT_PTHREADS4W_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_PTHREADS4W_WITHOUT_TEST_APPS} else {'OFF'}
-$ProjectSqliteWithSharedLibraries = if ($Env:MY_PROJECT_SQLITE_WITH_SHARED_LIBRARIES) {$Env:MY_PROJECT_SQLITE_WITH_SHARED_LIBRARIES} else {'OFF'}
-$ProjectSqliteWithoutApps = if ($Env:MY_PROJECT_SQLITE_WITHOUT_APPS) {$Env:MY_PROJECT_SQLITE_WITHOUT_APPS} else {'OFF'}
-$ProjectSqliteWithoutInstallAll = if ($Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_ALL} else {'OFF'}
-$ProjectSqliteWithoutInstallFiles = if ($Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_FILES} else {'OFF'}
-$ProjectSqliteWithoutInstallHeaders = if ($Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_HEADERS} else {'OFF'}
-$ProjectSqliteWithoutInstallLibraries = if ($Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
-$ProjectZlibWithoutInstallAll = if ($Env:MY_PROJECT_ZLIB_WITHOUT_INSTALL_ALL) {$Env:MY_PROJECT_ZLIB_WITHOUT_INSTALL_ALL} else {'OFF'}
-$ProjectZlibWithoutInstallFiles = if ($Env:MY_PROJECT_ZLIB_WITHOUT_INSTALL_FILES) {$Env:MY_PROJECT_ZLIB_WITHOUT_INSTALL_FILES} else {'OFF'}
-$ProjectZlibWithoutInstallHeaders = if ($Env:MY_PROJECT_ZLIB_WITHOUT_INSTALL_HEADERS) {$Env:MY_PROJECT_ZLIB_WITHOUT_INSTALL_HEADERS} else {'OFF'}
-$ProjectZlibWithoutInstallLibraries = if ($Env:MY_PROJECT_ZLIB_WITHOUT_INSTALL_LIBRARIES) {$Env:MY_PROJECT_ZLIB_WITHOUT_INSTALL_LIBRARIES} else {'OFF'}
-$ProjectZlibWithoutTestApps = if ($Env:MY_PROJECT_ZLIB_WITHOUT_TEST_APPS) {$Env:MY_PROJECT_ZLIB_WITHOUT_TEST_APPS} else {'OFF'}
+$ProjectBoostWithSharedLibraries = if ($Env:MY_PROJECT_BOOST_WITH_SHARED_LIBRARIES) { $Env:MY_PROJECT_BOOST_WITH_SHARED_LIBRARIES } else { 'OFF' }
+$ProjectBoostWithoutApps = if ($Env:MY_PROJECT_BOOST_WITHOUT_APPS) { $Env:MY_PROJECT_BOOST_WITHOUT_APPS } else { 'OFF' }
+$ProjectBoostWithoutInstallAll = if ($Env:MY_PROJECT_BOOST_WITHOUT_INSTALL_ALL) { $Env:MY_PROJECT_BOOST_WITHOUT_INSTALL_ALL } else { 'OFF' }
+$ProjectBoostWithoutInstallFiles = if ($Env:MY_PROJECT_BOOST_WITHOUT_INSTALL_FILES) { $Env:MY_PROJECT_BOOST_WITHOUT_INSTALL_FILES } else { 'OFF' }
+$ProjectBoostWithoutInstallHeaders = if ($Env:MY_PROJECT_BOOST_WITHOUT_INSTALL_HEADERS) { $Env:MY_PROJECT_BOOST_WITHOUT_INSTALL_HEADERS } else { 'OFF' }
+$ProjectBoostWithoutInstallLibraries = if ($Env:MY_PROJECT_BOOST_WITHOUT_INSTALL_LIBRARIES) { $Env:MY_PROJECT_BOOST_WITHOUT_INSTALL_LIBRARIES } else { 'OFF' }
+$ProjectCaresWithoutApps = if ($Env:MY_PROJECT_CARES_WITHOUT_APPS) { $Env:MY_PROJECT_CARES_WITHOUT_APPS } else { 'OFF' }
+$ProjectCaresWithoutInstallAll = if ($Env:MY_PROJECT_CARES_WITHOUT_INSTALL_ALL) { $Env:MY_PROJECT_CARES_WITHOUT_INSTALL_ALL } else { 'OFF' }
+$ProjectCaresWithoutInstallFiles = if ($Env:MY_PROJECT_CARES_WITHOUT_INSTALL_FILES) { $Env:MY_PROJECT_CARES_WITHOUT_INSTALL_FILES } else { 'OFF' }
+$ProjectCaresWithoutInstallHeaders = if ($Env:MY_PROJECT_CARES_WITHOUT_INSTALL_HEADERS) { $Env:MY_PROJECT_CARES_WITHOUT_INSTALL_HEADERS } else { 'OFF' }
+$ProjectCaresWithoutInstallLibraries = if ($Env:MY_PROJECT_CARES_WITHOUT_INSTALL_LIBRARIES) { $Env:MY_PROJECT_CARES_WITHOUT_INSTALL_LIBRARIES } else { 'OFF' }
+$ProjectCaresWithoutTestApps = if ($Env:MY_PROJECT_CARES_WITHOUT_TEST_APPS) { $Env:MY_PROJECT_CARES_WITHOUT_TEST_APPS } else { 'OFF' }
+$ProjectCjsonWithoutInstallAll = if ($Env:MY_PROJECT_CJSON_WITHOUT_INSTALL_ALL) { $Env:MY_PROJECT_CJSON_WITHOUT_INSTALL_ALL } else { 'OFF' }
+$ProjectCjsonWithoutInstallFiles = if ($Env:MY_PROJECT_CJSON_WITHOUT_INSTALL_FILES) { $Env:MY_PROJECT_CJSON_WITHOUT_INSTALL_FILES } else { 'OFF' }
+$ProjectCjsonWithoutInstallHeaders = if ($Env:MY_PROJECT_CJSON_WITHOUT_INSTALL_HEADERS) { $Env:MY_PROJECT_CJSON_WITHOUT_INSTALL_HEADERS } else { 'OFF' }
+$ProjectCjsonWithoutInstallLibraries = if ($Env:MY_PROJECT_CJSON_WITHOUT_INSTALL_LIBRARIES) { $Env:MY_PROJECT_CJSON_WITHOUT_INSTALL_LIBRARIES } else { 'OFF' }
+$ProjectCjsonWithoutTestApps = if ($Env:MY_PROJECT_CJSON_WITHOUT_TEST_APPS) { $Env:MY_PROJECT_CJSON_WITHOUT_TEST_APPS } else { 'OFF' }
+$ProjectCurlWithCares = if ($Env:MY_PROJECT_CURL_WITH_CARES) { $Env:MY_PROJECT_CURL_WITH_CARES } else { 'OFF' }
+$ProjectCurlWithLibSsh2 = if ($Env:MY_PROJECT_CURL_WITH_LIBSSH2) { $Env:MY_PROJECT_CURL_WITH_LIBSSH2 } else { 'OFF' }
+$ProjectCurlWithNgHttp2 = if ($Env:MY_PROJECT_CURL_WITH_NGHTTP2) { $Env:MY_PROJECT_CURL_WITH_NGHTTP2 } else { 'OFF' }
+$ProjectCurlWithOpenSsl = if ($Env:MY_PROJECT_CURL_WITH_OPENSSL) { $Env:MY_PROJECT_CURL_WITH_OPENSSL } else { 'OFF' }
+$ProjectCurlWithSharedCares = if ($Env:MY_PROJECT_CURL_WITH_SHARED_CARES) { $Env:MY_PROJECT_CURL_WITH_SHARED_CARES } else { 'OFF' }
+$ProjectCurlWithSharedLibraries = if ($Env:MY_PROJECT_CURL_WITH_SHARED_LIBRARIES) { $Env:MY_PROJECT_CURL_WITH_SHARED_LIBRARIES } else { 'OFF' }
+$ProjectCurlWithSharedLibSsh2 = if ($Env:MY_PROJECT_CURL_WITH_SHARED_LIBSSH2) { $Env:MY_PROJECT_CURL_WITH_SHARED_LIBSSH2 } else { 'OFF' }
+$ProjectCurlWithSharedNgHttp2 = if ($Env:MY_PROJECT_CURL_WITH_SHARED_NGHTTP2) { $Env:MY_PROJECT_CURL_WITH_SHARED_NGHTTP2 } else { 'OFF' }
+$ProjectCurlWithSharedZlib = if ($Env:MY_PROJECT_CURL_WITH_SHARED_ZLIB) { $Env:MY_PROJECT_CURL_WITH_SHARED_ZLIB } else { 'OFF' }
+$ProjectCurlWithZlib = if ($Env:MY_PROJECT_CURL_WITH_ZLIB) { $Env:MY_PROJECT_CURL_WITH_ZLIB } else { 'OFF' }
+$ProjectCurlWithoutApps = if ($Env:MY_PROJECT_CURL_WITHOUT_APPS) { $Env:MY_PROJECT_CURL_WITHOUT_APPS } else { 'OFF' }
+$ProjectCurlWithoutInstallAll = if ($Env:MY_PROJECT_CURL_WITHOUT_INSTALL_ALL) { $Env:MY_PROJECT_CURL_WITHOUT_INSTALL_ALL } else { 'OFF' }
+$ProjectCurlWithoutInstallFiles = if ($Env:MY_PROJECT_CURL_WITHOUT_INSTALL_FILES) { $Env:MY_PROJECT_CURL_WITHOUT_INSTALL_FILES } else { 'OFF' }
+$ProjectCurlWithoutInstallHeaders = if ($Env:MY_PROJECT_CURL_WITHOUT_INSTALL_HEADERS) { $Env:MY_PROJECT_CURL_WITHOUT_INSTALL_HEADERS } else { 'OFF' }
+$ProjectCurlWithoutInstallLibraries = if ($Env:MY_PROJECT_CURL_WITHOUT_INSTALL_LIBRARIES) { $Env:MY_PROJECT_CURL_WITHOUT_INSTALL_LIBRARIES } else { 'OFF' }
+$ProjectExpatWithSharedLibraries = if ($Env:MY_PROJECT_EXPAT_WITH_SHARED_LIBRARIES) { $Env:MY_PROJECT_EXPAT_WITH_SHARED_LIBRARIES } else { 'OFF' }
+$ProjectExpatWithoutApps = if ($Env:MY_PROJECT_EXPAT_WITHOUT_APPS) { $Env:MY_PROJECT_EXPAT_WITHOUT_APPS } else { 'OFF' }
+$ProjectExpatWithoutInstallAll = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_ALL) { $Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_ALL } else { 'OFF' }
+$ProjectExpatWithoutInstallFiles = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_FILES) { $Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_FILES } else { 'OFF' }
+$ProjectExpatWithoutInstallHeaders = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_HEADERS) { $Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_HEADERS } else { 'OFF' }
+$ProjectExpatWithoutInstallLibraries = if ($Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_LIBRARIES) { $Env:MY_PROJECT_EXPAT_WITHOUT_INSTALL_LIBRARIES } else { 'OFF' }
+$ProjectExpatWithoutTestApps = if ($Env:MY_PROJECT_EXPAT_WITHOUT_TEST_APPS) { $Env:MY_PROJECT_EXPAT_WITHOUT_TEST_APPS } else { 'OFF' }
+$ProjectLibSsh2WithSharedLibraries = if ($Env:MY_PROJECT_LIBSSH2_WITH_SHARED_LIBRARIES) { $Env:MY_PROJECT_LIBSSH2_WITH_SHARED_LIBRARIES } else { 'OFF' }
+$ProjectLibSsh2WithSharedZlib = if ($Env:MY_PROJECT_LIBSSH2_WITH_SHARED_ZLIB) { $Env:MY_PROJECT_LIBSSH2_WITH_SHARED_ZLIB } else { 'OFF' }
+$ProjectLibSsh2WithZlib = if ($Env:MY_PROJECT_LIBSSH2_WITH_ZLIB) { $Env:MY_PROJECT_LIBSSH2_WITH_ZLIB } else { 'OFF' }
+$ProjectLibSsh2WithoutInstallAll = if ($Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_ALL) { $Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_ALL } else { 'OFF' }
+$ProjectLibSsh2WithoutInstallFiles = if ($Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_FILES) { $Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_FILES } else { 'OFF' }
+$ProjectLibSsh2WithoutInstallHeaders = if ($Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_HEADERS) { $Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_HEADERS } else { 'OFF' }
+$ProjectLibSsh2WithoutInstallLibraries = if ($Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_LIBRARIES) { $Env:MY_PROJECT_LIBSSH2_WITHOUT_INSTALL_LIBRARIES } else { 'OFF' }
+$ProjectLibSsh2WithoutTestApps = if ($Env:MY_PROJECT_LIBSSH2_WITHOUT_TEST_APPS) { $Env:MY_PROJECT_LIBSSH2_WITHOUT_TEST_APPS } else { 'OFF' }
+$ProjectLibWebSocketsWithExternalPoll = if ($Env:MY_PROJECT_LIBWEBSOCKETS_WITH_EXTERNAL_POLL) { $Env:MY_PROJECT_LIBWEBSOCKETS_WITH_EXTERNAL_POLL } else { 'OFF' }
+$ProjectLibWebSocketsWithoutInstallAll = if ($Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_ALL) { $Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_ALL } else { 'OFF' }
+$ProjectLibWebSocketsWithoutInstallFiles = if ($Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_FILES) { $Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_FILES } else { 'OFF' }
+$ProjectLibWebSocketsWithoutInstallHeaders = if ($Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_HEADERS) { $Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_HEADERS } else { 'OFF' }
+$ProjectLibWebSocketsWithoutInstallLibraries = if ($Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_LIBRARIES) { $Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_INSTALL_LIBRARIES } else { 'OFF' }
+$ProjectLibWebSocketsWithoutTestApps = if ($Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_TEST_APPS) { $Env:MY_PROJECT_LIBWEBSOCKETS_WITHOUT_TEST_APPS } else { 'OFF' }
+$ProjectNetSnmpWithIpv6 = if ($Env:MY_PROJECT_NETSNMP_WITH_IPV6) { $Env:MY_PROJECT_NETSNMP_WITH_IPV6 } else { 'OFF' }
+$ProjectNetSnmpWithSharedLibraries = if ($Env:MY_PROJECT_NETSNMP_WITH_SHARED_LIBRARIES) { $Env:MY_PROJECT_NETSNMP_WITH_SHARED_LIBRARIES } else { 'OFF' }
+$ProjectNetSnmpWithSsh = if ($Env:MY_PROJECT_NETSNMP_WITH_SSH) { $Env:MY_PROJECT_NETSNMP_WITH_SSH } else { 'OFF' }
+$ProjectNetSnmpWithSsl = if ($Env:MY_PROJECT_NETSNMP_WITH_SSL) { $Env:MY_PROJECT_NETSNMP_WITH_SSL } else { 'OFF' }
+$ProjectNetSnmpWithWinExtDll = if ($Env:MY_PROJECT_NETSNMP_WITH_WINEXTDLL) { $Env:MY_PROJECT_NETSNMP_WITH_WINEXTDLL } else { 'OFF' }
+$ProjectNetSnmpWithoutApps = if ($Env:MY_PROJECT_NETSNMP_WITHOUT_APPS) { $Env:MY_PROJECT_NETSNMP_WITHOUT_APPS } else { 'OFF' }
+$ProjectNetSnmpWithoutInstallAll = if ($Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_ALL) { $Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_ALL } else { 'OFF' }
+$ProjectNetSnmpWithoutInstallFiles = if ($Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_FILES) { $Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_FILES } else { 'OFF' }
+$ProjectNetSnmpWithoutInstallHeaders = if ($Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_HEADERS) { $Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_HEADERS } else { 'OFF' }
+$ProjectNetSnmpWithoutInstallLibraries = if ($Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_LIBRARIES) { $Env:MY_PROJECT_NETSNMP_WITHOUT_INSTALL_LIBRARIES } else { 'OFF' }
+$ProjectNetSnmpWithoutMibLoading = if ($Env:MY_PROJECT_NETSNMP_WITHOUT_MIB_LOADING) { $Env:MY_PROJECT_NETSNMP_WITHOUT_MIB_LOADING } else { 'OFF' }
+$ProjectNgHttp2WithoutInstallAll = if ($Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_ALL) { $Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_ALL } else { 'OFF' }
+$ProjectNgHttp2WithoutInstallFiles = if ($Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_FILES) { $Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_FILES } else { 'OFF' }
+$ProjectNgHttp2WithoutInstallHeaders = if ($Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_HEADERS) { $Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_HEADERS } else { 'OFF' }
+$ProjectNgHttp2WithoutInstallLibraries = if ($Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_LIBRARIES) { $Env:MY_PROJECT_NGHTTP2_WITHOUT_INSTALL_LIBRARIES } else { 'OFF' }
+$ProjectNgHttp2WithoutTestApps = if ($Env:MY_PROJECT_NGHTTP2_WITHOUT_TEST_APPS) { $Env:MY_PROJECT_NGHTTP2_WITHOUT_TEST_APPS } else { 'OFF' }
+$ProjectOpenSslWithDeprecatedCiphers = if ($Env:MY_PROJECT_OPENSSL_WITH_DEPRECATED_CIPHERS) { $Env:MY_PROJECT_OPENSSL_WITH_DEPRECATED_CIPHERS } else { 'OFF' }
+$ProjectOpenSslWithSharedLibraries = if ($Env:MY_PROJECT_OPENSSL_WITH_SHARED_LIBRARIES) { $Env:MY_PROJECT_OPENSSL_WITH_SHARED_LIBRARIES } else { 'OFF' }
+$ProjectOpenSslWithSharedZlib = if ($Env:MY_PROJECT_OPENSSL_WITH_SHARED_ZLIB) { $Env:MY_PROJECT_OPENSSL_WITH_SHARED_ZLIB } else { 'OFF' }
+$ProjectOpenSslWithWeakSslCiphers = if ($Env:MY_PROJECT_OPENSSL_WITH_WEAK_SSL_CIPHERS) { $Env:MY_PROJECT_OPENSSL_WITH_WEAK_SSL_CIPHERS } else { 'OFF' }
+$ProjectOpenSslWithZlib = if ($Env:MY_PROJECT_OPENSSL_WITH_ZLIB) { $Env:MY_PROJECT_OPENSSL_WITH_ZLIB } else { 'OFF' }
+$ProjectOpenSslWithoutApps = if ($Env:MY_PROJECT_OPENSSL_WITHOUT_APPS) { $Env:MY_PROJECT_OPENSSL_WITHOUT_APPS } else { 'OFF' }
+$ProjectOpenSslWithoutInstallAll = if ($Env:MY_PROJECT_OPENSSL_WITHOUT_INSTALL_ALL) { $Env:MY_PROJECT_OPENSSL_WITHOUT_INSTALL_ALL } else { 'OFF' }
+$ProjectOpenSslWithoutInstallFiles = if ($Env:MY_PROJECT_OPENSSL_WITHOUT_INSTALL_FILES) { $Env:MY_PROJECT_OPENSSL_WITHOUT_INSTALL_FILES } else { 'OFF' }
+$ProjectOpenSslWithoutInstallHeaders = if ($Env:MY_PROJECT_OPENSSL_WITHOUT_INSTALL_HEADERS) { $Env:MY_PROJECT_OPENSSL_WITHOUT_INSTALL_HEADERS } else { 'OFF' }
+$ProjectOpenSslWithoutInstallLibraries = if ($Env:MY_PROJECT_OPENSSL_WITHOUT_INSTALL_LIBRARIES) { $Env:MY_PROJECT_OPENSSL_WITHOUT_INSTALL_LIBRARIES } else { 'OFF' }
+$ProjectPahoWithOpenSsl = if ($Env:MY_PROJECT_PAHO_WITH_OPENSSL) { $Env:MY_PROJECT_PAHO_WITH_OPENSSL } else { 'OFF' }
+$ProjectPahoWithSharedLibraries = if ($Env:MY_PROJECT_PAHO_WITH_SHARED_LIBRARIES) { $Env:MY_PROJECT_PAHO_WITH_SHARED_LIBRARIES } else { 'OFF' }
+$ProjectPahoWithoutInstallAll = if ($Env:MY_PROJECT_PAHO_WITHOUT_INSTALL_ALL) { $Env:MY_PROJECT_PAHO_WITHOUT_INSTALL_ALL } else { 'OFF' }
+$ProjectPahoWithoutInstallFiles = if ($Env:MY_PROJECT_PAHO_WITHOUT_INSTALL_FILES) { $Env:MY_PROJECT_PAHO_WITHOUT_INSTALL_FILES } else { 'OFF' }
+$ProjectPahoWithoutInstallHeaders = if ($Env:MY_PROJECT_PAHO_WITHOUT_INSTALL_HEADERS) { $Env:MY_PROJECT_PAHO_WITHOUT_INSTALL_HEADERS } else { 'OFF' }
+$ProjectPahoWithoutInstallLibraries = if ($Env:MY_PROJECT_PAHO_WITHOUT_INSTALL_LIBRARIES) { $Env:MY_PROJECT_PAHO_WITHOUT_INSTALL_LIBRARIES } else { 'OFF' }
+$ProjectPahoWithoutTestApps = if ($Env:MY_PROJECT_PAHO_WITHOUT_TEST_APPS) { $Env:MY_PROJECT_PAHO_WITHOUT_TEST_APPS } else { 'OFF' }
+$ProjectPcreWithSharedLibraries = if ($Env:MY_PROJECT_PCRE_WITH_SHARED_LIBRARIES) { $Env:MY_PROJECT_PCRE_WITH_SHARED_LIBRARIES } else { 'OFF' }
+$ProjectPcreWithoutApps = if ($Env:MY_PROJECT_PCRE_WITHOUT_APPS) { $Env:MY_PROJECT_PCRE_WITHOUT_APPS } else { 'OFF' }
+$ProjectPcreWithoutInstallAll = if ($Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_ALL) { $Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_ALL } else { 'OFF' }
+$ProjectPcreWithoutInstallFiles = if ($Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_FILES) { $Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_FILES } else { 'OFF' }
+$ProjectPcreWithoutInstallHeaders = if ($Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_HEADERS) { $Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_HEADERS } else { 'OFF' }
+$ProjectPcreWithoutInstallLibraries = if ($Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_LIBRARIES) { $Env:MY_PROJECT_PCRE_WITHOUT_INSTALL_LIBRARIES } else { 'OFF' }
+$ProjectPcreWithoutTestApps = if ($Env:MY_PROJECT_PCRE_WITHOUT_TEST_APPS) { $Env:MY_PROJECT_PCRE_WITHOUT_TEST_APPS } else { 'OFF' }
+$ProjectPocoWithSharedLibraries = if ($Env:MY_PROJECT_POCO_WITH_SHARED_LIBRARIES) { $Env:MY_PROJECT_POCO_WITH_SHARED_LIBRARIES } else { 'OFF' }
+$ProjectPocoWithSharedZlib = if ($Env:MY_PROJECT_POCO_WITH_SHARED_ZLIB) { $Env:MY_PROJECT_POCO_WITH_SHARED_ZLIB } else { 'OFF' }
+$ProjectPocoWithoutApps = if ($Env:MY_PROJECT_POCO_WITHOUT_APPS) { $Env:MY_PROJECT_POCO_WITHOUT_APPS } else { 'OFF' }
+$ProjectPocoWithoutInstallAll = if ($Env:MY_PROJECT_POCO_WITHOUT_INSTALL_ALL) { $Env:MY_PROJECT_POCO_WITHOUT_INSTALL_ALL } else { 'OFF' }
+$ProjectPocoWithoutInstallFiles = if ($Env:MY_PROJECT_POCO_WITHOUT_INSTALL_FILES) { $Env:MY_PROJECT_POCO_WITHOUT_INSTALL_FILES } else { 'OFF' }
+$ProjectPocoWithoutInstallHeaders = if ($Env:MY_PROJECT_POCO_WITHOUT_INSTALL_HEADERS) { $Env:MY_PROJECT_POCO_WITHOUT_INSTALL_HEADERS } else { 'OFF' }
+$ProjectPocoWithoutInstallLibraries = if ($Env:MY_PROJECT_POCO_WITHOUT_INSTALL_LIBRARIES) { $Env:MY_PROJECT_POCO_WITHOUT_INSTALL_LIBRARIES } else { 'OFF' }
+$ProjectProtoBufWithExternalProtoc = if ($Env:MY_PROJECT_PROTOBUF_WITH_EXTERNAL_PROTOC) { $Env:MY_PROJECT_PROTOBUF_WITH_EXTERNAL_PROTOC } else { 'OFF' }
+$ProjectProtoBufWithSharedLibraries = if ($Env:MY_PROJECT_PROTOBUF_WITH_SHARED_LIBRARIES) { $Env:MY_PROJECT_PROTOBUF_WITH_SHARED_LIBRARIES } else { 'OFF' }
+$ProjectProtoBufWithSharedZlib = if ($Env:MY_PROJECT_PROTOBUF_WITH_SHARED_ZLIB) { $Env:MY_PROJECT_PROTOBUF_WITH_SHARED_ZLIB } else { 'OFF' }
+$ProjectProtoBufWithZlib = if ($Env:MY_PROJECT_PROTOBUF_WITH_ZLIB) { $Env:MY_PROJECT_PROTOBUF_WITH_ZLIB } else { 'OFF' }
+$ProjectProtoBufWithoutInstallAll = if ($Env:MY_PROJECT_PROTOBUF_WITHOUT_INSTALL_ALL) { $Env:MY_PROJECT_PROTOBUF_WITHOUT_INSTALL_ALL } else { 'OFF' }
+$ProjectProtoBufWithoutInstallFiles = if ($Env:MY_PROJECT_PROTOBUF_WITHOUT_INSTALL_FILES) { $Env:MY_PROJECT_PROTOBUF_WITHOUT_INSTALL_FILES } else { 'OFF' }
+$ProjectProtoBufWithoutInstallHeaders = if ($Env:MY_PROJECT_PROTOBUF_WITHOUT_INSTALL_HEADERS) { $Env:MY_PROJECT_PROTOBUF_WITHOUT_INSTALL_HEADERS } else { 'OFF' }
+$ProjectProtoBufWithoutInstallLibraries = if ($Env:MY_PROJECT_PROTOBUF_WITHOUT_INSTALL_LIBRARIES) { $Env:MY_PROJECT_PROTOBUF_WITHOUT_INSTALL_LIBRARIES } else { 'OFF' }
+$ProjectProtoBufWithoutTestApps = if ($Env:MY_PROJECT_PROTOBUF_WITHOUT_TEST_APPS) { $Env:MY_PROJECT_PROTOBUF_WITHOUT_TEST_APPS } else { 'OFF' }
+$ProjectPthreads4wWithoutInstallAll = if ($Env:MY_PROJECT_PTHREADS4W_WITHOUT_INSTALL_ALL) { $Env:MY_PROJECT_PTHREADS4W_WITHOUT_INSTALL_ALL } else { 'OFF' }
+$ProjectPthreads4wWithoutInstallFiles = if ($Env:MY_PROJECT_PTHREADS4W_WITHOUT_INSTALL_FILES) { $Env:MY_PROJECT_PTHREADS4W_WITHOUT_INSTALL_FILES } else { 'OFF' }
+$ProjectPthreads4wWithoutInstallHeaders = if ($Env:MY_PROJECT_PTHREADS4W_WITHOUT_INSTALL_HEADERS) { $Env:MY_PROJECT_PTHREADS4W_WITHOUT_INSTALL_HEADERS } else { 'OFF' }
+$ProjectPthreads4wWithoutInstallLibraries = if ($Env:MY_PROJECT_PTHREADS4W_WITHOUT_INSTALL_LIBRARIES) { $Env:MY_PROJECT_PTHREADS4W_WITHOUT_INSTALL_LIBRARIES } else { 'OFF' }
+$ProjectPthreads4wWithoutTestApps = if ($Env:MY_PROJECT_PTHREADS4W_WITHOUT_TEST_APPS) { $Env:MY_PROJECT_PTHREADS4W_WITHOUT_TEST_APPS } else { 'OFF' }
+$ProjectSqliteWithSharedLibraries = if ($Env:MY_PROJECT_SQLITE_WITH_SHARED_LIBRARIES) { $Env:MY_PROJECT_SQLITE_WITH_SHARED_LIBRARIES } else { 'OFF' }
+$ProjectSqliteWithoutApps = if ($Env:MY_PROJECT_SQLITE_WITHOUT_APPS) { $Env:MY_PROJECT_SQLITE_WITHOUT_APPS } else { 'OFF' }
+$ProjectSqliteWithoutInstallAll = if ($Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_ALL) { $Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_ALL } else { 'OFF' }
+$ProjectSqliteWithoutInstallFiles = if ($Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_FILES) { $Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_FILES } else { 'OFF' }
+$ProjectSqliteWithoutInstallHeaders = if ($Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_HEADERS) { $Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_HEADERS } else { 'OFF' }
+$ProjectSqliteWithoutInstallLibraries = if ($Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_LIBRARIES) { $Env:MY_PROJECT_SQLITE_WITHOUT_INSTALL_LIBRARIES } else { 'OFF' }
+$ProjectZlibWithoutExportAlias = if ($Env:MY_PROJECT_ZLIB_WITHOUT_EXPORT_ALIAS) { $Env:MY_PROJECT_ZLIB_WITHOUT_EXPORT_ALIAS } else { 'OFF' }
+$ProjectZlibWithoutInstallAll = if ($Env:MY_PROJECT_ZLIB_WITHOUT_INSTALL_ALL) { $Env:MY_PROJECT_ZLIB_WITHOUT_INSTALL_ALL } else { 'OFF' }
+$ProjectZlibWithoutInstallFiles = if ($Env:MY_PROJECT_ZLIB_WITHOUT_INSTALL_FILES) { $Env:MY_PROJECT_ZLIB_WITHOUT_INSTALL_FILES } else { 'OFF' }
+$ProjectZlibWithoutInstallHeaders = if ($Env:MY_PROJECT_ZLIB_WITHOUT_INSTALL_HEADERS) { $Env:MY_PROJECT_ZLIB_WITHOUT_INSTALL_HEADERS } else { 'OFF' }
+$ProjectZlibWithoutInstallLibraries = if ($Env:MY_PROJECT_ZLIB_WITHOUT_INSTALL_LIBRARIES) { $Env:MY_PROJECT_ZLIB_WITHOUT_INSTALL_LIBRARIES } else { 'OFF' }
+$ProjectZlibWithoutTestApps = if ($Env:MY_PROJECT_ZLIB_WITHOUT_TEST_APPS) { $Env:MY_PROJECT_ZLIB_WITHOUT_TEST_APPS } else { 'OFF' }
 
 ##
 ## My variables
 ##
 $MyCmakeCommonArgumentList = @(
-        "-S $SourceFolder",
-        "-T $ProjectToolset",
-        "-DCMAKE_BUILD_TYPE=$ProjectReleaseType",
-        "-DCMAKE_CONFIGURATION_TYPES=$ProjectReleaseType",
-        "-DMY_REVISION=$ProjectRevision"
+    "-S $SourceFolder",
+    "-DCMAKE_BUILD_TYPE=$ProjectReleaseType",
+    "-DCMAKE_CONFIGURATION_TYPES=$ProjectReleaseType",
+    "-DMY_REVISION=$ProjectRevision"
 )
 if ('ON'.Equals($ProjectBoostWithSharedLibraries)) {
     $MyCmakeCommonArgumentList += "-DBOOST_WITH_SHARED_LIBRARIES=$ProjectBoostWithSharedLibraries"
@@ -404,6 +465,9 @@ if ('ON'.Equals($ProjectOpenSslWithSharedLibraries)) {
 if ('ON'.Equals($ProjectOpenSslWithSharedZlib)) {
     $MyCmakeCommonArgumentList += "-DOPENSSL_WITH_SHARED_ZLIB=$ProjectOpenSslWithSharedZlib"
 }
+if ('ON'.Equals($ProjectOpenSslWithWeakSslCiphers)) {
+    $MyCmakeCommonArgumentList += "-DOPENSSL_WITH_WEAK_SSL_CIPHERS=$ProjectOpenSslWithWeakSslCiphers"
+}
 if ('ON'.Equals($ProjectOpenSslWithZlib)) {
     $MyCmakeCommonArgumentList += "-DOPENSSL_WITH_ZLIB=$ProjectOpenSslWithZlib"
 }
@@ -545,6 +609,9 @@ if ('ON'.Equals($ProjectSqliteWithoutInstallHeaders)) {
 if ('ON'.Equals($ProjectSqliteWithoutInstallLibraries)) {
     $MyCmakeCommonArgumentList += "-DSQLITE_WITHOUT_INSTALL_LIBRARIES=$ProjectSqliteWithoutInstallLibraries"
 }
+if ('ON'.Equals($ProjectZlibWithoutExportAlias)) {
+    $MyCmakeCommonArgumentList += "-DZLIB_WITHOUT_EXPORT_ALIAS=$ProjectZlibWithoutExportAlias"
+}
 if ('ON'.Equals($ProjectZlibWithoutInstallAll)) {
     $MyCmakeCommonArgumentList += "-DZLIB_WITHOUT_INSTALL_ALL=$ProjectZlibWithoutInstallAll"
 }
@@ -575,21 +642,27 @@ if ('ON'.Equals($ProjectWithStaticVcrt)) {
 if ('ON'.Equals($ProjectWithWorkaroundSpectre)) {
     $MyCmakeCommonArgumentList += "-DBUILD_WITH_WORKAROUND_SPECTRE=$ProjectWithWorkaroundSpectre"
 }
-$MyCmakeGenerator = $CmakeToolsetToGeneratorMap[$ProjectToolset]
+$MyCmakeGenerator = "Ninja Multi-Config"
+if ('msbuild'.Equals($ProjectCmakeBuildSystem)) {
+    $MyCmakeGenerator = $CmakeToolsetToGeneratorMap[$ProjectCmakeToolset]
+}
 $MyCmakeCommonArgumentList += "-G `"$MyCmakeGenerator`""
+if ('msbuild'.Equals($ProjectCmakeBuildSystem)) {
+    $MyCmakeCommonArgumentList += "-T $ProjectCmakeToolset"
+}
 $MyCmakePlatformList = @(
-        'Win32',
-        'ARM',
-        'x64',
-        'ARM64',
-        'ARM64EC'
+    'Win32',
+    'ARM',
+    'x64',
+    'ARM64',
+    'ARM64EC'
 )
 $MyCmakePlatformToBuildToggleMap = @{
-        'ARM' = 'ON'
-        'ARM64' = 'ON'
-        'ARM64EC' = 'ON'
-        'Win32' = 'ON'
-        'x64' = 'ON'
+    'ARM'     = 'ON'
+    'ARM64'   = 'ON'
+    'ARM64EC' = 'ON'
+    'Win32'   = 'ON'
+    'x64'     = 'ON'
 }
 if ('ON'.Equals($ProjectShouldDisable32BitBuild)) {
     $MyCmakePlatformToBuildToggleMap['ARM'] = 'OFF'
@@ -612,16 +685,19 @@ if ('ON'.Equals($ProjectShouldDisableX86Build)) {
     $MyCmakePlatformToBuildToggleMap['Win32'] = 'OFF'
     $MyCmakePlatformToBuildToggleMap['x64'] = 'OFF'
 }
-if ('v120'.Equals($ProjectToolset)) {
+if ('v120'.Equals($ProjectCmakeToolset)) {
     $MyCmakePlatformToBuildToggleMap['ARM'] = 'OFF'
     $MyCmakePlatformToBuildToggleMap['ARM64'] = 'OFF'
     $MyCmakePlatformToBuildToggleMap['ARM64EC'] = 'OFF'
 }
-if ('v140'.Equals($ProjectToolset)) {
+if ('v140'.Equals($ProjectCmakeToolset)) {
     $MyCmakePlatformToBuildToggleMap['ARM64'] = 'OFF'
     $MyCmakePlatformToBuildToggleMap['ARM64EC'] = 'OFF'
 }
-if ('v141'.Equals($ProjectToolset)) {
+if ('v141'.Equals($ProjectCmakeToolset)) {
+    $MyCmakePlatformToBuildToggleMap['ARM64EC'] = 'OFF'
+}
+if ('ninja'.Equals($ProjectCmakeBuildSystem)) {
     $MyCmakePlatformToBuildToggleMap['ARM64EC'] = 'OFF'
 }
 $MyCmakePlatformToBuildList = @()
@@ -631,8 +707,134 @@ foreach ($Platform in $MyCmakePlatformToBuildToggleMap.Keys) {
     }
 }
 $MyCmakePlatformToBuildListString = $MyCmakePlatformToBuildList -join ", "
+$MyProjectCcacheCli = $CcacheCli
+$MyProjectCcacheCliDetected = $false
+$MyProjectCmakeCli = $CmakeCli
+$MyProjectCmakeCliDetected = $false
+$MyProjectNinjaCli = $NinjaCli
+$MyProjectNinjaCliDetected = $false
 $MyProjectProtocCli = "${ProtocCli}-${ProjectProtocVersion}"
 $MyProjectProtocCliDetected = $false
+
+##
+## My Functions
+##
+$MyFunctionEnvironmentVariableMap = @{
+}
+function Backup-EnvironmentVariables {
+    $cmdLine = "set"
+    & $Env:SystemRoot\system32\cmd.exe /c $cmdLine |
+    Select-String '^([^=]*)=(.*)$' | Foreach-Object {
+        $varName = $_.Matches[0].Groups[1].Value
+        $varValue = $_.Matches[0].Groups[2].Value
+        $MyFunctionEnvironmentVariableMap[$varName] = $varValue
+    }
+}
+function Invoke-CmdScript {
+    param(
+        [String] $scriptName
+    )
+    $cmdLine = """$scriptName"" $args & set"
+    & $Env:SystemRoot\system32\cmd.exe /c $cmdLine |
+    Select-String '^([^=]*)=(.*)$' | Foreach-Object {
+        $varName = $_.Matches[0].Groups[1].Value
+        $varValue = $_.Matches[0].Groups[2].Value
+        Set-Item Env:$varName $varValue
+    }
+}
+function Restore-EnvironmentVariables {
+    $cmdLine = "set"
+    & $Env:SystemRoot\system32\cmd.exe /c $cmdLine |
+    Select-String '^([^=]*)=(.*)$' | Foreach-Object {
+        $varName = $_.Matches[0].Groups[1].Value
+        $varValueOld = $MyFunctionEnvironmentVariableMap[$varName]
+        if (-not ([string]::IsNullOrEmpty($varValueOld))) {
+            Set-Item Env:$varName $varValueOld
+        }
+        else {
+            Set-Item Env:$varName ''
+        }
+    }
+}
+function Use-MSVC {
+    param(
+        [Parameter(Mandatory = $false)][string]$VisualStudioVersion,
+        [Parameter(Mandatory = $false)][string]$VcvarsPlatform,
+        [Parameter(Mandatory = $false)][string]$VcvarsWindowsSdkVersion
+    )
+    if (!($VisualStudioVersion)) {
+        $VisualStudioVersion = 'Visual Studio 16 2019'
+    }
+    if (!($VcvarsPlatform)) {
+        $VcvarsPlatform = 'x64'
+    }
+    if ('latest'.Equals($VcvarsWindowsSdkVersion)) {
+        $VcvarsWindowsSdkVersion = ''
+    }
+    $MsvcVariantList = @(
+        "BuildTools",
+        "Community",
+        "Professional",
+        "Enterprise"
+    )
+    if ('Visual Studio 16 2019'.Equals($VisualStudioVersion)) {
+        $MsvcVariantFound = $false
+        foreach ($MsvcVariant in $MsvcVariantList) {
+            if (-not $MsvcVariantFound -and (Test-Path -Path "C:\Program Files (x86)\Microsoft Visual Studio\2019\$MsvcVariant\VC\Auxiliary\Build\vcvarsall.bat")) {
+                Write-Information "[PowerShell] Using $VisualStudioVersion/$MsvcVariant/$VcvarsPlatform with Windows SDK $VcvarsWindowsSdkVersion ..."
+                Restore-EnvironmentVariables
+                Invoke-CmdScript "C:\Program Files (x86)\Microsoft Visual Studio\2019\$MsvcVariant\VC\Auxiliary\Build\vcvarsall.bat" $VcvarsPlatform $VcvarsWindowsSdkVersion
+                $MsvcVariantFound = $true
+            }
+        }
+        if (-not $MsvcVariantFound) {
+            Write-Error "[PowerShell] Can not find $VisualStudioVersion/$VcvarsPlatform to use ..."
+        }
+    }
+    elseif ('Visual Studio 17 2022'.Equals($VisualStudioVersion)) {
+        $MsvcVariantFound = $false
+        foreach ($MsvcVariant in $MsvcVariantList) {
+            if (-not $MsvcVariantFound -and (Test-Path -Path "C:\Program Files\Microsoft Visual Studio\2022\$MsvcVariant\VC\Auxiliary\Build\vcvarsall.bat")) {
+                Write-Information "[PowerShell] Using $VisualStudioVersion/$MsvcVariant/$VcvarsPlatform with Windows SDK $VcvarsWindowsSdkVersion ..."
+                Restore-EnvironmentVariables
+                Invoke-CmdScript "C:\Program Files\Microsoft Visual Studio\2022\$MsvcVariant\VC\Auxiliary\Build\vcvarsall.bat" $VcvarsPlatform $VcvarsWindowsSdkVersion
+                $MsvcVariantFound = $true
+            }
+            if (-not $MsvcVariantFound -and (Test-Path -Path "C:\Program Files (x86)\Microsoft Visual Studio\2022\$MsvcVariant\VC\Auxiliary\Build\vcvarsall.bat")) {
+                Write-Information "[PowerShell] Using $VisualStudioVersion/$MsvcVariant/$VcvarsPlatform with Windows SDK $VcvarsWindowsSdkVersion ..."
+                Restore-EnvironmentVariables
+                Invoke-CmdScript "C:\Program Files (x86)\Microsoft Visual Studio\2022\$MsvcVariant\VC\Auxiliary\Build\vcvarsall.bat" $VcvarsPlatform $VcvarsWindowsSdkVersion
+                $MsvcVariantFound = $true
+            }
+        }
+        if (-not $MsvcVariantFound) {
+            Write-Error "[PowerShell] Can not find $VisualStudioVersion/$VcvarsPlatform to use ..."
+        }
+    }
+    elseif ('Visual Studio 18 2026'.Equals($VisualStudioVersion)) {
+        $MsvcVariantFound = $false
+        foreach ($MsvcVariant in $MsvcVariantList) {
+            if (-not $MsvcVariantFound -and (Test-Path -Path "C:\Program Files\Microsoft Visual Studio\18\$MsvcVariant\VC\Auxiliary\Build\vcvarsall.bat")) {
+                Write-Information "[PowerShell] Using $VisualStudioVersion/$MsvcVariant/$VcvarsPlatform with Windows SDK $VcvarsWindowsSdkVersion ..."
+                Restore-EnvironmentVariables
+                Invoke-CmdScript "C:\Program Files\Microsoft Visual Studio\18\$MsvcVariant\VC\Auxiliary\Build\vcvarsall.bat" $VcvarsPlatform $VcvarsWindowsSdkVersion
+                $MsvcVariantFound = $true
+            }
+            if (-not $MsvcVariantFound -and (Test-Path -Path "C:\Program Files (x86)\Microsoft Visual Studio\18\$MsvcVariant\VC\Auxiliary\Build\vcvarsall.bat")) {
+                Write-Information "[PowerShell] Using $VisualStudioVersion/$MsvcVariant/$VcvarsPlatform with Windows SDK $VcvarsWindowsSdkVersion ..."
+                Restore-EnvironmentVariables
+                Invoke-CmdScript "C:\Program Files (x86)\Microsoft Visual Studio\18\$MsvcVariant\VC\Auxiliary\Build\vcvarsall.bat" $VcvarsPlatform $VcvarsWindowsSdkVersion
+                $MsvcVariantFound = $true
+            }
+        }
+        if (-not $MsvcVariantFound) {
+            Write-Error "[PowerShell] Can not find $VisualStudioVersion/$VcvarsPlatform to use ..."
+        }
+    }
+    else {
+        Write-Error "[PowerShell] Can not find $VisualStudioVersion/$VcvarsPlatform to use ..."
+    }
+}
 
 
 
@@ -640,12 +842,13 @@ $MyProjectProtocCliDetected = $false
 Write-Information "[PowerShell] Project information: version: `"$MyProjectVersion`""
 Write-Information "[PowerShell] Project information: revision: `"$ProjectRevision`""
 Write-Information "[PowerShell] Project information: release type: `"$ProjectReleaseType`""
+Write-Information "[PowerShell] Project information: Windows SDK version: `"$ProjectWindowsSdkVersion`""
 Write-Information "[PowerShell] Project information: disable clean build: $ProjectShouldDisableCleanBuild"
 Write-Information "[PowerShell] Project information: disable parallel build: $ProjectShouldDisableParallelBuild"
 Write-Information "[PowerShell] Project information: enable compiler cache: $ProjectWithCompilerCache"
 Write-Information "[PowerShell] Project information: enable compiler precheck: $ProjectWithCompilerPrecheck"
 Write-Information "[PowerShell] Project information: CMake generator: `"$MyCmakeGenerator`""
-Write-Information "[PowerShell] Project information: CMake toolset: `"$ProjectToolset`""
+Write-Information "[PowerShell] Project information: CMake toolset: `"$ProjectCmakeToolset`""
 Write-Information "[PowerShell] Project information: CMake platform to build: $MyCmakePlatformToBuildListString"
 Write-Information "[PowerShell] Component information: Boost with shared libraries: $ProjectBoostWithSharedLibraries"
 Write-Information "[PowerShell] Component information: Boost without apps: $ProjectBoostWithoutApps"
@@ -719,6 +922,7 @@ Write-Information "[PowerShell] Component information: nghttp2 without test apps
 Write-Information "[PowerShell] Component information: OpenSSL with deprecated ciphers: $ProjectOpenSslWithDeprecatedCiphers"
 Write-Information "[PowerShell] Component information: OpenSSL with shared libraries: $ProjectOpenSslWithSharedLibraries"
 Write-Information "[PowerShell] Component information: OpenSSL with shared Zlib: $ProjectOpenSslWithSharedZlib"
+Write-Information "[PowerShell] Component information: OpenSSL with weak SSL ciphers: $ProjectOpenSslWithWeakSslCiphers"
 Write-Information "[PowerShell] Component information: OpenSSL with Zlib: $ProjectOpenSslWithZlib"
 Write-Information "[PowerShell] Component information: OpenSSL without apps: $ProjectOpenSslWithoutApps"
 Write-Information "[PowerShell] Component information: OpenSSL without installing all artifacts: $ProjectOpenSslWithoutInstallAll"
@@ -766,6 +970,7 @@ Write-Information "[PowerShell] Component information: SQLite without installing
 Write-Information "[PowerShell] Component information: SQLite without installing files: $ProjectSqliteWithoutInstallFiles"
 Write-Information "[PowerShell] Component information: SQLite without installing headers: $ProjectSqliteWithoutInstallHeaders"
 Write-Information "[PowerShell] Component information: SQLite without installing libraries: $ProjectSqliteWithoutInstallLibraries"
+Write-Information "[PowerShell] Component information: Zlib without exporting alias: $ProjectZlibWithoutExportAlias"
 Write-Information "[PowerShell] Component information: Zlib without installing all artifacts: $ProjectZlibWithoutInstallAll"
 Write-Information "[PowerShell] Component information: Zlib without installing files: $ProjectZlibWithoutInstallFiles"
 Write-Information "[PowerShell] Component information: Zlib without installing headers: $ProjectZlibWithoutInstallHeaders"
@@ -821,33 +1026,431 @@ if (-not (Test-Path -Path $TempInstallFolder)) {
 
 
 
-## Detect CMake
-$MyCmakeProcess = $null
-$MyCmakeProcessHandle = $null
-Write-Information "[PowerShell] Detecting CMake ..."
-try {
-    $MyCmakeProcess = Start-Process -FilePath "${Env:ProgramFiles}\CMake\bin\$CmakeCli" -WindowStyle Hidden -PassThru `
+## Append Ccache root folder into PATH
+if (-not $MyProjectCcacheCliDetected) {
+    $MyCcacheTargetPath = "${ProjectCcacheRoot}\${ProjectCcacheVersion}"
+    $Env:PATH = $Env:PATH + ';' + "${MyCcacheTargetPath}"
+}
+
+
+
+## Detect Ccache from PATH
+if (-not $MyProjectCcacheCliDetected) {
+    $MyCcacheProcess = $null
+    $MyCcacheProcessHandle = $null
+    Write-Information "[PowerShell] Detecting Ccache from PATH ..."
+    try {
+        $MyCcacheProcess = Start-Process -FilePath "$MyProjectCcacheCli" -WindowStyle Hidden -PassThru `
             -ArgumentList "--help"
-    $MyCmakeProcessHandle = $MyCmakeProcess.Handle
-    $MyCmakeProcess.WaitForExit()
-    $MyCmakeProcessExitCode = $MyCmakeProcess.ExitCode
-    if ($MyCmakeProcessExitCode -ne 0) {
-        Write-Error "[PowerShell] Detecting CMake ... INCORRECT (ExitCode: $MyCmakeProcessExitCode)"
-        Exit 1
+        $MyCcacheProcessHandle = $MyCcacheProcess.Handle
+        $MyCcacheProcess.WaitForExit()
+        $MyCcacheProcessExitCode = $MyCcacheProcess.ExitCode
+        if ($MyCcacheProcessExitCode -ne 0) {
+            Write-Information "[PowerShell] Detecting Ccache from PATH ... INCORRECT (ExitCode: $MyCcacheProcessExitCode)"
+            $MyProjectCcacheCliDetected = $false
+        }
+        else {
+            Write-Information "[PowerShell] Detecting Ccache from PATH ... FOUND"
+            $MyProjectCcacheCliDetected = $true
+        }
     }
-} catch {
-    Write-Error "[PowerShell] Detecting CMake ... NOT FOUND"
-    Exit 1
-} finally {
-    if ($null -ne $MyCmakeProcessHandle) {
-        $MyCmakeProcessHandle = $null
+    catch {
+        Write-Information "[PowerShell] Detecting Ccache from PATH ... NOT FOUND"
+        $MyProjectCcacheCliDetected = $false
     }
-    if ($null -ne $MyCmakeProcess) {
-        $MyCmakeProcess.Dispose()
-        $MyCmakeProcess = $null
+    finally {
+        if ($null -ne $MyCcacheProcessHandle) {
+            $MyCcacheProcessHandle = $null
+        }
+        if ($null -ne $MyCcacheProcess) {
+            $MyCcacheProcess.Dispose()
+            $MyCcacheProcess = $null
+        }
     }
 }
-Write-Information "[PowerShell] Detecting CMake ... FOUND"
+
+
+
+## Restore project Ccache
+if (-not $MyProjectCcacheCliDetected) {
+    Write-Information "[PowerShell] Restoring project Ccache ..."
+
+    ## Restore projecy Ccache - Download archive file
+    $MyCcacheArchiveNameWithoutExt = $CcacheVersionArchitectureToArchiveNameWithoutExtMap["${ProjectCcacheVersion}_${Env:PROCESSOR_ARCHITECTURE}"]
+    $MyCcacheArchiveUrl = "https://github.com/ccache/ccache/releases/download/v${ProjectCcacheVersion}/${MyCcacheArchiveNameWithoutExt}.zip"
+    $MyCcacheTempPath = [System.guid]::NewGuid().toString()
+    $MyCcacheTempPath = "${Env:Temp}\${MyCcacheTempPath}_${MyCcacheArchiveNameWithoutExt}.zip"
+    Write-Information "[PowerShell] Restoring project Ccache ... Downloading archive file from ${MyCcacheArchiveUrl} ..."
+    try {
+        Invoke-WebRequest $MyCcacheArchiveUrl -OutFile $MyCcacheTempPath
+    }
+    catch {
+        Write-Error "[PowerShell] Restoring project Ccache ... Downloading archive file from ${MyCcacheArchiveUrl} ... FAILED"
+        Exit 1
+    }
+    Write-Information "[PowerShell] Restoring project Ccache ... Downloading archive file from ${MyCcacheArchiveUrl} ... DONE"
+
+    ## Restore project Ccache - Extract archive file
+    Write-Information "[PowerShell] Restoring project Ccache ... Extracting archive file to ${MyCcacheTargetPath} ..."
+    try {
+        Expand-Archive -Path $MyCcacheTempPath -DestinationPath $MyCcacheTargetPath
+        Move-Item -Path "$MyCcacheTargetPath\$MyCcacheArchiveNameWithoutExt\*" -Destination "$MyCcacheTargetPath"
+        Remove-Item "$MyCcacheTargetPath\$MyCcacheArchiveNameWithoutExt"
+        Remove-Item -LiteralPath $MyCcacheTempPath -Force
+    }
+    catch {
+        Write-Error "[PowerShell] Restoring project Ccache ... Extracting archive file to ${MyCcacheTargetPath} ... FAILED"
+        Exit 1
+    }
+    Write-Information "[PowerShell] Restoring project Ccache ... Extracting archive file to ${MyCcacheTargetPath} ... DONE"
+
+    ## Restore project Ccache - Check binary file
+    Write-Information "[PowerShell] Restoring project Ccache ... Checking binary file ..."
+    if (-not (Test-Path "${MyCcacheTargetPath}")) {
+        Write-Error "[PowerShell] Restoring project Ccache ... Checking binary file ... FAILED (Folder does not exist)"
+        Exit 1
+    }
+    if (Test-Path "${MyCcacheTargetPath}\${CcacheCli}.exe") {
+        Write-Information "[PowerShell] Restoring project Ccache ... Checking binary file ... FOUND"
+    }
+    else {
+        Write-Error "[PowerShell] Restoring project Ccache ... Checking binary file ... NOT FOUND (Ccache is missing)"
+        Exit 1
+    }
+
+    ## Restore project Ccache - Compact ${MyCcacheTargetPath}
+    Write-Information "[PowerShell] Restoring project Ccache ... Compacting ${MyCcacheTargetPath} ..."
+    $MyNtfsCompactProcess = $null
+    $MyNtfsCompactProcessHandle = $null
+    try {
+        $MyNtfsCompactProcess = Start-Process -FilePath "$NtfsCompactCli" -WindowStyle Hidden -PassThru `
+            -ArgumentList "/c /s:${MyCcacheTargetPath}"
+        $MyNtfsCompactProcessHandle = $MyNtfsCompactProcess.Handle
+        $MyNtfsCompactProcess.WaitForExit()
+        $MyNtfsCompactProcessExitCode = $MyNtfsCompactProcess.ExitCode
+        if ($MyNtfsCompactProcessExitCode -ne 0) {
+            Write-Error "[PowerShell] Restoring project Ccache ... Compacting ${MyCcacheTargetPath} ... FAILED (ExitCode: $MyNtfsCompactProcessExitCode)"
+            Exit 1
+        }
+        else {
+            Write-Information "[PowerShell] Restoring project Ccache ... Compacting ${MyCcacheTargetPath} ... DONE"
+        }
+    }
+    catch {
+        Write-Error "[PowerShell] Restoring project Ccache ... Compacting ${MyCcacheTargetPath} ... FAILED"
+        Exit 1
+    }
+    finally {
+        if ($null -ne $MyNtfsCompactProcessHandle) {
+            $MyNtfsCompactProcessHandle = $null
+        }
+        if ($null -ne $MyNtfsCompactProcess) {
+            $MyNtfsCompactProcess.Dispose()
+            $MyNtfsCompactProcess = $null
+        }
+    }
+
+    $MyProjectCcacheCliDetected = $true
+    Write-Information "[PowerShell] Restoring project Ccache ... DONE"
+}
+
+
+
+## Append CMake root folder into PATH
+if (-not $MyProjectCmakeCliDetected) {
+    $MyCmakeTargetPath = "${ProjectCmakeRoot}\${ProjectCmakeVersion}"
+    $Env:PATH = $Env:PATH + ';' + "${MyCmakeTargetPath}\bin"
+}
+
+
+
+## Detect CMake from PATH
+if (-not $MyProjectCmakeCliDetected) {
+    $MyCmakeProcess = $null
+    $MyCmakeProcessHandle = $null
+    Write-Information "[PowerShell] Detecting CMake from PATH ..."
+    try {
+        $MyCmakeProcess = Start-Process -FilePath "$MyProjectCmakeCli" -WindowStyle Hidden -PassThru `
+            -ArgumentList "--help"
+        $MyCmakeProcessHandle = $MyCmakeProcess.Handle
+        $MyCmakeProcess.WaitForExit()
+        $MyCmakeProcessExitCode = $MyCmakeProcess.ExitCode
+        if ($MyCmakeProcessExitCode -ne 0) {
+            Write-Information "[PowerShell] Detecting CMake from PATH ... INCORRECT (ExitCode: $MyCmakeProcessExitCode)"
+            $MyProjectCmakeCliDetected = $false
+        }
+        else {
+            Write-Information "[PowerShell] Detecting CMake from PATH ... FOUND"
+            $MyProjectCmakeCliDetected = $true
+        }
+    }
+    catch {
+        Write-Information "[PowerShell] Detecting CMake from PATH ... NOT FOUND"
+        $MyProjectCmakeCliDetected = $false
+    }
+    finally {
+        if ($null -ne $MyCmakeProcessHandle) {
+            $MyCmakeProcessHandle = $null
+        }
+        if ($null -ne $MyCmakeProcess) {
+            $MyCmakeProcess.Dispose()
+            $MyCmakeProcess = $null
+        }
+    }
+}
+
+
+
+## Detect CMake from Installer
+if (-not $MyProjectCmakeCliDetected) {
+    $MyCmakeProcess = $null
+    $MyCmakeProcessHandle = $null
+    Write-Information "[PowerShell] Detecting CMake from Installer ..."
+    try {
+        $MyProjectCmakeCliFromInstaller = "${Env:ProgramFiles}\CMake\bin\$CmakeCli"
+        $MyCmakeProcess = Start-Process -FilePath "$MyProjectCmakeCliFromInstaller" -WindowStyle Hidden -PassThru `
+            -ArgumentList "--help"
+        $MyCmakeProcessHandle = $MyCmakeProcess.Handle
+        $MyCmakeProcess.WaitForExit()
+        $MyCmakeProcessExitCode = $MyCmakeProcess.ExitCode
+        if ($MyCmakeProcessExitCode -ne 0) {
+            Write-Information "[PowerShell] Detecting CMake from Installer ... INCORRECT (ExitCode: $MyCmakeProcessExitCode)"
+            $MyProjectCmakeCliDetected = $false
+        }
+        else {
+            Write-Information "[PowerShell] Detecting CMake from Installer ... FOUND"
+            $MyProjectCmakeCliDetected = $true
+            $MyProjectCmakeCli = $MyProjectCmakeCliFromInstaller
+        }
+    }
+    catch {
+        Write-Information "[PowerShell] Detecting CMake from Installer ... NOT FOUND"
+        $MyProjectCmakeCliDetected = $false
+    }
+    finally {
+        if ($null -ne $MyCmakeProcessHandle) {
+            $MyCmakeProcessHandle = $null
+        }
+        if ($null -ne $MyCmakeProcess) {
+            $MyCmakeProcess.Dispose()
+            $MyCmakeProcess = $null
+        }
+    }
+
+}
+
+
+
+## Restore project CMake
+if (-not $MyProjectCmakeCliDetected) {
+    Write-Information "[PowerShell] Restoring project CMake ..."
+
+    ## Restore project CMake - Download archive file
+    $MyCmakeArchiveNameWithoutExt = $CmakeVersionArchitectureToArchiveNameWithoutExtMap["${ProjectCmakeVersion}_${Env:PROCESSOR_ARCHITECTURE}"]
+    $MyCmakeArchiveUrl = "https://github.com/Kitware/CMake/releases/download/v${ProjectCmakeVersion}/${MyCmakeArchiveNameWithoutExt}.zip"
+    $MyCmakeTempPath = [System.guid]::NewGuid().toString()
+    $MyCmakeTempPath = "${Env:Temp}\${MyCmakeTempPath}_${MyCmakeArchiveNameWithoutExt}.zip"
+    Write-Information "[PowerShell] Restoring project CMake ... Downloading archive file from ${MyCmakeArchiveUrl} ..."
+    try {
+        Invoke-WebRequest $MyCmakeArchiveUrl -OutFile $MyCmakeTempPath
+    }
+    catch {
+        Write-Error "[PowerShell] Restoring project CMake ... Downloading archive file from ${MyCmakeArchiveUrl} ... FAILED"
+        Exit 1
+    }
+    Write-Information "[PowerShell] Restoring project CMake ... Downloading archive file from ${MyCmakeArchiveUrl} ... DONE"
+
+    ## Restore project CMake - Extract archive file
+    Write-Information "[PowerShell] Restoring project CMake ... Extracting archive file to ${MyCmakeTargetPath} ..."
+    try {
+        Expand-Archive -Path $MyCmakeTempPath -DestinationPath $MyCmakeTargetPath
+        Move-Item -Path "$MyCmakeTargetPath\$MyCmakeArchiveNameWithoutExt\*" -Destination "$MyCmakeTargetPath"
+        Remove-Item "$MyCmakeTargetPath\$MyCmakeArchiveNameWithoutExt"
+        Remove-Item -LiteralPath $MyCmakeTempPath -Force
+    }
+    catch {
+        Write-Error "[PowerShell] Restoring project CMake ... Extracting archive file to ${MyCmakeTargetPath} ... FAILED"
+        Exit 1
+    }
+    Write-Information "[PowerShell] Restoring project CMake ... Extracting archive file to ${MyCmakeTargetPath} ... DONE"
+
+    ## Restore project CMake - Check binary file
+    Write-Information "[PowerShell] Restoring project CMake ... Checking binary file ..."
+    if (-not (Test-Path "${MyCmakeTargetPath}\bin")) {
+        Write-Error "[PowerShell] Restoring project CMake ... Checking binary file ... FAILED (Folder does not exist)"
+        Exit 1
+    }
+    if (Test-Path "${MyCmakeTargetPath}\bin\${CmakeCli}.exe") {
+        Write-Information "[PowerShell] Restoring project CMake ... Checking binary file ... FOUND"
+    }
+    else {
+        Write-Error "[PowerShell] Restoring project CMake ... Checking binary file ... NOT FOUND (CMake is missing)"
+        Exit 1
+    }
+
+    ## Restore project CMake - Compact ${MyCmakeTargetPath}
+    Write-Information "[PowerShell] Restoring project CMake ... Compacting ${MyCmakeTargetPath} ..."
+    $MyNtfsCompactProcess = $null
+    $MyNtfsCompactProcessHandle = $null
+    try {
+        $MyNtfsCompactProcess = Start-Process -FilePath "$NtfsCompactCli" -WindowStyle Hidden -PassThru `
+            -ArgumentList "/c /s:${MyCmakeTargetPath}"
+        $MyNtfsCompactProcessHandle = $MyNtfsCompactProcess.Handle
+        $MyNtfsCompactProcess.WaitForExit()
+        $MyNtfsCompactProcessExitCode = $MyNtfsCompactProcess.ExitCode
+        if ($MyNtfsCompactProcessExitCode -ne 0) {
+            Write-Error "[PowerShell] Restoring project CMake ... Compacting ${MyCmakeTargetPath} ... FAILED (ExitCode: $MyNtfsCompactProcessExitCode)"
+            Exit 1
+        }
+        else {
+            Write-Information "[PowerShell] Restoring project CMake ... Compacting ${MyCmakeTargetPath} ... DONE"
+        }
+    }
+    catch {
+        Write-Error "[PowerShell] Restoring project CMake ... Compacting ${MyCmakeTargetPath} ... FAILED"
+        Exit 1
+    }
+    finally {
+        if ($null -ne $MyNtfsCompactProcessHandle) {
+            $MyNtfsCompactProcessHandle = $null
+        }
+        if ($null -ne $MyNtfsCompactProcess) {
+            $MyNtfsCompactProcess.Dispose()
+            $MyNtfsCompactProcess = $null
+        }
+    }
+
+    $MyProjectCmakeCliDetected = $true
+    Write-Information "[PowerShell] Restoring project CMake ... DONE"
+}
+
+
+
+## Append Ninja root folder into PATH
+if (-not $MyProjectNinjaCliDetected) {
+    $MyNinjaTargetPath = "${ProjectNinjaRoot}\${ProjectNinjaVersion}"
+    $Env:PATH = $Env:PATH + ';' + "${MyNinjaTargetPath}"
+}
+
+
+
+## Detect Ninja from PATH
+if (-not $MyProjectNinjaCliDetected) {
+    $MyNinjaProcess = $null
+    $MyNinjaProcessHandle = $null
+    Write-Information "[PowerShell] Detecting Ninja from PATH ..."
+    try {
+        $MyNinjaProcess = Start-Process -FilePath "$MyProjectNinjaCli" -WindowStyle Hidden -PassThru `
+            -ArgumentList "--version"
+        $MyNinjaProcessHandle = $MyNinjaProcess.Handle
+        $MyNinjaProcess.WaitForExit()
+        $MyNinjaProcessExitCode = $MyNinjaProcess.ExitCode
+        if ($MyNinjaProcessExitCode -ne 0) {
+            Write-Information "[PowerShell] Detecting Ninja from PATH ... INCORRECT (ExitCode: $MyNinjaProcessExitCode)"
+            $MyProjectNinjaCliDetected = $false
+        }
+        else {
+            Write-Information "[PowerShell] Detecting Ninja from PATH ... FOUND"
+            $MyProjectNinjaCliDetected = $true
+        }
+    }
+    catch {
+        Write-Information "[PowerShell] Detecting Ninja from PATH ... NOT FOUND"
+        $MyProjectNinjaCliDetected = $false
+    }
+    finally {
+        if ($null -ne $MyNinjaProcessHandle) {
+            $MyNinjaProcessHandle = $null
+        }
+        if ($null -ne $MyNinjaProcess) {
+            $MyNinjaProcess.Dispose()
+            $MyNinjaProcess = $null
+        }
+    }
+}
+
+
+
+## Restore project Ninja
+if (-not $MyProjectNinjaCliDetected) {
+    Write-Information "[PowerShell] Restoring project Ninja ..."
+
+    ## Restore project Ninja - Download archive file
+    $MyNinjaArchiveNameWithoutExt = $NinjaVersionArchitectureToArchiveNameWithoutExtMap["${ProjectNinjaVersion}_${Env:PROCESSOR_ARCHITECTURE}"]
+    $MyNinjaArchiveUrl = "https://github.com/ninja-build/ninja/releases/download/v${ProjectNinjaVersion}/${MyNinjaArchiveNameWithoutExt}.zip"
+    $MyNinjaTempPath = [System.guid]::NewGuid().toString()
+    $MyNinjaTempPath = "${Env:Temp}\${MyNinjaTempPath}_${MyNinjaArchiveNameWithoutExt}.zip"
+    Write-Information "[PowerShell] Restoring project Ninja ... Downloading archive file from ${MyNinjaArchiveUrl} ..."
+    try {
+        Invoke-WebRequest $MyNinjaArchiveUrl -OutFile $MyNinjaTempPath
+    }
+    catch {
+        Write-Error "[PowerShell] Restoring project Ninja ... Downloading archive file from ${MyNinjaArchiveUrl} ... FAILED"
+        Exit 1
+    }
+    Write-Information "[PowerShell] Restoring project Ninja ... Downloading archive file from ${MyNinjaArchiveUrl} ... DONE"
+
+    ## Restore project Ninja - Extract archive file
+    Write-Information "[PowerShell] Restoring project Ninja ... Extracting archive file to ${MyNinjaTargetPath} ..."
+    try {
+        Expand-Archive -Path $MyNinjaTempPath -DestinationPath $MyNinjaTargetPath
+        Remove-Item -LiteralPath $MyNinjaTempPath -Force
+    }
+    catch {
+        Write-Error "[PowerShell] Restoring project Ninja ... Extracting archive file to ${MyNinjaTargetPath} ... FAILED"
+        Exit 1
+    }
+    Write-Information "[PowerShell] Restoring project Ninja ... Extracting archive file to ${MyNinjaTargetPath} ... DONE"
+
+    ## Restore project Ninja - Check binary file
+    Write-Information "[PowerShell] Restoring project Ninja ... Checking binary file ..."
+    if (-not (Test-Path "${MyNinjaTargetPath}")) {
+        Write-Error "[PowerShell] Restoring project Ninja ... Checking binary file ... FAILED (Folder does not exist)"
+        Exit 1
+    }
+    if (Test-Path "${MyNinjaTargetPath}\${NinjaCli}.exe") {
+        Write-Information "[PowerShell] Restoring project Ninja ... Checking binary file ... FOUND"
+    }
+    else {
+        Write-Error "[PowerShell] Restoring project Ninja ... Checking binary file ... NOT FOUND (Ninja is missing)"
+        Exit 1
+    }
+
+    ## Restore project Ninja - Compact ${MyNinjaTargetPath}
+    Write-Information "[PowerShell] Restoring project Ninja ... Compacting ${MyNinjaTargetPath} ..."
+    $MyNtfsCompactProcess = $null
+    $MyNtfsCompactProcessHandle = $null
+    try {
+        $MyNtfsCompactProcess = Start-Process -FilePath "$NtfsCompactCli" -WindowStyle Hidden -PassThru `
+            -ArgumentList "/c /s:${MyNinjaTargetPath}"
+        $MyNtfsCompactProcessHandle = $MyNtfsCompactProcess.Handle
+        $MyNtfsCompactProcess.WaitForExit()
+        $MyNtfsCompactProcessExitCode = $MyNtfsCompactProcess.ExitCode
+        if ($MyNtfsCompactProcessExitCode -ne 0) {
+            Write-Error "[PowerShell] Restoring project Ninja ... Compacting ${MyNinjaTargetPath} ... FAILED (ExitCode: $MyNtfsCompactProcessExitCode)"
+            Exit 1
+        }
+        else {
+            Write-Information "[PowerShell] Restoring project Ninja ... Compacting ${MyNinjaTargetPath} ... DONE"
+        }
+    }
+    catch {
+        Write-Error "[PowerShell] Restoring project Ninja ... Compacting ${MyNinjaTargetPath} ... FAILED"
+        Exit 1
+    }
+    finally {
+        if ($null -ne $MyNtfsCompactProcessHandle) {
+            $MyNtfsCompactProcessHandle = $null
+        }
+        if ($null -ne $MyNtfsCompactProcess) {
+            $MyNtfsCompactProcess.Dispose()
+            $MyNtfsCompactProcess = $null
+        }
+    }
+
+    $MyProjectNinjaCliDetected = $true
+    Write-Information "[PowerShell] Restoring project Ninja ... DONE"
+}
 
 
 
@@ -864,21 +1467,24 @@ if (-not $MyProjectProtocCliDetected) {
     $MyProtocProcessHandle = $null
     try {
         $MyProtocProcess = Start-Process -FilePath "$MyProjectProtocCli" -WindowStyle Hidden -PassThru `
-                -ArgumentList "--version"
+            -ArgumentList "--version"
         $MyProtocProcessHandle = $MyProtocProcess.Handle
         $MyProtocProcess.WaitForExit()
         $MyProtocProcessExitCode = $MyProtocProcess.ExitCode
         if ($MyProtocProcessExitCode -ne 0) {
             Write-Error "[PowerShell] Detecting Project Protoc ... INCORRECT (ExitCode: $MyProtocProcessExitCode)"
             $MyProjectProtocCliDetected = $false
-        } else {
+        }
+        else {
             Write-Information "[PowerShell] Detecting Project Protoc ... FOUND"
             $MyProjectProtocCliDetected = $true
         }
-    } catch {
+    }
+    catch {
         Write-Information "[PowerShell] Detecting Project Protoc ... NOT FOUND (Project Protoc is missing)"
         $MyProjectProtocCliDetected = $false
-    } finally {
+    }
+    finally {
         if ($null -ne $MyProtocProcessHandle) {
             $MyProtocProcessHandle = $null
         }
@@ -903,7 +1509,8 @@ if (-not $MyProjectProtocCliDetected) {
     Write-Information "[PowerShell] Restoring Project Protoc ... Downloading archive file from ${MyProtocArchiveUrl} ..."
     try {
         Invoke-WebRequest $MyProtocArchiveUrl -OutFile $MyProtocTempPath
-    } catch {
+    }
+    catch {
         Write-Error "[PowerShell] Restoring Project Protoc ... Downloading archive file from ${MyProtocArchiveUrl} ... FAILED"
         Exit 1
     }
@@ -913,7 +1520,8 @@ if (-not $MyProjectProtocCliDetected) {
     Write-Information "[PowerShell] Restoring Project Protoc ... Extracting archive file to ${MyProtocTargetPath} ..."
     try {
         Expand-Archive -Path $MyProtocTempPath -DestinationPath $MyProtocTargetPath
-    } catch {
+    }
+    catch {
         Write-Error "[PowerShell] Restoring Project Protoc ... Extracting archive file to ${MyProtocTargetPath} ... FAILED"
         Exit 1
     }
@@ -927,10 +1535,12 @@ if (-not $MyProjectProtocCliDetected) {
     }
     if (Test-Path "${MyProtocTargetPath}\bin\${MyProjectProtocCli}.exe") {
         Write-Information "[PowerShell] Restoring Project Protoc ... Checking binary file ... FOUND"
-    } elseif (-not (Test-Path "${MyProtocTargetPath}\bin\${ProtocCli}.exe")) {
+    }
+    elseif (-not (Test-Path "${MyProtocTargetPath}\bin\${ProtocCli}.exe")) {
         Write-Error "[PowerShell] Restoring Project Protoc ... Checking binary file ... NOT FOUND (Protoc is missing)"
         Exit 1
-    } else {
+    }
+    else {
         Move-Item -Path "${MyProtocTargetPath}\bin\${ProtocCli}.exe" -Destination "${MyProtocTargetPath}\bin\${MyProjectProtocCli}.exe" -Force -ErrorVariable MyIoError | Out-Null
         if ($MyIoError) {
             Write-Error "[PowerShell] Restoring Project Protoc ... Checking binary file ... FAILED (Can not move resource)"
@@ -940,7 +1550,7 @@ if (-not $MyProjectProtocCliDetected) {
         $MyProtocProcessHandle = $null
         try {
             $MyProtocProcess = Start-Process -FilePath "$MyProjectProtocCli" -WindowStyle Hidden -PassThru `
-                    -ArgumentList "--version"
+                -ArgumentList "--version"
             $MyProtocProcessHandle = $MyProtocProcess.Handle
             $MyProtocProcess.WaitForExit()
             $MyProtocProcessExitCode = $MyProtocProcess.ExitCode
@@ -948,10 +1558,12 @@ if (-not $MyProjectProtocCliDetected) {
                 Write-Error "[PowerShell] Restoring Project Protoc ... Checking binary file ... INCORRECT (ExitCode: $MyProtocProcessExitCode)"
                 Exit 1
             }
-        } catch {
+        }
+        catch {
             Write-Information "[PowerShell] Restoring Project Protoc ... Checking binary file ... NOT FOUND (Project Protoc is missing)"
             Exit 1
-        } finally {
+        }
+        finally {
             if ($null -ne $MyProtocProcessHandle) {
                 $MyProtocProcessHandle = $null
             }
@@ -968,113 +1580,155 @@ if (-not $MyProjectProtocCliDetected) {
 
 ## Build project
 Write-Information "[PowerShell] Building project ..."
+if ('ninja'.Equals($ProjectCmakeBuildSystem)) {
+    Backup-EnvironmentVariables
+}
 foreach ($MyCmakePlatform in $MyCmakePlatformList) {
-    ## Build project for arch $MyCmakePlatform
-    Write-Information "[PowerShell] Building project for arch $MyCmakePlatform ..."
+    ## Build project for arch $MyCmakePlatform by $ProjectCmakeBuildSystem
+    Write-Information "[PowerShell] Building project for arch $MyCmakePlatform by $ProjectCmakeBuildSystem ..."
     if (-not ('ON'.Equals($MyCmakePlatformToBuildToggleMap[$MyCmakePlatform]))) {
-        Write-Information "[PowerShell] Building project for arch $MyCmakePlatform ... SKIPPED"
-    } else {
-        $MyTempBuildFolder = Join-Path -Path $TempBuildFolder -ChildPath $ProjectReleaseType
-        $MyTempBuildFolder = Join-Path -Path $MyTempBuildFolder -ChildPath $MyCmakePlatform
-        $MyTempInstallFolderAbs = Resolve-Path $TempInstallFolder
-        $MyTempInstallFolderAbs = Join-Path -Path $MyTempInstallFolderAbs -ChildPath $ProjectReleaseType
-        $MyTempInstallFolderAbs = Join-Path -Path $MyTempInstallFolderAbs -ChildPath $MyCmakePlatform
+        Write-Information "[PowerShell] Building project for arch $MyCmakePlatform by $ProjectCmakeBuildSystem ... SKIPPED"
+        continue
+    }
 
-        ## Build project for arch $MyCmakePlatform - Generate project
-        $MyCmakeProcess = $null
-        $MyCmakeProcessHandle = $null
-        Write-Verbose "[PowerShell] Building project for arch $MyCmakePlatform ... Generating project ..."
-        try {
-            $MyCmakeArgumentList = $MyCmakeCommonArgumentList + @(
-                    "-B $MyTempBuildFolder",
-                    "-A $MyCmakePlatform",
-                    "--install-prefix `"$MyTempInstallFolderAbs`""
-            )
-            if ('ON'.Equals($ProjectWithWorkaroundArm64rt)) {
-                if ('ARM64'.Equals($MyCmakePlatform)) {
-                    $MyCmakeArgumentList += "-DBUILD_WITH_WORKAROUND_ARM64RT=$ProjectWithWorkaroundArm64rt"
-                }
+    if ('ninja'.Equals($ProjectCmakeBuildSystem)) {
+        $MyVisualStudioVersion = $CmakeToolsetToGeneratorMap[$ProjectCmakeToolset]
+        $MyVcvarsPlatform = $CmakePlatformToVcvarsPlatformMap[$MyCmakePlatform]
+        Use-MSVC -VisualStudioVersion $MyVisualStudioVersion -VcvarsPlatform $MyVcvarsPlatform -VcvarsWindowsSdkVersion $ProjectWindowsSdkVersion
+    }
+
+    $MyTempBuildFolder = Join-Path -Path $TempBuildFolder -ChildPath $ProjectReleaseType
+    $MyTempBuildFolder = Join-Path -Path $MyTempBuildFolder -ChildPath $MyCmakePlatform
+    $MyTempInstallFolderAbs = Resolve-Path $TempInstallFolder
+    $MyTempInstallFolderAbs = Join-Path -Path $MyTempInstallFolderAbs -ChildPath $ProjectReleaseType
+    $MyTempInstallFolderAbs = Join-Path -Path $MyTempInstallFolderAbs -ChildPath $MyCmakePlatform
+
+    ## Build project for arch $MyCmakePlatform - Generate project
+    $MyCmakeProcess = $null
+    $MyCmakeProcessHandle = $null
+    Write-Information "[PowerShell] Building project for arch $MyCmakePlatform by $ProjectCmakeBuildSystem ... Generating project ..."
+    try {
+        $MyCmakeArgumentList = $MyCmakeCommonArgumentList + @(
+            "-B $MyTempBuildFolder",
+            "--install-prefix `"$MyTempInstallFolderAbs`""
+        )
+        if ('msbuild'.Equals($ProjectCmakeBuildSystem)) {
+            if ('latest'.Equals($ProjectWindowsSdkVersion)) {
+                $MyCmakeArgumentList += "-A ${MyCmakePlatform}"
             }
-            if ('ON'.Equals($ProjectWithWorkaroundOptGy)) {
-                if ('ARM'.Equals($MyCmakePlatform)) {
-                    $MyCmakeArgumentList += "-DBUILD_WITH_WORKAROUND_OPT_GY=$ProjectWithWorkaroundOptGy"
-                }
-            }
-            $MyCmakeArgumentListString = $MyCmakeArgumentList -join " "
-            Write-Verbose "[PowerShell] Building project for arch $MyCmakePlatform ... Generating project ... argument list: $MyCmakeArgumentListString"
-            $MyCmakeProcess = Start-Process -FilePath "${Env:ProgramFiles}\CMake\bin\$CmakeCli" -NoNewWindow -PassThru `
-                    -ArgumentList $MyCmakeArgumentListString
-            $MyCmakeProcessHandle = $MyCmakeProcess.Handle
-            $MyCmakeProcess.WaitForExit()
-            $MyCmakeProcessExitCode = $MyCmakeProcess.ExitCode
-            if ($MyCmakeProcessExitCode -ne 0) {
-                Write-Error "[PowerShell] Building project for arch $MyCmakePlatform ... Generating project ... FAILED (ExitCode: $MyCmakeProcessExitCode)"
-                Exit 1
-            }
-        } catch {
-            Write-Error "[PowerShell] Building project for arch $MyCmakePlatform ... Generating project ... FAILED (CMake is missing)"
-            Exit 1
-        } finally {
-            if ($null -ne $MyCmakeProcessHandle) {
-                $MyCmakeProcessHandle = $null
-            }
-            if ($null -ne $MyCmakeProcess) {
-                $MyCmakeProcess.Dispose()
-                $MyCmakeProcess = $null
+            else {
+                $MyCmakeArgumentList += "-A ${MyCmakePlatform},version=${ProjectWindowsSdkVersion}"
             }
         }
-        Write-Verbose "[PowerShell] Building project for arch $MyCmakePlatform ... Generating project ... DONE"
+        if ('ON'.Equals($ProjectWithWorkaroundArm64rt)) {
+            if ('ARM64'.Equals($MyCmakePlatform)) {
+                $MyCmakeArgumentList += "-DBUILD_WITH_WORKAROUND_ARM64RT=$ProjectWithWorkaroundArm64rt"
+            }
+        }
+        if ('ON'.Equals($ProjectWithWorkaroundOptGy)) {
+            if ('ARM'.Equals($MyCmakePlatform)) {
+                $MyCmakeArgumentList += "-DBUILD_WITH_WORKAROUND_OPT_GY=$ProjectWithWorkaroundOptGy"
+            }
+        }
+        $MyCmakeArgumentListString = $MyCmakeArgumentList -join " "
+        Write-Verbose "[PowerShell] Building project for arch $MyCmakePlatform by $ProjectCmakeBuildSystem ... Generating project ... argument list: $MyCmakeArgumentListString"
+        $MyCmakeProcess = Start-Process -FilePath $MyProjectCmakeCli -NoNewWindow -PassThru `
+            -ArgumentList $MyCmakeArgumentListString
+        $MyCmakeProcessHandle = $MyCmakeProcess.Handle
+        $MyCmakeProcess.WaitForExit()
+        $MyCmakeProcessExitCode = $MyCmakeProcess.ExitCode
+        if ($MyCmakeProcessExitCode -ne 0) {
+            Write-Error "[PowerShell] Building project for arch $MyCmakePlatform by $ProjectCmakeBuildSystem ... Generating project ... FAILED (ExitCode: $MyCmakeProcessExitCode)"
+            Exit 1
+        }
+    }
+    catch {
+        Write-Error "[PowerShell] Building project for arch $MyCmakePlatform by $ProjectCmakeBuildSystem ... Generating project ... FAILED (CMake is missing)"
+        Exit 1
+    }
+    finally {
+        if ($null -ne $MyCmakeProcessHandle) {
+            $MyCmakeProcessHandle = $null
+        }
+        if ($null -ne $MyCmakeProcess) {
+            $MyCmakeProcess.Dispose()
+            $MyCmakeProcess = $null
+        }
+    }
+    Write-Information "[PowerShell] Building project for arch $MyCmakePlatform by $ProjectCmakeBuildSystem ... Generating project ... DONE"
 
-        ## Build project for arch $MyCmakePlatform - Compile project
-        $MyCmakeProcess = $null
-        $MyCmakeProcessHandle = $null
-        Write-Verbose "[PowerShell] Building project for arch $MyCmakePlatform ... Compiling project ..."
-        try {
+    ## Build project for arch $MyCmakePlatform - Compile project
+    $MyCmakeProcess = $null
+    $MyCmakeProcessHandle = $null
+    $MyStopWatch = [System.Diagnostics.Stopwatch]::StartNew()
+    Write-Information "[PowerShell] Building project for arch $MyCmakePlatform by $ProjectCmakeBuildSystem ... Compiling project ..."
+    try {
+        $MyCmakeParaParallel = ''
+        if ('msbuild'.Equals($ProjectCmakeBuildSystem)) {
             $MyCmakeParaParallel = '-- /m'
+            if (-not ''.Equals($ProjectParallelBuildLevel)) {
+                $MyCmakeParaParallel = "-- /m:$ProjectParallelBuildLevel"
+            }
             if ('ON'.Equals($ProjectShouldDisableParallelBuild)) {
                 $MyCmakeParaParallel = ''
             }
-            $MyCmakeProcess = Start-Process -FilePath "${Env:ProgramFiles}\CMake\bin\$CmakeCli" -NoNewWindow -PassThru `
-                    -ArgumentList "--build $MyTempBuildFolder --config $ProjectReleaseType $MyCmakeParaParallel"
-            $MyCmakeProcessHandle = $MyCmakeProcess.Handle
-            $MyCmakeProcess.WaitForExit()
-            $MyCmakeProcessExitCode = $MyCmakeProcess.ExitCode
-            if ($MyCmakeProcessExitCode -ne 0) {
-                Write-Error "[PowerShell] Building project for arch $MyCmakePlatform ... Compiling project ... FAILED (ExitCode: $MyCmakeProcessExitCode)"
-                Exit 1
+        }
+        if ('ninja'.Equals($ProjectCmakeBuildSystem)) {
+            $MyCmakeParaParallel = ''
+            if (-not ''.Equals($ProjectParallelBuildLevel)) {
+                $MyCmakeParaParallel = "-- -j$ProjectParallelBuildLevel"
             }
-        } catch {
-            Write-Error "[PowerShell] Building project for arch $MyCmakePlatform ... Compiling project ... FAILED (CMake is missing)"
-            Exit 1
-        } finally {
-            if ($null -ne $MyCmakeProcessHandle) {
-                $MyCmakeProcessHandle = $null
-            }
-            if ($null -ne $MyCmakeProcess) {
-                $MyCmakeProcess.Dispose()
-                $MyCmakeProcess = $null
+            if ('ON'.Equals($ProjectShouldDisableParallelBuild)) {
+                $MyCmakeParaParallel = '-- -j1'
             }
         }
-        Write-Verbose "[PowerShell] Building project for arch $MyCmakePlatform ... Compiling project ... DONE"
+        $MyCmakeProcess = Start-Process -FilePath $MyProjectCmakeCli -NoNewWindow -PassThru `
+            -ArgumentList "--build $MyTempBuildFolder --config $ProjectReleaseType $MyCmakeParaParallel"
+        $MyCmakeProcessHandle = $MyCmakeProcess.Handle
+        $MyCmakeProcess.WaitForExit()
+        $MyCmakeProcessExitCode = $MyCmakeProcess.ExitCode
+        if ($MyCmakeProcessExitCode -ne 0) {
+            Write-Error "[PowerShell] Building project for arch $MyCmakePlatform by $ProjectCmakeBuildSystem ... Compiling project ... FAILED (ExitCode: $MyCmakeProcessExitCode)"
+            Exit 1
+        }
+    }
+    catch {
+        Write-Error "[PowerShell] Building project for arch $MyCmakePlatform by $ProjectCmakeBuildSystem ... Compiling project ... FAILED (CMake is missing)"
+        Exit 1
+    }
+    finally {
+        if ($null -ne $MyCmakeProcessHandle) {
+            $MyCmakeProcessHandle = $null
+        }
+        if ($null -ne $MyCmakeProcess) {
+            $MyCmakeProcess.Dispose()
+            $MyCmakeProcess = $null
+        }
+        $MyStopWatch.Stop()
+    }
+    Write-Information "[PowerShell] Building project for arch $MyCmakePlatform by $ProjectCmakeBuildSystem ... Compiling project ... DONE ( Elapsed: $($MyStopWatch.Elapsed.ToString()) )"
 
+    if (-not ('ON'.Equals($ProjectShouldDisableInstallBuild))) {
         ## Build project for arch $MyCmakePlatform - Install project
         $MyCmakeProcess = $null
         $MyCmakeProcessHandle = $null
-        Write-Verbose "[PowerShell] Building project for arch $MyCmakePlatform ... Installing project ..."
+        Write-Information "[PowerShell] Building project for arch $MyCmakePlatform by $ProjectCmakeBuildSystem ... Installing project ..."
         try {
-            $MyCmakeProcess = Start-Process -FilePath "${Env:ProgramFiles}\CMake\bin\$CmakeCli" -NoNewWindow -PassThru `
-                    -ArgumentList "--install $MyTempBuildFolder --config $ProjectReleaseType"
+            $MyCmakeProcess = Start-Process -FilePath $MyProjectCmakeCli -NoNewWindow -PassThru `
+                -ArgumentList "--install $MyTempBuildFolder --config $ProjectReleaseType"
             $MyCmakeProcessHandle = $MyCmakeProcess.Handle
             $MyCmakeProcess.WaitForExit()
             $MyCmakeProcessExitCode = $MyCmakeProcess.ExitCode
             if ($MyCmakeProcessExitCode -ne 0) {
-                Write-Error "[PowerShell] Building project for arch $MyCmakePlatform ... Installing project ... FAILED (ExitCode: $MyCmakeProcessExitCode)"
+                Write-Error "[PowerShell] Building project for arch $MyCmakePlatform by $ProjectCmakeBuildSystem ... Installing project ... FAILED (ExitCode: $MyCmakeProcessExitCode)"
                 Exit 1
             }
-        } catch {
-            Write-Error "[PowerShell] Building project for arch $MyCmakePlatform ... Installing project ... FAILED (CMake is missing)"
+        }
+        catch {
+            Write-Error "[PowerShell] Building project for arch $MyCmakePlatform by $ProjectCmakeBuildSystem ... Installing project ... FAILED (CMake is missing)"
             Exit 1
-        } finally {
+        }
+        finally {
             if ($null -ne $MyCmakeProcessHandle) {
                 $MyCmakeProcessHandle = $null
             }
@@ -1083,9 +1737,9 @@ foreach ($MyCmakePlatform in $MyCmakePlatformList) {
                 $MyCmakeProcess = $null
             }
         }
-        Write-Verbose "[PowerShell] Building project for arch $MyCmakePlatform ... Installing project ... DONE"
-
-        Write-Information "[PowerShell] Building project for arch $MyCmakePlatform ... DONE"
+        Write-Information "[PowerShell] Building project for arch $MyCmakePlatform by $ProjectCmakeBuildSystem ... Installing project ... DONE"
     }
+
+    Write-Information "[PowerShell] Building project for arch $MyCmakePlatform by $ProjectCmakeBuildSystem ... DONE"
 }
 Write-Information "[PowerShell] Building project ... DONE"
